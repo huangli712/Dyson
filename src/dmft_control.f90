@@ -45,14 +45,27 @@
 !! control flag, determine the running mode of the code
 !!
 !! if task == 1:
-!!     calculate the local hybridization function. of course, the fermi
-!!     level might be updated as well (depends on lfermi)
+!!     the code will do the following jobs: 
+!!     (1) search the fermi level (depends on `lfermi`),
+!!     (2) calculate the impurity level,
+!!     (3) calculate the local green's function,
+!!     (4) calculate the hybridization function,
+!!     (5) calculate the local weiss's function,
+!!     (6) write the above calculated results.
 !!
 !! if task == 2:
-!!     calculate charge correction due to the electronic correlation
+!!     the code will do the following jobs:
+!!     (1) calculate charge correction due to the electronic correlation,
+!!     (2) calculate total energy.
 !!
-!! if task == 0:
-!!     search the fermi level only
+!! if task == 3:
+!!     search the fermi level only (depends on `lfermi`)
+!!
+!! if task == 4:
+!!     calculate the impurity level only
+!!
+!! if task == 5:
+!!     calculate all complex frequency dependent eigenvalues only
 !!
      integer, public, save :: task   = 1
 
