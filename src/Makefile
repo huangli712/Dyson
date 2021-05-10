@@ -50,8 +50,6 @@ flink_lib:
 flink_mod:
 	cp $(FLINK)/constants.mod .
 	cp $(FLINK)/mmpi.mod .
-	cp $(FLINK)/spring.mod .
-	cp $(FLINK)/stack.mod .
 	cp $(FLINK)/parser.mod .
 	cp $(FLINK)/linkedlist.mod .
 
