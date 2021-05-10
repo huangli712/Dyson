@@ -12,6 +12,10 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> module control                                                   <<<
+!!========================================================================
+
   module control
      use constants, only : dp
 
@@ -72,7 +76,7 @@
 !!
 !! @var axis
 !!
-!! control flag, determine the axis for brillouin zone integration
+!! control flag, determine the working axis for brillouin zone integration
 !!
 !! if axis == 1:
 !!     imaginary axis
@@ -92,7 +96,7 @@
 !! control flag, determine whether the fermi level should be updated
 !!
 !! if lfermi == .true.
-!!     search the fermi level
+!!     search the fermi level by using the bisection algorithm
 !!
 !! if lfermi == .false.
 !!     fix the fermi level. in other words, the dft fermi level is used
@@ -166,7 +170,9 @@
 !!
 !! @var nspin
 !!
-!! number of spin orientations
+!! number of spin orientations. for non-magnetic or paramagnetic systems
+!! nspin = 1, while for magnetic systems, nspin = 2. here, spin-orbit
+!! coupling has not been supported
 !!
      integer, public, save :: nspin  = 1
 
@@ -182,7 +188,9 @@
 !! @var ngrp
 !!
 !! number of groups of projectors, which are used to create the Hilbert
-!! subspace for correlated orbitals
+!! subspace for correlated or non-correlated orbitals. note that `ngrp`
+!! is always larger or equal to `nsite`. in other words, multiple groups
+!! of projectors are permitted. some of them might be non-correlated.
 !!
      integer, public, save :: ngrp   = 1
 
@@ -190,7 +198,9 @@
 !! @var nwnd
 !!
 !! number of energy windows or band windows, which are used to restrict
-!! the correlated subspace
+!! the correlated subspace. note that in the current implementation,
+!! `nwnd` must be equal to 1. in other words, there is only single band
+!! window.
 !!
      integer, public, save :: nwnd   = 1
 
@@ -198,7 +208,8 @@
 !! @var nsite
 !!
 !! number of correlated electron problems, i.e, number of impurity sites
-!! in which the correlated effect is considered
+!! in which the correlated effect is considered. `nsite` should be smaller
+!! or equal to `ngrp`.
 !!
      integer, public, save :: nsite  = 1
 
@@ -223,7 +234,8 @@
 !!
 !! @var fermi
 !!
-!! default fermi level, which is usually taken from the dft calculations
+!! default fermi level, which is usually taken from the dft calculations.
+!! when task = 1 or 3, `fermi` might be updated.
 !!
      real(dp), public, save :: fermi = 0.00_dp
 
@@ -283,7 +295,9 @@
 
   end module control
 
-
+!!========================================================================
+!!>>> module version                                                   <<<
+!!========================================================================
 
   module version
      implicit none
