@@ -361,7 +361,7 @@
 !!
 !! @mod dmft_fmesh
 !!
-!! contain the frequency mesh
+!! contain the linear frequency mesh
 !!
   module dmft_fmesh
      use constants, only : dp
@@ -371,7 +371,7 @@
 !!
 !! @var fmesh
 !!
-!! frequency mesh. it can be defined on imaginary axis or real axis
+!! linear frequency mesh. it can be defined on imaginary axis or real axis.
 !!
      real(dp), public, save, allocatable :: fmesh(:)
 
