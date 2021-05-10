@@ -1087,6 +1087,7 @@
      implicit none
 
      if ( allocated(sigdc) ) deallocate(sigdc)
+     if ( allocated(sigoo) ) deallocate(sigoo)
      if ( allocated(sig_l) ) deallocate(sig_l)
 
      return
