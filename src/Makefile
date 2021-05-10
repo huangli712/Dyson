@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for zen/src/dmft directory.
+## Makefile for dyson/src directory.
 ##
 ## Usage
 ## =====
@@ -21,13 +21,13 @@
 ## =======
 ##
 ## 02/23/2021 by li huang (created)
-## 05/09/2021 by li huang (last modified)
+## 05/10/2021 by li huang (last modified)
 ##
 ##
 
 .SUFFIXES: .f90
 
-include ../../build/make.sys
+include ../build/make.sys
 
 modc = dmft_control.o dmft_context.o
 core = dmft_core.o
