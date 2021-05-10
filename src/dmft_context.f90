@@ -384,7 +384,7 @@
 !!
 !! @mod dmft_eimps
 !!
-!! contain the impurity levels
+!! contain the band levels and impurity levels
 !!
   module dmft_eimps
      use constants, only : dp
@@ -479,7 +479,7 @@
 !!
 !! @mod dmft_weiss
 !!
-!! contain bath weiss functions and hybridization functions
+!! contain local weiss functions and hybridization functions
 !!
   module dmft_weiss
      use constants, only : dp
@@ -489,7 +489,7 @@
 !!
 !! @var wss_l
 !!
-!! local bath weiss functions
+!! local weiss functions
 !!
      complex(dp), public, save, allocatable :: wss_l(:,:,:,:,:)
 
@@ -839,6 +839,7 @@
      implicit none
 
 ! allocate memory
+     allocate(eimpk(qbnd,qbnd,nspin),       stat = istat)
      allocate(eimps(qdim,qdim,nspin,nsite), stat = istat)
 
 ! check the status
@@ -847,6 +848,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
+     eimpk = czero
      eimps = czero
 
      return
