@@ -114,7 +114,7 @@
 !!
 !! to calculate the local green's function, generate key inputs for the
 !! quantum impurity solvers. the fermi level may be updated, depending
-!! on the configuration parameter  
+!! on the configuration parameter 
 !!
   subroutine dmft_try1()
      use constants, only : mystd
@@ -380,7 +380,7 @@
                  call s_print_error('cal_eimps','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-! evaluate Em, which is just some dft eigenvalues 
+! evaluate Em, which is just some dft eigenvalues
              Em = enk(bs:be,k,s)
 
 ! convert `Em` to diagonal matrix `Hm`
@@ -571,7 +571,7 @@
      use context, only : sigdc, sig_l
      use context, only : grn_l
      use context, only : hyb_l
- 
+
      implicit none
 
 ! external arguments
@@ -755,13 +755,13 @@
          call s_print_error('cal_sk_hk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! evaluate Em, which is just some dft eigenvalues 
+! evaluate Em, which is just some dft eigenvalues
      Em = enk(bs:be,k,s)
 
 ! convert `Em` to diagonal matrix `Hm`
      call s_diag_z(cbnd, Em, Hm)
 
-! combine `Hm` and `Sk` to build the effective hamiltonian 
+! combine `Hm` and `Sk` to build the effective hamiltonian
      FREQ_LOOP: do m=1,nmesh
          Hk(:,:,m) = Hm + Sk(:,:,m)
      enddo FREQ_LOOP ! over m={1,nmesh} loop
@@ -950,13 +950,13 @@
          call s_print_error('cal_so_ho','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! evaluate Em, which is just some dft eigenvalues 
+! evaluate Em, which is just some dft eigenvalues
      Em = enk(bs:be,k,s)
 
 ! convert `Em` to diagonal matrix `Hm`
      call s_diag_z(cbnd, Em, Hm)
 
-! combine `Hm` and `So` to build the effective hamiltonian 
+! combine `Hm` and `So` to build the effective hamiltonian
      Ho = Hm + So
 
 ! deallocate memory
@@ -1012,7 +1012,7 @@
 ! self-energy function at Kohn-Sham basis
      complex(dp), intent(in)  :: Sk(cbnd,cbnd,nmesh)
 
-! asymptotic values of self-energy function at Kohn-Sham basis 
+! asymptotic values of self-energy function at Kohn-Sham basis
      complex(dp), intent(out) :: So(cbnd,cbnd)
 
 ! local parameters
@@ -1217,7 +1217,7 @@
      real(dp), parameter :: delta = 0.5_dp
 
 ! local variables
-! loop index for the bisection algorithm 
+! loop index for the bisection algorithm
      integer  :: loop
 
 ! left boundary, right boundary, and the final result for the fermi level
@@ -1473,7 +1473,7 @@
          enddo ! over b={1,cbnd} loop
      enddo ! over s={1,nspin} loop
 
-! consider the contribution from asymptotic part 
+! consider the contribution from asymptotic part
      do s=1,nspin
          do k=1,nkpt
              bs = kwin(k,s,1,1)
@@ -1487,7 +1487,7 @@
      enddo ! over s={1,nspin} loop
 
 ! sum up the density matrix
-     val = real( sum(zocc) ) 
+     val = real( sum(zocc) )
 
 ! consider the spins
      if ( nspin == 1 ) then
@@ -1505,7 +1505,7 @@
 !! @sub cal_eigsys
 !!
 !! try to diagonalize H(k) + \Sigma(i\omega_n) and H(k) + \Sigma(\infty)
-!! to obtain the corresponding eigenvalues 
+!! to obtain the corresponding eigenvalues
 !!
   subroutine cal_eigsys(eigs, einf)
      use constants, only : dp, mystd
@@ -1554,7 +1554,7 @@
 ! self-energy functions, \Sigma(i\omega_n)
      complex(dp), allocatable :: Sk(:,:,:)
 
-! H(k) + \Sigma(i\omega_n) 
+! H(k) + \Sigma(i\omega_n)
      complex(dp), allocatable :: Hk(:,:,:)
 
 ! eigenvalues for H(k) + \Sigma(i\omega_n)
@@ -1563,13 +1563,13 @@
 ! self-energy functions, \Sigma(\infty)
      complex(dp), allocatable :: So(:,:)
 
-! H(k) + \Sigma(\infty) 
+! H(k) + \Sigma(\infty)
      complex(dp), allocatable :: Ho(:,:)
 
 ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), allocatable :: Eo(:)
 
-! well, here the number of impurity sites is restricted to be one 
+! well, here the number of impurity sites is restricted to be one
 ! later we will remove this bug
      call s_assert2(nsite == 1, 'nsite should be 1')
      t = 1

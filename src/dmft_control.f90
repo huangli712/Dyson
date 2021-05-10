@@ -6,7 +6,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/09/2021 by li huang (last modified)
+!!!           05/10/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -44,15 +44,15 @@
 !!
 !! control flag, determine the running mode of the code
 !!
-!! if task == 0:
-!!     search the fermi level only
-!!
 !! if task == 1:
 !!     calculate the local hybridization function. of course, the fermi
 !!     level might be updated as well (depends on lfermi)
 !!
 !! if task == 2:
 !!     calculate charge correction due to the electronic correlation
+!!
+!! if task == 0:
+!!     search the fermi level only
 !!
      integer, public, save :: task   = 1
 
