@@ -195,6 +195,7 @@
      integer :: p
 
 ! print lattice structure
+     write(mystd,'(2X,a)') '>>> system information from lattice.ir'
      write(mystd,'(2X,a)') "[system information] -> lattice    -> sorts"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,nsort
@@ -209,17 +210,19 @@
      write(mystd,*)
 
 ! print quantum impurities
+     write(mystd,'(2X,a)') '>>> system information from sigma.bare'
      write(mystd,'(2X,a)') "[system information] -> impurities -> sig_l"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,nsite
          do p=1,nspin
              write(mystd,'(4X,a10,i3,2X,a6,i3)') "impurity :", s, "spin :", p
              do i=1,ndim(i_grp(s))
-                 write(mystd,'(4X,a1,i3,2f10.5)') ">", i, real(sig_l(1,i,i,p,s)), real(sig_l(nmesh,i,i,p,s))
+                 write(mystd,'(4X,a1,i3,2f10.5)') ">", i, real(sig_l(i,i,1,p,s)), real(sig_l(i,i,nmesh,p,s))
              enddo ! over i={1,ndim(i_grp(s))} loop
          enddo ! over p={1,nspin} loop
      enddo ! over s={1,nsite} loop
 
+     write(mystd,'(2X,a)') '>>> system information from sigma.dc'
      write(mystd,'(2X,a)') "[system information] -> impurities -> sigdc"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,nsite
@@ -231,6 +234,7 @@
          enddo ! over p={1,nspin} loop
      enddo ! over s={1,nsite} loop
 
+     write(mystd,'(2X,a)') '>>> system information from maps.ir'
      write(mystd,'(2X,a)') "[system information] -> impurities -> mappings"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,nsite
@@ -239,7 +243,8 @@
      enddo ! over s={1,nsite} loop
      write(mystd,*)
 
-! print local projectors
+! print local orbital projectors
+     write(mystd,'(2X,a)') '>>> system information from groups.ir'
      write(mystd,'(2X,a)') "[system information] -> projectors -> groups"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,ngrp
@@ -251,6 +256,7 @@
          write(mystd,'(4X,a9,i3)') ">  ndim :", ndim(s)
      enddo ! over s={1,ngrp} loop
 
+     write(mystd,'(2X,a)') '>>> system information from windows.ir'
      write(mystd,'(2X,a)') "[system information] -> projectors -> windows"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,nwnd
@@ -260,6 +266,7 @@
          write(mystd,'(4X,a9,i3)') ">  nbnd :", nbnd(s)
      enddo ! over s={1,nwnd} loop
 
+     write(mystd,'(2X,a)') '>>> system information from maps.ir'
      write(mystd,'(2X,a)') "[system information] -> projectors -> mappings"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,ngrp
