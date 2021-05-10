@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/10/2021 by li huang (last modified)
+!!!           05/11/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -79,7 +79,7 @@
 !!
 !! @sub: dmft_print_footer
 !!
-!! print the ending information for the dmft/jacaranda
+!! print the ending information for the dyson/jacaranda code
 !!
   subroutine dmft_print_footer()
      use constants, only : dp
@@ -252,7 +252,7 @@
          write(mystd,'(4X,a8,i3)') "group  :", s
          write(mystd,'(4X,a9,2X,a)') "> shell :", shell(s)
          write(mystd,'(4X,a9,l3)') ">  corr :", corr(s)
-         write(mystd,'(4X,a9,i3)') ">  site :", site(s)
+         write(mystd,'(4X,a9,i3,2X,a2)') ">  site :", site(s), atoms(site(s))
          write(mystd,'(4X,a9,i3)') ">     l :", l(s)
          write(mystd,'(4X,a9,i3)') ">  ndim :", ndim(s)
      enddo ! over s={1,ngrp} loop
