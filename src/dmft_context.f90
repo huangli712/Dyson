@@ -864,6 +864,7 @@
 
 ! allocate memory
      allocate(sigdc(qdim,qdim,nspin,nsite),       stat = istat)
+     allocate(sigoo(qdim,qdim,nspin,nsite),       stat = istat)
      allocate(sig_l(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
 ! check the status
@@ -873,6 +874,7 @@
 
 ! initialize them
      sigdc = czero
+     sigoo = czero
      sig_l = czero
 
      return
