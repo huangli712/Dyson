@@ -1,5 +1,5 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
-!!! ZEN @ JACARANDA                                                      !
+!!! Dyson @ JACARANDA                                                    !
 !!!                                                                      !
 !!! A highly optimized dynamical mean field theory engine, which will be !
 !!! used together with various ab initio density functional theory codes !
