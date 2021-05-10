@@ -1,6 +1,8 @@
 # Dyson
 
-Dyson is designed to solve the dyson's equation in the DFT + DMFT (i.e density functional theory plus dynamical mean-field theory) calculations. It is usually used with the Zen framework. This package is currently under developement. **IT DOESN'T WORK NOW!**
+The Dyson code is designed to solve the dyson's equation. It is usually used with the [**Zen**](https://github.com/huangli712/Zen) DFT + DMFT framework. 
+
+This package is currently under developement. **IT DOESN'T WORK NOW!**
 
 ## Version
 
