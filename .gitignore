@@ -2,6 +2,7 @@
 *.o
 *.a
 *.x
+*.ir
 *.mod
 *.dat
 *.log
@@ -18,3 +19,4 @@ atom.cix
 test.py
 test.f90
 src/dmft
+test/*/*
