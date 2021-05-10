@@ -71,6 +71,8 @@
 
 # endif  /* MPI */
 
+     write(mystd,*)
+
      return
   end subroutine dmft_print_header
 
@@ -122,6 +124,7 @@
 
      implicit none
 
+     write(mystd,'(2X,a)') '>>> configuration parameters from dmft.in and params.ir'
      write(mystd,'(2X,a)') '[configuration parameters] -> general'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      write(mystd,'(4X,a16,a10,  2X,a8)') 'model  / value :', trim(model) , 'type : i'
