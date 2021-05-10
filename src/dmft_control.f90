@@ -54,7 +54,7 @@
 !! control flag, determine the running mode of the code
 !!
 !! if task == 1:
-!!     the code will do the following jobs: 
+!!     the code will do the following jobs:
 !!     (1) search the fermi level (depends on `lfermi`),
 !!     (2) calculate the impurity level,
 !!     (3) calculate the local green's function,
