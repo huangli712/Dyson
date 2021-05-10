@@ -414,7 +414,7 @@
 !!
 !! @mod dmft_sigma
 !!
-!! contain the self-energy functions
+!! contain the impurity self-energy functions
 !!
   module dmft_sigma
      use constants, only : dp
@@ -430,10 +430,18 @@
      complex(dp), public, save, allocatable :: sigdc(:,:,:,:)
 
 !!
+!! @var sigoo
+!!
+!! asymptotic values for (sig_l - sigdc) when \omega goes to \infty
+!!
+     complex(dp), public, save, allocatable :: sigoo(:,:,:,:)
+
+!!
 !! @var sig_l
 !!
-!! local self-energy functions. they are usually taken from the output of
-!! various quantum impurity solver
+!! impurity self-energy functions. they are usually taken from the output
+!! of various quantum impurity solver. note that the double counting terms
+!! have not been subtracted from them.
 !!
      complex(dp), public, save, allocatable :: sig_l(:,:,:,:,:)
 
@@ -446,7 +454,7 @@
 !!
 !! @mod dmft_green
 !!
-!! contain the green's functions
+!! contain the local green's functions
 !!
   module dmft_green
      use constants, only : dp
@@ -456,7 +464,9 @@
 !!
 !! @var grn_l
 !!
-!! local green's functions
+!! local green's functions. note that within the dynamical mean-field
+!! theory, local green's functions should be equal to impurity green's
+!! functions.
 !!
      complex(dp), public, save, allocatable :: grn_l(:,:,:,:,:)
 
