@@ -256,7 +256,8 @@
 !!
 !! @var weight
 !!
-!! integration weights for k-points. it has not been renormalized
+!! integration weights for k-points. please pay attention to that they
+!! have not been renormalized.
 !!
      real(dp), public, save, allocatable :: weight(:)
 
