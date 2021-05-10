@@ -88,7 +88,8 @@
 !!
 !! @var qdim
 !!
-!! maximum number of correlated orbitals for all groups
+!! maximum number of correlated orbitals for all groups. actually, it
+!! should be equal to maxval(ndim).
 !!
      integer, public, save :: qdim = -1
 
@@ -102,7 +103,7 @@
 !!
 !! @var corr
 !!
-!! test which group is correlated
+!! tell us this group is correlated or not
 !!
      logical, public, save, allocatable :: corr(:)
 
@@ -123,7 +124,7 @@
 !!
 !! @var ndim
 !!
-!! number of projectors (orbitals) of group
+!! number of projectors (orbitals) included in this group
 !!
      integer, public, save, allocatable :: ndim(:)
 
