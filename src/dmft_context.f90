@@ -279,7 +279,9 @@
 !!
 !! @var tetra
 !!
-!! contain tetrahedron information
+!! contain tetrahedron information. tetra(itet,1:4) point to the four
+!! vertices for given tetrahedron, while tetra(itet,5) denotes the
+!! corresponding weight for this tetrahedron.
 !!
      integer, public, save, allocatable :: tetra(:,:)
 
@@ -292,7 +294,7 @@
 !!
 !! @mod dmft_eigen
 !!
-!! contain the Kohn-Sham eigenvalues and occupations
+!! contain the Kohn-Sham eigenvalues and related occupations
 !!
   module dmft_eigen
      use constants, only : dp
