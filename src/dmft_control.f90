@@ -16,6 +16,11 @@
 !!>>> module control                                                   <<<
 !!========================================================================
 
+!!
+!! @mod control
+!!
+!! define the control parameters and dimensional parameters
+!!
   module control
      use constants, only : dp
 
@@ -299,6 +304,11 @@
 !!>>> module version                                                   <<<
 !!========================================================================
 
+!!
+!! @mod version
+!!
+!! define the version string
+!!
   module version
      implicit none
 
@@ -307,14 +317,14 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.1.3 @ 2021.05.10D'
+     character(len=20), public, parameter :: V_FULL = 'v0.2.0 @ 2021.05.10D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.1.3'
+     character(len=06), public, parameter :: V_CURR = 'v0.2.0'
 
 !!
 !! @var V_DATE
