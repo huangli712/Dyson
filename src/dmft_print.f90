@@ -202,6 +202,7 @@
          write(mystd,'(4X,a6,i3,2X,a8,a3,i3)') "sort :", s, "symbol :", sorts(s), sortn(s)
      enddo ! over s={1,nsort} loop
 
+     write(mystd,'(2X,a)') '>>> system information from lattice.ir'
      write(mystd,'(2X,a)') "[system information] -> lattice    -> atoms"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,natom
