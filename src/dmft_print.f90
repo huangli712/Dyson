@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/09/2021 by li huang (last modified)
+!!!           05/10/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -17,7 +17,7 @@
 !!
 !! @sub dmft_print_header
 !!
-!! print the startup information for the dmft/jacaranda code
+!! print the startup information for the dyson/jacaranda code
 !!
   subroutine dmft_print_header()
      use constants, only : mystd
@@ -50,7 +50,7 @@
 
 # endif  /* MPI */
 
-     write(mystd,'(2X,a)') 'A Modern Dynamical Mean-Field Theory Booster'
+     write(mystd,'(2X,a)') 'A Modern Dynamical Metal-Field Theory Self-Consistent Equation Solver'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//" "//__DATE__//')'
