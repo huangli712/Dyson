@@ -172,7 +172,7 @@
   subroutine dmft_print_system()
      use constants, only : mystd
 
-     use control, only : nsort, natom 
+     use control, only : nsort, natom
      use control, only : nspin
      use control, only : ngrp, nwnd
      use control, only : nsite, nmesh
@@ -192,13 +192,13 @@
      integer :: p
 
 ! print lattice structure
-     write(mystd,'(2X,a)') "[system information] -> lattice    -> sorts" 
+     write(mystd,'(2X,a)') "[system information] -> lattice    -> sorts"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,nsort
          write(mystd,'(4X,a6,i3,2X,a8,a3,i3)') "sort :", s, "symbol :", sorts(s), sortn(s)
      enddo ! over s={1,nsort} loop
 
-     write(mystd,'(2X,a)') "[system information] -> lattice    -> atoms" 
+     write(mystd,'(2X,a)') "[system information] -> lattice    -> atoms"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,natom
          write(mystd,'(4X,a6,i3,2X,a8,a3,1X,3f9.6)') "atom :", s, "symbol :", atoms(s), coord(s,:)
@@ -206,7 +206,7 @@
      write(mystd,*)
 
 ! print quantum impurities
-     write(mystd,'(2X,a)') "[system information] -> impurities -> sig_l" 
+     write(mystd,'(2X,a)') "[system information] -> impurities -> sig_l"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,nsite
          do p=1,nspin
@@ -217,7 +217,7 @@
          enddo ! over p={1,nspin} loop
      enddo ! over s={1,nsite} loop
 
-     write(mystd,'(2X,a)') "[system information] -> impurities -> sigdc" 
+     write(mystd,'(2X,a)') "[system information] -> impurities -> sigdc"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,nsite
          do p=1,nspin
@@ -228,7 +228,7 @@
          enddo ! over p={1,nspin} loop
      enddo ! over s={1,nsite} loop
 
-     write(mystd,'(2X,a)') "[system information] -> impurities -> mappings" 
+     write(mystd,'(2X,a)') "[system information] -> impurities -> mappings"
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,nsite
          write(mystd,'(4X,a10,i3,2X,a8,i3)') "impurity :", s, "group  :", i_grp(s)
