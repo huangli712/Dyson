@@ -4,7 +4,7 @@ Dyson is designed to solve the dyson's equation in the DFT + DMFT (i.e density f
 
 ## Version
 
-v0.1.2-devel.210510
+v0.1.3-devel.210510
 
 ## License
 
