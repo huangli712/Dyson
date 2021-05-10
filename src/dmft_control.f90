@@ -3,7 +3,7 @@
 !!! program : control    module
 !!!           version    module
 !!! source  : dmft_control.f90
-!!! type    : module
+!!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
 !!!           05/10/2021 by li huang (last modified)

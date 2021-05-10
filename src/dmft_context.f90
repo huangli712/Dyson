@@ -18,7 +18,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/08/2021 by li huang (last modified)
+!!!           05/10/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -32,7 +32,7 @@
 !! @mod dmft_map
 !!
 !! define connections / mappings between the quantum impurity problems and
-!! the groups of projectors (or band windows)
+!! the groups of projectors (and band windows)
 !!
   module dmft_map
      implicit none
