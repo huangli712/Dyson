@@ -198,14 +198,14 @@
 !!
 !! @var sorts
 !!
-!! sorts of atoms
+!! sorts of atoms (chemical symbol)
 !!
      character(len=2), public, save, allocatable :: sorts(:)
 
 !!
 !! @var atoms
 !!
-!! list of atoms
+!! list of atoms (chemical symbol)
 !!
      character(len=2), public, save, allocatable :: atoms(:)
 
