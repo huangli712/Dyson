@@ -57,7 +57,8 @@
 !! @var g_imp
 !!
 !! from a given group of projectors, return the corresponding quantum
-!! impurity problem, group -> impurity
+!! impurity problem, group -> impurity. 0 value means that this group
+!! of projectors is for non-correlated orbitals.
 !!
      integer, public, save, allocatable :: g_imp(:)
 
@@ -65,7 +66,8 @@
 !! @var w_imp
 !!
 !! from a given dft band window, return the corresponding quantum impurity
-!! problem, window -> impurity
+!! problem, window -> impurity. 0 value means that this dft band window
+!! is for non-correlated orbitals.
 !!
      integer, public, save, allocatable :: w_imp(:)
 
