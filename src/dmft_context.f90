@@ -324,7 +324,7 @@
 !!
 !! @mod dmft_projs
 !!
-!! contain the local orbital projections
+!! contain the local orbital projectors
 !!
   module dmft_projs
      use constants, only : dp
@@ -334,7 +334,12 @@
 !!
 !! @var chipsi
 !!
-!! overlap matrix between the local orbitals and the Kohn-Sham basis
+!! overlap matrix between the local orbitals and the Kohn-Sham basis. its
+!! definition is \langle \chi^{I}_{\alpha} | \psi_{b,k,s} \rangle, where
+!! `I` means the index for correlated sites, \alpha means the index for
+!! correlated orbitals. `b`, `k`, `s` are indices for dft bands, k-points,
+!! and spins, respectively. of course, `b` is restricted by band windows,
+!! and depends on k-points.
 !!
      complex(dp), public, save, allocatable :: chipsi(:,:,:,:,:)
 
