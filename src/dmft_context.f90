@@ -346,8 +346,9 @@
 !!
 !! @var psichi
 !!
-!! overlap matrix between the Kohn-Sham basis and the local orbitals
-!! actually, psichi can be obtained by chipsi through conjugate transpose
+!! overlap matrix between the Kohn-Sham basis and the local orbitals. its
+!! definition is \langle \psi_{b,k,s} | \chi^{I}_{\alpha} \rangle.
+!! actually, psichi can be obtained by chipsi through conjugate transpose.
 !!
      complex(dp), public, save, allocatable :: psichi(:,:,:,:,:)
 
