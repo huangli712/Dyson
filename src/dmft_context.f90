@@ -137,7 +137,7 @@
 !!
 !! @mod dmft_window
 !!
-!! specify the band windows of groups of projectors
+!! specify the dft band windows for projectors
 !!
   module dmft_window
      implicit none
@@ -145,7 +145,8 @@
 !!
 !! @var qbnd
 !!
-!! maximum number of bands for all the band windows
+!! maximum number of dft bands for all the band windows. actually, it
+!! should be equal to maxval(nbnd).
 !!
      integer, public, save :: qbnd = -1
 
