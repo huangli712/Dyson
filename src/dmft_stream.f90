@@ -719,10 +719,13 @@
          read(mytmp,*) ! empty line
          read(mytmp,*) ! skip _case
          read(mytmp,*) ! skip scale
+         !
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nsort, "nsort is wrong")
+         call s_assert2(itmp == nsort, 'nsort is wrong')
+         !
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == natom, "natom is wrong")
+         call s_assert2(itmp == natom, 'natom is wrong')
+         !
          read(mytmp,*) ! empty line
 
 ! read sorts
