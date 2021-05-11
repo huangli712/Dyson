@@ -1234,7 +1234,7 @@
      logical  :: exists
 
 ! dummy real variables
-     real(dp) :: rtmp
+     real(dp) :: re, im
 
 ! dummy character variables
      character(len = 5) :: chr1
@@ -1259,20 +1259,20 @@
 ! skip header
          read(mytmp,*)
          read(mytmp,*)
+         read(mytmp,*) ! empty line
 
 ! check nsite
-         read(mytmp,*) ! empty line
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nsite, "nsite is wrong")
+         call s_assert2(itmp == nsite, 'nsite is wrong')
 
 ! check nspin
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nspin, "nspin is wrong")
+         call s_assert2(itmp == nspin, 'nspin is wrong')
 
 ! check ndim
          do i=1,nsite
              read(mytmp,*) chr1, chr2, itmp
-             call s_assert2(itmp == ndim(i_grp(i)), "ndim is wrong")
+             call s_assert2(itmp == ndim(i_grp(i)), 'ndim is wrong')
          enddo ! over i={1,nsite} loop
          read(mytmp,*) ! empty line
 
@@ -1282,8 +1282,8 @@
                  read(mytmp,*) ! empty line
                  do m=1,ndim(i_grp(i))
                      do n=1,ndim(i_grp(i))
-                         read(mytmp,*) rtmp
-                         sigdc(n,m,s,i) = dcmplx(rtmp, 0.0_dp)
+                         read(mytmp,*) re, im
+                         sigdc(n,m,s,i) = dcmplx(re, im)
                      enddo ! over n={1,ndim(i_grp(i))} loop
                  enddo ! over m={1,ndim(i_grp(i))} loop
                  read(mytmp,*) ! empty line
