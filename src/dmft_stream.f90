@@ -554,7 +554,8 @@
 !! @sub dmft_input_window
 !!
 !! read in windows of projectors (see module dmft_window). the data are
-!! used to embed or project the self-energy functions
+!! used to upfold or downfold the self-energy functions and green's
+!! functions.
 !!
   subroutine dmft_input_window()
      use constants, only : mytmp
