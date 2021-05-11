@@ -355,7 +355,7 @@
      character(len = 2) :: chr2
 
 ! read in mappings or connections between quantum impurity problems and
-! groups of projectors if available
+! groups of projectors. this code can not run without file `maps.ir`
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -374,16 +374,15 @@
 ! skip header
          read(mytmp,*)
          read(mytmp,*)
+         read(mytmp,*)
 
 ! check nsite, ngrp, and nwnd
-         read(mytmp,*)
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nsite, "nsite is wrong")
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == ngrp, "ngrp is wrong")
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nwnd, "nwnd is wrong")
-         call s_assert2(ngrp == nwnd, "ngrp is not equal to nwnd")
 
 ! read data: i_grp
          read(mytmp,*)
