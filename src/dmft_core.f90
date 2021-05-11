@@ -6,8 +6,7 @@
 !!!           dmft_try3
 !!!           dmft_try4
 !!!           dmft_try5
-!!!           cal_fermi
-!!!           cal_eimps
+!!!           dmft_try999
 !!!           cal_sigoo
 !!!           cal_sig_l
 !!!           cal_grn_l
@@ -22,6 +21,8 @@
 !!!           cal_sk_so
 !!!           cal_sk_gk
 !!!           cal_gk_gl
+!!!           cal_fermi
+!!!           cal_eimps
 !!!           dichotomy
 !!!           cal_nelect
 !!!           cal_occupy
@@ -57,17 +58,29 @@
 
      DISPATCHER: select case ( task )
 
-! task = 0, search the fermi level
-         case (0)
-             call dmft_try0()
-
-! task = 1, calculate the local green's function
+! task = 1, calculate the hybridization function, for one-shot calculation
          case (1)
              call dmft_try1()
 
-! task = 2, calculate density correction
+! task = 2, calculate density correction, for self-consistent calculation
          case (2)
              call dmft_try2()
+
+! task = 3, search the fermi level
+         case (3)
+             call dmft_try3()
+
+! task = 4, calculate the impurity level
+         case (4)
+             call dmft_try4()
+
+! task = 5, calculate complex eigenvalues
+         case (5)
+             call dmft_try5()
+
+! task = 999, only for test
+         case (999)
+             call dmft_try999()
 
          case default
              call s_print_error('dmft_driver','this feature is not supported')
@@ -222,6 +235,9 @@
 
   subroutine dmft_try5()
   end subroutine dmft_try5
+
+  subroutine dmft_try999()
+  end subroutine dmft_try999
 
 !!========================================================================
 !!>>> driver subroutines: layer 3                                      <<<
