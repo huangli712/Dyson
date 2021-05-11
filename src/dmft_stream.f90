@@ -444,7 +444,8 @@
 !! @sub dmft_input_group
 !!
 !! read in groups of projectors (see module dmft_group). the data can
-!! be used to embed or project the self-energy functions
+!! be used to upfold or downfold the self-energy functions and green's
+!! functions.
 !!
   subroutine dmft_input_group()
      use constants, only : mytmp
