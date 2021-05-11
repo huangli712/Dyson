@@ -127,7 +127,7 @@
 !!
 !! setup dimensional parameters and some real constants for the dynamical
 !! mean-field theory engine. note that these parameters are extracted
-!! from the `params.ir` file
+!! from the `params.ir` file. this code can run with 'params.ir' file
 !!
   subroutine dmft_setup_param()
      use constants, only : dp
@@ -278,6 +278,7 @@
 # endif  /* MPI */
 
 ! reset fermi to zero, because it is calibrated by the adaptor
+! see ZenCore -> plo.jl -> plo_fermi() function for more details.
      fermi = zero
 
      return
