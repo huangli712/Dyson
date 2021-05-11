@@ -1131,11 +1131,11 @@
 ! check group
              read(mytmp,*) ! empty line
              read(mytmp,*) chr1, chr2, itmp
-             call s_assert2(itmp == g, "group is wrong")
+             call s_assert2(itmp == g, 'group is wrong')
 
 ! check nproj
              read(mytmp,*) chr1, chr2, itmp
-             call s_assert2(itmp == ndim(g), "nproj is wrong")
+             call s_assert2(itmp == ndim(g), 'nproj is wrong')
 
 ! check nband
 ! here, `nband` is not the number of bands in the dft calculations. it is
@@ -1143,13 +1143,15 @@
 ! the local orbital projection. for different groups of projectors, the
 ! corresponding `nband` might be different.
              read(mytmp,*) chr1, chr2, itmp
-             call s_assert2(itmp == nbnd(g), "nband is wrong")
+             call s_assert2(itmp == nbnd(g), 'nband is wrong')
 
-! check nkpt and nspin
+! check nkpt
              read(mytmp,*) chr1, chr2, itmp
-             call s_assert2(itmp == nkpt, "nkpt is wrong")
+             call s_assert2(itmp == nkpt, 'nkpt is wrong')
+
+! check nspin
              read(mytmp,*) chr1, chr2, itmp
-             call s_assert2(itmp == nspin, "nspin is wrong")
+             call s_assert2(itmp == nspin, 'nspin is wrong')
              read(mytmp,*) ! empty line
 
 ! parse the data
