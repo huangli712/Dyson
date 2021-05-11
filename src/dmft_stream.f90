@@ -1319,7 +1319,7 @@
 !!
 !! @sub dmft_input_sig_l
 !!
-!! read in bare self-energy functions from quantum impurity solvers.
+!! read in bare self-energy functions from various quantum impurity solvers.
 !! (see module dmft_sigma)
 !!
   subroutine dmft_input_sig_l()
@@ -1383,33 +1383,33 @@
 ! skip header
          read(mytmp,*)
          read(mytmp,*)
+         read(mytmp,*) ! empty line
 
 ! check axis
-         read(mytmp,*) ! empty line
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == axis, "axis is wrong")
+         call s_assert2(itmp == axis, 'axis is wrong')
 
 ! check beta
          read(mytmp,*) chr1, chr2, rtmp
-         call s_assert2(rtmp == beta, "beta is wrong")
+         call s_assert2(rtmp == beta, 'beta is wrong')
 
 ! check nsite
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nsite, "nsite is wrong")
+         call s_assert2(itmp == nsite, 'nsite is wrong')
 
 ! check nmesh
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nmesh, "nmesh is wrong")
+         call s_assert2(itmp == nmesh, 'nmesh is wrong')
 
 ! check nspin
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nspin, "nspin is wrong")
+         call s_assert2(itmp == nspin, 'nspin is wrong')
 
 ! check ndim
          do i=1,nsite
              read(mytmp,*) chr1, chr2, itmp
-             call s_assert2(itmp == ndim(i_grp(i)), "ndim is wrong")
-             call s_assert2(itmp <= qdim, "ndim is wrong")
+             call s_assert2(itmp == ndim(i_grp(i)), 'ndim is wrong')
+             call s_assert2(itmp <= qdim, 'ndim is wrong')
          enddo ! over i={1,nsite} loop
          read(mytmp,*) ! empty line
 
