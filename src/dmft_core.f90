@@ -7,6 +7,8 @@
 !!!           dmft_try4
 !!!           dmft_try5
 !!!           dmft_try999
+!!!           cal_fermi
+!!!           cal_eimps
 !!!           cal_sigoo
 !!!           cal_sig_l
 !!!           cal_grn_l
@@ -21,8 +23,6 @@
 !!!           cal_sk_so
 !!!           cal_sk_gk
 !!!           cal_gk_gl
-!!!           cal_fermi
-!!!           cal_eimps
 !!!           dichotomy
 !!!           cal_nelect
 !!!           cal_occupy
@@ -433,6 +433,24 @@
 
      return
   end subroutine cal_eimps
+
+!!
+!! @sub cal_sigoo
+!!
+  subroutine cal_sigoo()
+     implicit none
+
+     return
+  end subroutine cal_sigoo
+
+!!
+!! @sub cal_sig_l
+!!
+  subroutine cal_sig_l()
+     implicit none
+
+     return
+  end subroutine cal_sig_l
 
 !!
 !! @sub cal_grn_l
