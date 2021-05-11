@@ -924,13 +924,15 @@
 ! skip header
          read(mytmp,*)
          read(mytmp,*)
+         read(mytmp,*) ! empty line
 
 ! check ntet and volt
-         read(mytmp,*) ! empty line
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == ntet, "ntet is wrong")
+         call s_assert2(itmp == ntet, 'ntet is wrong')
+         !
          read(mytmp,*) chr1, chr2, rtmp
-         call s_assert2(rtmp == volt, "volt is wrong")
+         call s_assert2(rtmp == volt, 'volt is wrong')
+         !
          read(mytmp,*) ! empty line
 
 ! read tetrahedron data
