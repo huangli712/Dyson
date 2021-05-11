@@ -1,11 +1,15 @@
 !!!-----------------------------------------------------------------------
 !!! project : jacaranda
 !!! program : dmft_driver
-!!!           dmft_try0
 !!!           dmft_try1
 !!!           dmft_try2
+!!!           dmft_try3
+!!!           dmft_try4
+!!!           dmft_try5
 !!!           cal_fermi
 !!!           cal_eimps
+!!!           cal_sigoo
+!!!           cal_sig_l
 !!!           cal_grn_l
 !!!           cal_wss_l
 !!!           cal_hyb_l
@@ -31,7 +35,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/08/2021 by li huang (last modified)
+!!!           05/11/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -76,38 +80,6 @@
 !!========================================================================
 !!>>> driver subroutines: layer 2                                      <<<
 !!========================================================================
-
-!!
-!! @sub dmft_try0
-!!
-!! to determine the fermi level, the global variable `fermi` may be
-!! updated in this subroutine
-!!
-  subroutine dmft_try0()
-     use constants, only : mystd
-
-     use control, only : cname
-     use control, only : lfermi
-     use control, only : myid, master
-
-     implicit none
-
-! check lfermi
-     call s_assert2(lfermi .eqv. .true., 'lfermi must be true')
-
-! call the computational subroutine to do this job
-     if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
-     endif ! back if ( myid == master ) block
-     !
-     call cal_fermi()
-     !
-     if ( myid == master ) then
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
-
-     return
-  end subroutine dmft_try0
 
 !!
 !! @sub dmft_try1
@@ -212,6 +184,44 @@
 
      return
   end subroutine dmft_try2
+
+!!
+!! @sub dmft_try3
+!!
+!! to determine the fermi level, the global variable `fermi` may be
+!! updated in this subroutine
+!!
+  subroutine dmft_try3()
+     use constants, only : mystd
+
+     use control, only : cname
+     use control, only : lfermi
+     use control, only : myid, master
+
+     implicit none
+
+! check lfermi
+     call s_assert2(lfermi .eqv. .true., 'lfermi must be true')
+
+! call the computational subroutine to do this job
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_fermi()
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+     return
+  end subroutine dmft_try3
+
+  subroutine dmft_try4()
+  end subroutine dmft_try4
+
+  subroutine dmft_try5()
+  end subroutine dmft_try5
 
 !!========================================================================
 !!>>> driver subroutines: layer 3                                      <<<
