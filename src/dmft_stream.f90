@@ -344,6 +344,9 @@
      implicit none
 
 ! local variables
+! loop index
+     integer :: i
+
 ! dummy integer variables
      integer :: itmp
 
