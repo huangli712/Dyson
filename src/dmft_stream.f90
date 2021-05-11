@@ -501,12 +501,12 @@
 ! skip header
          read(mytmp,*)
          read(mytmp,*)
+         read(mytmp,*)
 
 ! check ngrp
-         read(mytmp,*)
          read(mytmp,*) chr1, chr2, itmp
+         call s_assert2(itmp == ngrp, 'ngrp is wrong')
          read(mytmp,*)
-         call s_assert2(itmp == ngrp, "ngrp is wrong")
 
 ! read data
          do i=1,ngrp
@@ -521,7 +521,7 @@
 
 ! evaluate and check qdim
          itmp = maxval(ndim)
-         call s_assert2(itmp == qdim, "ndim is wrong")
+         call s_assert2(itmp == qdim, 'ndim is wrong')
 
 ! close file handler
          close(mytmp)
