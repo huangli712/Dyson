@@ -607,12 +607,12 @@
 ! skip header
          read(mytmp,*)
          read(mytmp,*)
+         read(mytmp,*)
 
 ! check nwnd
-         read(mytmp,*)
          read(mytmp,*) chr1, chr2, itmp
+         call s_assert2(itmp == nwnd, 'nwnd is wrong')
          read(mytmp,*)
-         call s_assert2(itmp == nwnd, "nwnd is wrong")
 
 ! read data
          do i=1,nwnd
@@ -631,7 +631,7 @@
 
 ! evaluate and check qbnd
          itmp = maxval(nbnd)
-         call s_assert2(itmp == qbnd, "nbnd is wrong")
+         call s_assert2(itmp == qbnd, 'nbnd is wrong')
 
 ! close file handler
          close(mytmp)
