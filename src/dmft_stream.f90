@@ -378,11 +378,11 @@
 
 ! check nsite, ngrp, and nwnd
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nsite, "nsite is wrong")
+         call s_assert2(itmp == nsite, 'nsite is wrong')
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == ngrp, "ngrp is wrong")
+         call s_assert2(itmp == ngrp, 'ngrp is wrong')
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nwnd, "nwnd is wrong")
+         call s_assert2(itmp == nwnd, 'nwnd is wrong')
 
 ! read data: i_grp
          read(mytmp,*)
@@ -426,6 +426,16 @@
      call mp_barrier()
 
 # endif  /* MPI */
+
+! additional check for the data
+! note: all of the impurity problems should share the same band window!
+     call s_assert2(nsite <= ngrp, 'nsite must be smaller or equal to ngrp')
+     call s_assert2(nwnd <= ngrp, 'nwnd must be smaller or equal to ngrp')
+     do itmp=1,nsite
+         if ( i_wnd(itmp) /= i_wnd(1) ) then
+             call s_print_error('dmft_input_map', 'please check i_wnd')
+         endif ! back if ( i_wnd(itmp) /= i_wnd(1) ) block
+     enddo ! over itmp={1,nsite} loop
 
      return
   end subroutine dmft_input_map
