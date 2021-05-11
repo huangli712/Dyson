@@ -830,13 +830,15 @@
 ! skip header
          read(mytmp,*)
          read(mytmp,*)
+         read(mytmp,*) ! empty line
 
 ! check nkpt and ndir
-         read(mytmp,*) ! empty line
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nkpt, "nkpt is wrong")
+         call s_assert2(itmp == nkpt, 'nkpt is wrong')
+         !
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == 3, "ndir is wrong")
+         call s_assert2(itmp == 3, 'ndir is wrong')
+         !
          read(mytmp,*) ! empty line
 
 ! read k-points and the corresponding weights
