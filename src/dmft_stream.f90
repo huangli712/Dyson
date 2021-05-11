@@ -1016,18 +1016,21 @@
 ! skip header
          read(mytmp,*)
          read(mytmp,*)
+         read(mytmp,*) ! empty line
 
 ! check nband, nkpt, and nspin
-         read(mytmp,*) ! empty line
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nband, "nband is wrong")
+         call s_assert2(itmp == nband, 'nband is wrong')
+         !
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nkpt, "nkpt is wrong")
+         call s_assert2(itmp == nkpt, 'nkpt is wrong')
+         !
          read(mytmp,*) chr1, chr2, itmp
-         call s_assert2(itmp == nspin, "nspin is wrong")
+         call s_assert2(itmp == nspin, 'nspin is wrong')
+         !
          read(mytmp,*) ! empty line
 
-! read band structure data
+! read eigenvalues and occupations data
          do s=1,nspin
              do k=1,nkpt
                  do b=1,nband
