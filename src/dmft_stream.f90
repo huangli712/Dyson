@@ -288,8 +288,8 @@
 !! @sub dmft_setup_system
 !!
 !! setup correlated electron problem, Kohn-Sham dataset, and self-energy
-!! functions for the dynamical mean-field theory engine. this is an entry
-!! for the other individual subroutines
+!! functions for the dynamical mean-field theory engine. this subroutine
+!! is only a dispatcher for the other individual subroutines
 !!
   subroutine dmft_setup_system()
      use control, only : ltetra
@@ -304,11 +304,11 @@
 ! setup Kohn-Sham dataset
      call dmft_input_lattice()
      call dmft_input_kmesh()
-     if (ltetra .eqv. .true.) then
-         call dmft_input_tetra()
-     endif
      call dmft_input_eigen()
      call dmft_input_projs()
+     if ( ltetra .eqv. .true. ) then
+         call dmft_input_tetra()
+     endif ! back if ( ltetra .eqv. .true. ) block
 
 ! setup impurity self-energy functions and related double counting terms
      call dmft_input_sigdc()
@@ -326,7 +326,7 @@
 !!
 !! read in connections / mappings between quantum impurity problems and
 !! groups of projectors (see module dmft_map). the data can be used to
-!! embed or project the self-energy functions
+!! upfold or downfold the self-energy functions or green's functions.
 !!
   subroutine dmft_input_map()
      use constants, only : mytmp
