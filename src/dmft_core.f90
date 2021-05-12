@@ -778,8 +778,9 @@
 !!
 !! @sub cal_sl_sk
 !!
-!! try to substract the double-counting term from the local self-energy
-!! function, and then map it from local basis to Kohn-Sham basis
+!! try to upfold the self-energy function from local basis to Kohn-Sham
+!! basis. we assume that the double counting terms have been substracted
+!! from the self-energy functions.
 !!
   subroutine cal_sl_sk(cdim, cbnd, k, s, t, Sk)
      use constants, only : dp
@@ -787,7 +788,7 @@
 
      use control, only : nmesh
 
-     use context, only : sigdc, sig_l
+     use context, only : sig_l
 
      implicit none
 
@@ -828,10 +829,10 @@
 
 ! here we use Sl to save sig_l - sigdc
      do m=1,nmesh
-         Sl(:,:,m) = sig_l(1:cdim,1:cdim,m,s,t) - sigdc(1:cdim,1:cdim,s,t)
+         Sl(:,:,m) = sig_l(1:cdim,1:cdim,m,s,t)
      enddo ! over m={1,nmesh} loop
 
-! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
+! mapping: Sl (local basis) -> Sk (Kohn-Sham basis)
      call map_chi_psi(cdim, cbnd, nmesh, k, s, t, Sl, Sk)
 
 ! deallocate memory
