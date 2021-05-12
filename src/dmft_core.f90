@@ -826,7 +826,8 @@
          call s_print_error('cal_sl_sk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! here we use Sl to save sig_l - sigdc
+! here we use Sl to save sig_l - sigdc. sigdc has been substracted from
+! sig_l beforehand
      do m=1,nmesh
          Sl(:,:,m) = sig_l(1:cdim,1:cdim,m,s,t)
      enddo ! over m={1,nmesh} loop
@@ -1720,7 +1721,7 @@
              do t=1,nsite ! add contributions from each impurity sites
                  Xk = czero
                  cdim = ndim(t)
-                 call cal_sl_sk(cdim, cbnd, k, s, t, Sk)
+                 call cal_sl_sk(cdim, cbnd, k, s, t, Xk)
                  Sk = Sk + Xk
              enddo ! over t={1,nsite} loop
              !
@@ -1731,7 +1732,12 @@
              eigs(1:cbnd,:,k,s) = Ek
 
 ! construct H(k) + \Sigma(\infty) and diagonalize it
-             call cal_sl_so(cdim, cbnd, k, s, t, So)
+             So = czero
+             !
+             do t=1,nsite ! add contributions from each impurity sites
+                 Xo = czero
+                 call cal_sl_so(cdim, cbnd, k, s, t, So)
+             enddo ! over t={1,nsite} loop
              !
              call cal_so_ho(cbnd, bs, be, k, s, So, Ho)
              !
