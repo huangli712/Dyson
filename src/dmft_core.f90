@@ -968,7 +968,7 @@
 
      use control, only : nmesh
 
-     use context, only : sigdc, sig_l
+     use context, only : sigdc, sigoo
 
      implicit none
 
@@ -991,56 +991,27 @@
 ! self-energy function at \omega = \infty in Kohn-Sham basis
      complex(dp), intent(out) :: So(cbnd,cbnd)
 
-! local parameters
-! how many frequency points are included to calculate the asymptotic
-! values of self-energy function
-     integer, parameter :: mcut = 16
-
 ! local variables
-! loop index for frequency mesh
-     integer :: m
-
 ! status flag
      integer :: istat
 
-! dummy array: for local self-energy function
-     complex(dp), allocatable :: Sl(:,:,:)
-
-! dummy array: for lattice self-energy function
-     complex(dp), allocatable :: Sk(:,:,:)
+! dummy array: for local self-energy function (substracted by sigdc)
+     complex(dp), allocatable :: Sl(:,:)
 
 ! allocate memory
-! the last elements of Sl and Sk are used to store the averaged values
-     allocate(Sl(cdim,cdim,mcut+1), stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('cal_sl_so','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-     !
-     allocate(Sk(cbnd,cbnd,mcut+1), stat = istat)
+     allocate(Sl(cdim,cdim), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_sl_so','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! here we use Sl to save sig_l - sigdc
-     do m=1,mcut
-         Sl(:,:,m) = sig_l(1:cdim,1:cdim,nmesh+1-m,s,t) - sigdc(1:cdim,1:cdim,s,t)
-     enddo ! over m={1,mcut} loop
-
-! then the averaged values are stored at Sl(:,:,mcut+1)
-     Sl(:,:,mcut+1) = czero
-     do m=1,mcut
-         Sl(:,:,mcut+1) = Sl(:,:,mcut+1) + Sl(:,:,m) / real(mcut)
-     enddo ! over m={1,mcut} loop
+! here we use Sl to save sigoo - sigdc
+     Sl = sigoo(1:cdim,1:cdim,s,t) - sigdc(1:cdim,1:cdim,s,t)
 
 ! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
-     call map_chi_psi(cdim, cbnd, mcut + 1, k, s, t, Sl, Sk)
-
-! Sk(:,:,mcut + 1) is what we want, copy it to `So`
-     So = Sk(:,:,mcut+1)
+     call one_chi_psi(cdim, cbnd, k, s, t, Sl, So)
 
 ! deallocate memory
      if ( allocated(Sl) ) deallocate(Sl)
-     if ( allocated(Sk) ) deallocate(Sk)
 
      return
   end subroutine cal_sl_so
