@@ -1656,6 +1656,7 @@
 
 ! self-energy functions, \Sigma(i\omega_n)
      complex(dp), allocatable :: Sk(:,:,:)
+     complex(dp), allocatable :: Xk(:,:,:)
 
 ! H(k) + \Sigma(i\omega_n)
      complex(dp), allocatable :: Hk(:,:,:)
@@ -1665,18 +1666,13 @@
 
 ! self-energy functions, \Sigma(\infty)
      complex(dp), allocatable :: So(:,:)
+     complex(dp), allocatable :: Xo(:,:)
 
 ! H(k) + \Sigma(\infty)
      complex(dp), allocatable :: Ho(:,:)
 
 ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), allocatable :: Eo(:)
-
-! well, here the number of impurity sites is restricted to be one
-! later we will remove this bug
-     call s_assert2(nsite == 1, 'nsite should be 1')
-     t = 1
-     cdim = ndim(t)
 
 ! initialization
      eigs = czero
