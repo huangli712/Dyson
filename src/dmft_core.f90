@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/11/2021 by li huang (last modified)
+!!!           05/12/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -256,7 +256,36 @@
 !! function works for Matsubara self-energy functions only. 
 !!
   subroutine cal_sigoo()
+     use constants, only : dp
+
+     use control, only : nspin
+     use control, only : nsite
+     use control, only : nmesh
+
+     use context, only : qdim
+     use context, only : sigoo, sig_l
+
      implicit none
+
+! local parameters
+! how many frequency points are included to calculate the asymptotic
+! values of Matsubara self-energy function
+     integer, parameter :: mcut = 16
+
+! local variables
+! loop index for frequency mesh
+     integer :: m
+
+! loop index for spins
+     integer :: s
+
+! loop index for impurity sites
+     integer :: t
+
+! status flag
+     integer :: istat
+
+! dummy array for the Matsubara self-energy functions
 
      return
   end subroutine cal_sigoo
