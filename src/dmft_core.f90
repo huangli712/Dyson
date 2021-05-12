@@ -227,6 +227,9 @@
   subroutine dmft_try4()
      use constants, only : mystd
 
+     use control, only : cname
+     use control, only : myid, master
+
      implicit none
 
 ! call the computational subroutine to compute the local impurity levels
