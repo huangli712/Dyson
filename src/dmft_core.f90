@@ -236,7 +236,13 @@
   subroutine dmft_try5()
   end subroutine dmft_try5
 
+!!
+!! @sub dmft_try999
+!!
   subroutine dmft_try999()
+     implicit none
+
+     return
   end subroutine dmft_try999
 
 !!========================================================================
