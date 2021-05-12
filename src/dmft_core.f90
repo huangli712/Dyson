@@ -163,9 +163,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Hybri'
      endif ! back if ( myid == master ) block
      !
-     do t=1,nsite
-         call cal_hyb_l(t)
-     enddo ! over t={1,nsite} loop
+     call cal_hyb_l()
      !
      if ( myid == master ) then
          write(mystd,*)
