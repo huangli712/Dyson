@@ -2078,6 +2078,10 @@
 
 ! allocate memory
      allocate(Cp(cdim,cbnd), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('one_psi_chi','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
      allocate(Pc(cbnd,cdim), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('one_psi_chi','can not allocate enough memory')
