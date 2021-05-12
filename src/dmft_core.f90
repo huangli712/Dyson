@@ -253,7 +253,7 @@
 !! @sub cal_sigoo
 !!
 !! try to calculate the asymptotic values for self-energy functions. this
-!! function works for Matsubara self-energy functions only. 
+!! function works for Matsubara self-energy functions (bare) only. 
 !!
   subroutine cal_sigoo()
      use constants, only : dp
@@ -290,7 +290,11 @@
      complex(dp), allocatable :: Sm(:,:)
 
 ! allocate memory
-     allocate(Sm(qdim,qdim))
+     allocate(Sm(qdim,qdim), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_sigoo','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
 ! deallocate memory
      if ( allocated(Sm) ) deallocate(Sm)
 
