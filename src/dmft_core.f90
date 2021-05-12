@@ -1718,7 +1718,7 @@
 ! construct H(k) + \Sigma(i\omega_n) and diagonalize it
              Sk = czero
              !
-             do t=1,nsite ! add contributions from each impurity sites
+             do t=1,nsite ! add contributions from all impurity sites
                  Xk = czero
                  cdim = ndim(t)
                  call cal_sl_sk(cdim, cbnd, k, s, t, Xk)
@@ -1734,9 +1734,11 @@
 ! construct H(k) + \Sigma(\infty) and diagonalize it
              So = czero
              !
-             do t=1,nsite ! add contributions from each impurity sites
+             do t=1,nsite ! add contributions from all impurity sites
                  Xo = czero
-                 call cal_sl_so(cdim, cbnd, k, s, t, So)
+                 cdim = ndim(t)
+                 call cal_sl_so(cdim, cbnd, k, s, t, Xo)
+                 So = So + Xo
              enddo ! over t={1,nsite} loop
              !
              call cal_so_ho(cbnd, bs, be, k, s, So, Ho)
@@ -1750,7 +1752,7 @@
              if ( allocated(Xo) ) deallocate(Xo)
              if ( allocated(Ho) ) deallocate(Ho)
              if ( allocated(Eo) ) deallocate(Eo)
-
+             !
              if ( allocated(Sk) ) deallocate(Sk)
              if ( allocated(Xk) ) deallocate(Xk)
              if ( allocated(Hk) ) deallocate(Hk)
