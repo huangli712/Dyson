@@ -104,7 +104,7 @@
 !!
 !! to calculate the local green's function, generate key inputs for the
 !! quantum impurity solvers. the fermi level may be updated, depending
-!! on the configuration parameter 
+!! on the configuration parameter.
 !!
   subroutine dmft_try1()
      use constants, only : mystd
@@ -141,9 +141,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Level'
      endif ! back if ( myid == master ) block
      !
-     do t=1,nsite
-         call cal_eimps(t)
-     enddo ! over t={1,nsite} loop
+     call cal_eimps()
      !
      if ( myid == master ) then
          write(mystd,*)
