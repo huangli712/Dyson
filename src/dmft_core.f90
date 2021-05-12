@@ -224,6 +224,11 @@
      return
   end subroutine dmft_try3
 
+!!
+!! @sub dmft_try4
+!!
+!! try to determine the local impurity levels.
+!!
   subroutine dmft_try4()
      use constants, only : mystd
 
@@ -232,7 +237,7 @@
 
      implicit none
 
-! call the computational subroutine to compute the local impurity levels
+! call the computational subroutine to do this job
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Level'
      endif ! back if ( myid == master ) block
