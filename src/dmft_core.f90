@@ -1474,6 +1474,7 @@
      use control, only : nmesh
      use control, only : beta
 
+     use context, only : i_wnd
      use context, only : qbnd
      use context, only : kwin
      use context, only : fmesh
