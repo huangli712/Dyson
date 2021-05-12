@@ -257,6 +257,7 @@
 !!
   subroutine cal_sigoo()
      use constants, only : dp
+     use constants, only : czero
 
      use control, only : nspin
      use control, only : nsite
@@ -286,6 +287,12 @@
      integer :: istat
 
 ! dummy array for the Matsubara self-energy functions
+     complex(dp), allocatable :: Sm(:,:)
+
+! allocate memory
+     allocate(Sm(qdim,qdim))
+! deallocate memory
+     if ( allocated(Sm) ) deallocate(Sm)
 
      return
   end subroutine cal_sigoo
