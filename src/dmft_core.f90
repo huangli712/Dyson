@@ -1088,7 +1088,9 @@
 !!
 !! @sub cal_ho_eo
 !!
-!! try to diagonalize H(k) + \Sigma(\infty), get all the eigenvalues
+!! try to diagonalize the effective hamiltonian: H(k) + \Sigma(\infty),
+!! get all the complex eigenvalues. here, we just assumed the effective
+!! hamiltonian is a general complex matrix.
 !!
   subroutine cal_ho_eo(cbnd, Ho, Eo)
      use constants, only : dp
