@@ -35,7 +35,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/12/2021 by li huang (last modified)
+!!!           05/13/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -54,6 +54,12 @@
      use control, only : task
 
      implicit none
+
+! calculate sig_l -> sigoo
+     call cal_sigoo()
+
+! calculate sig_l -> sig_l - sigdc
+     call cal_sig_l()
 
      DISPATCHER: select case ( task )
 
