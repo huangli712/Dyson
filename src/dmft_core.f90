@@ -7,13 +7,13 @@
 !!!           dmft_try4
 !!!           dmft_try5
 !!!           dmft_try999
-!!!           cal_fermi
-!!!           cal_eimps
 !!!           cal_sigoo
 !!!           cal_sig_l
 !!!           cal_grn_l
 !!!           cal_wss_l
 !!!           cal_hyb_l
+!!!           cal_fermi
+!!!           cal_eimps
 !!!           cal_sl_sk
 !!!           cal_sk_hk
 !!!           cal_hk_ek
@@ -242,197 +242,6 @@
 !!========================================================================
 !!>>> driver subroutines: layer 3                                      <<<
 !!========================================================================
-
-!!
-!! @sub cal_fermi
-!!
-!! try to determine the fermi level
-!!
-  subroutine cal_fermi()
-     use constants, only : dp, mystd
-     use constants, only : czero
-
-     use control, only : nkpt, nspin
-     use control, only : nmesh
-     use control, only : myid, master
-
-     use context, only : qbnd
-
-     implicit none
-
-! local variables
-! status flag
-     integer  :: istat
-
-! desired charge density
-     real(dp) :: ndens
-
-! dummy arrays, used to save the eigenvalues of H + \Sigma
-     complex(dp), allocatable :: eigs(:,:,:,:)
-     complex(dp), allocatable :: einf(:,:,:)
-
-! allocate memory
-     allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('cal_fermi','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-     !
-     allocate(einf(qbnd,nkpt,nspin),       stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('cal_fermi','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-! calculate the nominal charge density according to the dft eigenvalues
-     if ( myid == master ) then
-         write(mystd,'(4X,a)') 'calculating desired charge density'
-     endif ! back if ( myid == master ) block
-     !
-     call cal_nelect(ndens)
-
-! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
-     if ( myid == master ) then
-         write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
-     endif ! back if ( myid == master ) block
-     !
-     call cal_eigsys(eigs, einf)
-
-! search the fermi level using bisection algorithm
-! the global variable `fermi` will be updated within `dichotomy()`
-     if ( myid == master ) then
-         write(mystd,'(4X,a)') 'searching fermi level'
-     endif ! back if ( myid == master ) block
-     !
-     call dichotomy(ndens, eigs, einf)
-
-! deallocate memory
-     if ( allocated(eigs) ) deallocate(eigs)
-     if ( allocated(einf) ) deallocate(einf)
-
-     return
-  end subroutine cal_fermi
-
-!!
-!! @sub cal_eimps
-!!
-!! try to calculate local energy levels for given impurity site
-!!
-  subroutine cal_eimps(t)
-     use constants, only : dp, mystd
-     use constants, only : czero
-
-     use control, only : nkpt, nspin
-     use control, only : myid, master
-
-     use context, only : i_wnd
-     use context, only : ndim
-     use context, only : kwin
-     use context, only : weight
-     use context, only : enk
-     use context, only : eimps
-
-     implicit none
-
-! external arguments
-! index for impurity sites
-     integer, intent(in) :: t
-
-! local variables
-! loop index for spin
-     integer :: s
-
-! loop index for k-points
-     integer :: k
-
-! number of dft bands for given k-point and spin
-     integer :: cbnd
-
-! number of correlated orbitals for given impurity site
-     integer :: cdim
-
-! band window: start index and end index for bands
-     integer :: bs, be
-
-! status flag
-     integer :: istat
-
-! dummy arrays, used to build effective hamiltonian
-     complex(dp), allocatable :: Em(:)
-     complex(dp), allocatable :: Hm(:,:)
-
-     complex(dp), allocatable :: Eimp(:,:)
-
-! init cbnd and cdim
-! cbnd will be k-dependent. it will be updated later
-     cbnd = 0
-     cdim = ndim(t)
-
-! allocate memory
-     allocate(Eimp(cdim,cdim), stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('cal_eimps','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-! reset eimps
-     eimps(:,:,:,t) = czero
-
-! print some useful information
-     if ( myid == master ) then
-         write(mystd,'(4X,a,i4)') 'calculate eimps for site:', t
-         write(mystd,'(4X,a)')  'add contributions from ...'
-     endif ! back if ( myid == master ) block
-
-     SPIN_LOOP: do s=1,nspin
-         KPNT_LOOP: do k=1,nkpt
-
-! evaluate band window for the current k-point and spin
-! i_wnd(t) returns the corresponding band window for given impurity site t
-             bs = kwin(k,s,1,i_wnd(t))
-             be = kwin(k,s,2,i_wnd(t))
-
-! determine cbnd
-             cbnd = be - bs + 1
-
-! provide some useful information
-             if ( myid == master ) then
-                 write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
-                 write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
-                 write(mystd,'(2X,a,3i3)') 'window: ', bs, be, cbnd
-             endif ! back if ( myid == master ) block
-
-! allocate memory
-             allocate(Em(cbnd),      stat = istat)
-             allocate(Hm(cbnd,cbnd), stat = istat)
-             if ( istat /= 0 ) then
-                 call s_print_error('cal_eimps','can not allocate enough memory')
-             endif ! back if ( istat /= 0 ) block
-
-! evaluate Em, which is just some dft eigenvalues
-             Em = enk(bs:be,k,s)
-
-! convert `Em` to diagonal matrix `Hm`
-             call s_diag_z(cbnd, Em, Hm)
-
-! project hamiltonian to local basis
-             call one_psi_chi(cbnd, cdim, k, s, t, Hm, Eimp)
-
-! save the final results
-             eimps(1:cdim,1:cdim,s,t) = eimps(1:cdim,1:cdim,s,t) + Eimp * weight(k)
-
-! deallocate memory
-             if ( allocated(Em) ) deallocate(Em)
-             if ( allocated(Hm) ) deallocate(Hm)
-
-         enddo KPNT_LOOP ! over k={1,nkpt} loop
-     enddo SPIN_LOOP ! over s={1,nspin} loop
-
-! renormalize impurity levels
-     eimps(:,:,:,t) = eimps(:,:,:,t) / float(nkpt)
-
-! deallocate memory
-     if ( allocated(Eimp) ) deallocate(Eimp)
-
-     return
-  end subroutine cal_eimps
 
 !!
 !! @sub cal_sigoo
@@ -674,6 +483,197 @@
 
      return
   end subroutine cal_hyb_l
+
+!!
+!! @sub cal_fermi
+!!
+!! try to determine the fermi level
+!!
+  subroutine cal_fermi()
+     use constants, only : dp, mystd
+     use constants, only : czero
+
+     use control, only : nkpt, nspin
+     use control, only : nmesh
+     use control, only : myid, master
+
+     use context, only : qbnd
+
+     implicit none
+
+! local variables
+! status flag
+     integer  :: istat
+
+! desired charge density
+     real(dp) :: ndens
+
+! dummy arrays, used to save the eigenvalues of H + \Sigma
+     complex(dp), allocatable :: eigs(:,:,:,:)
+     complex(dp), allocatable :: einf(:,:,:)
+
+! allocate memory
+     allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_fermi','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
+     allocate(einf(qbnd,nkpt,nspin),       stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_fermi','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! calculate the nominal charge density according to the dft eigenvalues
+     if ( myid == master ) then
+         write(mystd,'(4X,a)') 'calculating desired charge density'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_nelect(ndens)
+
+! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
+     if ( myid == master ) then
+         write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_eigsys(eigs, einf)
+
+! search the fermi level using bisection algorithm
+! the global variable `fermi` will be updated within `dichotomy()`
+     if ( myid == master ) then
+         write(mystd,'(4X,a)') 'searching fermi level'
+     endif ! back if ( myid == master ) block
+     !
+     call dichotomy(ndens, eigs, einf)
+
+! deallocate memory
+     if ( allocated(eigs) ) deallocate(eigs)
+     if ( allocated(einf) ) deallocate(einf)
+
+     return
+  end subroutine cal_fermi
+
+!!
+!! @sub cal_eimps
+!!
+!! try to calculate local energy levels for given impurity site
+!!
+  subroutine cal_eimps(t)
+     use constants, only : dp, mystd
+     use constants, only : czero
+
+     use control, only : nkpt, nspin
+     use control, only : myid, master
+
+     use context, only : i_wnd
+     use context, only : ndim
+     use context, only : kwin
+     use context, only : weight
+     use context, only : enk
+     use context, only : eimps
+
+     implicit none
+
+! external arguments
+! index for impurity sites
+     integer, intent(in) :: t
+
+! local variables
+! loop index for spin
+     integer :: s
+
+! loop index for k-points
+     integer :: k
+
+! number of dft bands for given k-point and spin
+     integer :: cbnd
+
+! number of correlated orbitals for given impurity site
+     integer :: cdim
+
+! band window: start index and end index for bands
+     integer :: bs, be
+
+! status flag
+     integer :: istat
+
+! dummy arrays, used to build effective hamiltonian
+     complex(dp), allocatable :: Em(:)
+     complex(dp), allocatable :: Hm(:,:)
+
+     complex(dp), allocatable :: Eimp(:,:)
+
+! init cbnd and cdim
+! cbnd will be k-dependent. it will be updated later
+     cbnd = 0
+     cdim = ndim(t)
+
+! allocate memory
+     allocate(Eimp(cdim,cdim), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_eimps','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! reset eimps
+     eimps(:,:,:,t) = czero
+
+! print some useful information
+     if ( myid == master ) then
+         write(mystd,'(4X,a,i4)') 'calculate eimps for site:', t
+         write(mystd,'(4X,a)')  'add contributions from ...'
+     endif ! back if ( myid == master ) block
+
+     SPIN_LOOP: do s=1,nspin
+         KPNT_LOOP: do k=1,nkpt
+
+! evaluate band window for the current k-point and spin
+! i_wnd(t) returns the corresponding band window for given impurity site t
+             bs = kwin(k,s,1,i_wnd(t))
+             be = kwin(k,s,2,i_wnd(t))
+
+! determine cbnd
+             cbnd = be - bs + 1
+
+! provide some useful information
+             if ( myid == master ) then
+                 write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
+                 write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
+                 write(mystd,'(2X,a,3i3)') 'window: ', bs, be, cbnd
+             endif ! back if ( myid == master ) block
+
+! allocate memory
+             allocate(Em(cbnd),      stat = istat)
+             allocate(Hm(cbnd,cbnd), stat = istat)
+             if ( istat /= 0 ) then
+                 call s_print_error('cal_eimps','can not allocate enough memory')
+             endif ! back if ( istat /= 0 ) block
+
+! evaluate Em, which is just some dft eigenvalues
+             Em = enk(bs:be,k,s)
+
+! convert `Em` to diagonal matrix `Hm`
+             call s_diag_z(cbnd, Em, Hm)
+
+! project hamiltonian to local basis
+             call one_psi_chi(cbnd, cdim, k, s, t, Hm, Eimp)
+
+! save the final results
+             eimps(1:cdim,1:cdim,s,t) = eimps(1:cdim,1:cdim,s,t) + Eimp * weight(k)
+
+! deallocate memory
+             if ( allocated(Em) ) deallocate(Em)
+             if ( allocated(Hm) ) deallocate(Hm)
+
+         enddo KPNT_LOOP ! over k={1,nkpt} loop
+     enddo SPIN_LOOP ! over s={1,nspin} loop
+
+! renormalize impurity levels
+     eimps(:,:,:,t) = eimps(:,:,:,t) / float(nkpt)
+
+! deallocate memory
+     if ( allocated(Eimp) ) deallocate(Eimp)
+
+     return
+  end subroutine cal_eimps
 
 !!========================================================================
 !!>>> service subroutines: set 1                                       <<<
