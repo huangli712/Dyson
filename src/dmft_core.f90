@@ -1463,7 +1463,7 @@
 !!
 !! @sub cal_occupy
 !!
-!! for given fermi level, try to calculate the corresponding occupations
+!! for given fermi level, try to calculate the corresponding occupations.
 !!
   subroutine cal_occupy(fermi, val, eigs, einf)
      use constants, only : dp
@@ -1540,13 +1540,17 @@
      endif ! back if ( istat /= 0 ) block
 
 ! calculate local green's function
-! here, the asymptotic part is substracted
      gloc = czero
      do s=1,nspin
          do k=1,nkpt
-             bs = kwin(k,s,1,1)
-             be = kwin(k,s,2,1)
+
+! determine the band window
+! see remarks in cal_nelect()
+             bs = kwin(k,s,1,i_wnd(1))
+             be = kwin(k,s,2,i_wnd(1))
              cbnd = be - bs + 1
+
+! here, the asymptotic part is substracted
              do m=1,nmesh
                  caux = czi * fmesh(m) + fermi
                  do b=1,cbnd
@@ -1554,6 +1558,7 @@
                      gloc(b,m,s) = gloc(b,m,s) - one / ( caux - einf(b,k,s) )
                  enddo ! over b={1,cbnd} loop
              enddo ! over m={1,nmesh} loop
+
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
 
@@ -1567,8 +1572,9 @@
 ! consider the contribution from asymptotic part
      do s=1,nspin
          do k=1,nkpt
-             bs = kwin(k,s,1,1)
-             be = kwin(k,s,2,1)
+! see remarks in cal_nelect()
+             bs = kwin(k,s,1,i_wnd(1))
+             be = kwin(k,s,2,i_wnd(1))
              cbnd = be - bs + 1
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
@@ -1576,6 +1582,11 @@
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
+
+! actually, we should consider the correction due to limit frequency point
+! here. later we will implement it.
+!
+! TO_BE_DONE
 
 ! sum up the density matrix
      val = real( sum(zocc) )
