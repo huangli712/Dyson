@@ -1715,7 +1715,14 @@
              endif ! back if ( istat /= 0 ) block
 
 ! construct H(k) + \Sigma(i\omega_n) and diagonalize it
-             call cal_sl_sk(cdim, cbnd, k, s, t, Sk)
+             Sk = czero
+             !
+             do t=1,nsite ! add contributions from each impurity sites
+                 Xk = czero
+                 cdim = ndim(t)
+                 call cal_sl_sk(cdim, cbnd, k, s, t, Sk)
+                 Sk = Sk + Xk
+             enddo ! over t={1,nsite} loop
              !
              call cal_sk_hk(cbnd, bs, be, k, s, Sk, Hk)
              !
