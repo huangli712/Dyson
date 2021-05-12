@@ -225,6 +225,8 @@
   end subroutine dmft_try3
 
   subroutine dmft_try4()
+     use constants, only : mystd
+
      implicit none
 
 ! call the computational subroutine to compute the local impurity levels
