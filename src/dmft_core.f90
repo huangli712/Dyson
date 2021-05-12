@@ -919,7 +919,9 @@
 !!
 !! @sub cal_hk_ek
 !!
-!! try to diagonalize H(k) + \Sigma(i\omega_n), get all the eigenvalues
+!! try to diagonalize the effective hamiltonian: H(k) + \Sigma(i\omega_n),
+!! get all the complex eigenvalues. here, we just assumed the effective
+!! hamiltonian is a general complex matrix.
 !!
   subroutine cal_hk_ek(cbnd, Hk, Ek)
      use constants, only : dp
