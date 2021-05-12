@@ -1214,7 +1214,7 @@
 !! @sub cal_gk_gl
 !!
 !! try to calculate local green's function from lattice green's function
-!! via downfolding method
+!! via downfolding procedure.
 !!
   subroutine cal_gk_gl(cbnd, cdim, k, s, t, Gk, Gl)
      use constants, only : dp
@@ -1303,9 +1303,10 @@
      real(dp) :: sign
 
 ! initialization, determine mu1, mu2, occ1, occ2, and sign
-! if sign < 0, it means occ1 < desired, we should push mu2 to higher
-! energy. if sign > 0, it means occ1 > desired. then mu1 will be
-! the right boundary, and we should push mu2 to lower energy
+!
+! (1) if sign < 0, it means occ1 < desired, we should push mu2 to higher
+! energy. (2) if sign > 0, it means occ1 > desired. then mu1 will be the
+! right boundary, and we should push mu2 to lower energy
      mu1 = fermi
      call cal_occupy(mu1, occ1, eigs, einf)
      !
@@ -1352,7 +1353,7 @@
      else
          mu3 = mu2
          occ3 = occ2
-     endif
+     endif ! back if block
      !
      do while ( loop <= max_loops .and. abs( occ3 - desired ) > mc )
          loop = loop + 1
