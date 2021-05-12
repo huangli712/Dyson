@@ -295,6 +295,16 @@
          call s_print_error('cal_sigoo','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     sigoo = czero
+     do t=1,nsite
+         do s=1,nspin
+             Sm = czero
+             do m=1,mcut
+                 Sm = Sm + sig_l(:,:,nmesh + 1 - m,s,t)
+             enddo ! over m={1,mcut} loop
+         enddo ! over s={1,nspin} loop
+     enddo ! over t={1,nsite} loop
+
 ! deallocate memory
      if ( allocated(Sm) ) deallocate(Sm)
 
