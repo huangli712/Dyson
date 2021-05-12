@@ -844,7 +844,9 @@
 !!
 !! @sub cal_sk_hk
 !!
-!! try to build H(k) + \Sigma(i\omega_n)
+!! try to build H(k) + \Sigma(i\omega_n). here, \Sigma should contain
+!! contributions from all impurity sites. so, only when nsite = 1, we
+!! can use the output of cal_sl_sk() as the input of this subroutine.
 !!
   subroutine cal_sk_hk(cbnd, bs, be, k, s, Sk, Hk)
      use constants, only : dp
@@ -871,7 +873,7 @@
 ! self-energy function at Kohn-Sham basis
      complex(dp), intent(in)  :: Sk(cbnd,cbnd,nmesh)
 
-! lattice green's function at given k-point and spin
+! frequency-dependent effective hamiltonian at given k-point and spin
      complex(dp), intent(out) :: Hk(cbnd,cbnd,nmesh)
 
 ! local variables
