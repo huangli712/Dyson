@@ -252,6 +252,9 @@
 !!
 !! @sub cal_sigoo
 !!
+!! try to calculate the asymptotic values for self-energy functions. this
+!! function works for Matsubara self-energy functions only. 
+!!
   subroutine cal_sigoo()
      implicit none
 
