@@ -958,9 +958,9 @@
 !!
 !! @sub cal_sl_so
 !!
-!! try to substract the double-counting term from the local self-energy
-!! function. and then evaluate its asymptotic values at \omega = \infty.
-!! finally, map it from local basis to Kohn-Sham basis
+!! try to substract the double-counting term from the asymptotic values
+!! of bare self-energy functions (i.e `sigoo`). and then upfolding them
+!! from local basis to Kohn-Sham basis.
 !!
   subroutine cal_sl_so(cdim, cbnd, k, s, t, So)
      use constants, only : dp
