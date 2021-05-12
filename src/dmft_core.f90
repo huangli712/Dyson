@@ -20,7 +20,6 @@
 !!!           cal_sl_so
 !!!           cal_so_ho
 !!!           cal_ho_eo
-!!!           cal_sk_so
 !!!           cal_sk_gk
 !!!           cal_gk_gl
 !!!           dichotomy
@@ -1111,51 +1110,6 @@
 
      return
   end subroutine cal_ho_eo
-
-!!
-!! @sub cal_sk_so
-!!
-!! try to evaluate \Sigma(i\omega_n \to \infty). it's function is similar
-!! to `cal_sl_so()`
-!!
-  subroutine cal_sk_so(cbnd, Sk, So)
-     use constants, only : dp
-     use constants, only : czero
-
-     use control, only : nmesh
-
-     implicit none
-
-! external arguments
-! number of dft bands for given k-point and spin
-     integer, intent(in) :: cbnd
-
-! self-energy function at Kohn-Sham basis
-     complex(dp), intent(in)  :: Sk(cbnd,cbnd,nmesh)
-
-! asymptotic values of self-energy function at Kohn-Sham basis
-     complex(dp), intent(out) :: So(cbnd,cbnd)
-
-! local parameters
-! how many frequency points are included to calculate the asymptotic
-! values of self-energy function
-     integer, parameter :: mcut = 16
-
-! local variables
-! loop index for frequency mesh
-     integer :: m
-
-! count the final `mcut` frequency points, and calculate the averaged value
-     So = czero
-     !
-     do m=1,mcut
-         So = So + Sk(:,:,nmesh + 1 - m)
-     enddo ! over m={1,mcut} loop
-     !
-     So = So / real(mcut)
-
-     return
-  end subroutine cal_sk_so
 
 !!========================================================================
 !!>>> service subroutines: set 3                                       <<<
