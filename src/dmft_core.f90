@@ -1683,8 +1683,9 @@
 
 ! evaluate band window for the current k-point and spin
 ! i_wnd(t) returns the corresponding band window for given impurity site t
-             bs = kwin(k,s,1,i_wnd(t))
-             be = kwin(k,s,2,i_wnd(t))
+! see remarks in cal_nelect() subroutine
+             bs = kwin(k,s,1,i_wnd(1))
+             be = kwin(k,s,2,i_wnd(1))
 
 ! determine cbnd
              cbnd = be - bs + 1
@@ -1696,6 +1697,7 @@
 
 ! allocate memory
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
+             allocate(Xk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Hk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Ek(cbnd,nmesh),      stat = istat)
              !
@@ -1704,11 +1706,12 @@
              endif ! back if ( istat /= 0 ) block
              !
              allocate(So(cbnd,cbnd),       stat = istat)
+             allocate(Xo(cbnd,cbnd),       stat = istat)
              allocate(Ho(cbnd,cbnd),       stat = istat)
              allocate(Eo(cbnd),            stat = istat)
              !
              if ( istat /= 0 ) then
-                 call s_print_error('cal_occupy','can not allocate enough memory')
+                 call s_print_error('cal_eigsys','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
 ! construct H(k) + \Sigma(i\omega_n) and diagonalize it
@@ -1731,10 +1734,12 @@
 
 ! deallocate memory
              if ( allocated(So) ) deallocate(So)
+             if ( allocated(Xo) ) deallocate(Xo)
              if ( allocated(Ho) ) deallocate(Ho)
              if ( allocated(Eo) ) deallocate(Eo)
 
              if ( allocated(Sk) ) deallocate(Sk)
+             if ( allocated(Xk) ) deallocate(Xk)
              if ( allocated(Hk) ) deallocate(Hk)
              if ( allocated(Ek) ) deallocate(Ek)
 
