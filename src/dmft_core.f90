@@ -302,8 +302,7 @@
              do m=1,mcut
                  Sm = Sm + sig_l(:,:,nmesh + 1 - m,s,t)
              enddo ! over m={1,mcut} loop
-             Sm = Sm / float(mcut)
-
+             sigoo(:,:,s,t) = Sm / float(mcut)
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
 
