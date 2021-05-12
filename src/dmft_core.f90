@@ -1401,6 +1401,7 @@
 
      use control, only : nkpt, nspin
 
+     use context, only : i_wnd
      use context, only : kwin
      use context, only : weight
      use context, only : occupy
