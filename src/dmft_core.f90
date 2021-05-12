@@ -328,7 +328,21 @@
 !! self-energy functions
 !!
   subroutine cal_sig_l()
+     use control, only : nspin
+     use control, only : nsite
+     use control, only : nmesh
+
      implicit none
+
+! local variables
+! loop index for frequency mesh
+     integer :: m
+
+! loop index for spins
+     integer :: s
+
+! loop index for impurity sites
+     integer :: t
 
      return
   end subroutine cal_sig_l
