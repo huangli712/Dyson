@@ -195,8 +195,8 @@
 !!
 !! @sub dmft_try3
 !!
-!! to determine the fermi level, the global variable `fermi` may be
-!! updated in this subroutine
+!! try to search the fermi level, the global variable `fermi` may be
+!! updated in this subroutine.
 !!
   subroutine dmft_try3()
      use constants, only : mystd
