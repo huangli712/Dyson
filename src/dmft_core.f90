@@ -966,8 +966,6 @@
      use constants, only : dp
      use constants, only : czero
 
-     use control, only : nmesh
-
      use context, only : sigdc, sigoo
 
      implicit none
@@ -1006,6 +1004,9 @@
 
 ! here we use Sl to save sigoo - sigdc
      Sl = sigoo(1:cdim,1:cdim,s,t) - sigdc(1:cdim,1:cdim,s,t)
+
+! reset So
+     So = czero
 
 ! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
      call one_chi_psi(cdim, cbnd, k, s, t, Sl, So)
