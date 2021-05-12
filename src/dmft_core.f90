@@ -1421,18 +1421,34 @@
 ! band window: start index and end index for bands
      integer :: bs, be
 
-! basically, now we only support single band window. so the last index
-! for kwin is always 1
+!
+! important remarks:
+!
+! there is an important question. which band window shall we used?
+! multiple band windows are always possible since we don't have enough
+! reason to restrict `nwnd` to be 1.
+!
+! the answer is the band window that is connected to the quantum
+! impurity problems. basically, now we require that all the quantum
+! impurity problems share the same band window. so in this subroutine,
+! we only need to consider ONE band window, which is defined by
+! i_wnd(1) or i_wnd(2). whatever, they point to the same band window
+! according to our assumption. 
+!
+
+! reset nelect
      nelect = zero
+
+! perform summation
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
-             bs = kwin(k,s,1,1)
-             be = kwin(k,s,2,1)
+             bs = kwin(k,s,1,i_wnd(1))
+             be = kwin(k,s,2,i_wnd(1))
              nelect = nelect + sum( occupy(bs:be,k,s) ) * weight(k)
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
-! normalize `nelect`
+! don't forget to normalize `nelect`
      nelect = nelect / float(nkpt)
 
 ! consider the spins
