@@ -324,6 +324,9 @@
 !!
 !! @sub cal_sig_l
 !!
+!! try to substract the double counting terms from the bare Matsubara
+!! self-energy functions
+!!
   subroutine cal_sig_l()
      implicit none
 
