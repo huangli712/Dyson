@@ -1585,8 +1585,8 @@
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
 
-! actually, we should consider the correction due to limit frequency point
-! here. later we will implement it.
+! actually, we should consider the correction due to finite frequency
+! point here. later we will implement it.
 !
 ! TO_BE_DONE
 
@@ -1684,6 +1684,7 @@
 
 ! evaluate band window for the current k-point and spin
 ! i_wnd(t) returns the corresponding band window for given impurity site t
+!
 ! see remarks in cal_nelect() subroutine
              bs = kwin(k,s,1,i_wnd(1))
              be = kwin(k,s,2,i_wnd(1))
@@ -1808,7 +1809,7 @@
 !! @sub map_chi_psi
 !!
 !! service subroutine. map a function from local basis to Kohn-Sham
-!! basis. you can call this procedure `embedding` or `upfold`
+!! basis. you can call this procedure `embedding` or `upfolding`.
 !!
   subroutine map_chi_psi(cdim, cbnd, nfrq, k, s, t, Mc, Mp)
      use constants, only : dp
@@ -1857,6 +1858,10 @@
 
 ! allocate memory
      allocate(Cp(cdim,cbnd), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('map_chi_psi','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
      allocate(Pc(cbnd,cdim), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('map_chi_psi','can not allocate enough memory')
