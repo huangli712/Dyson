@@ -152,9 +152,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Green'
      endif ! back if ( myid == master ) block
      !
-     do t=1,nsite
-         call cal_grn_l(t)
-     enddo ! over t={1,nsite} loop
+     call cal_grn_l()
      !
      if ( myid == master ) then
          write(mystd,*)
