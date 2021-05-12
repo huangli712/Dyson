@@ -111,17 +111,12 @@
 
      use control, only : cname
      use control, only : lfermi
-     use control, only : nsite
      use control, only : myid, master
 
      use context, only : grn_l
      use context, only : wss_l, hyb_l
 
      implicit none
-
-! local variables
-! loop index for impurity sites
-     integer :: t
 
 ! call the computational subroutine to search the fermi level
      if ( myid == master ) then
