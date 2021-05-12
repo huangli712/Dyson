@@ -295,13 +295,22 @@
          call s_print_error('cal_sigoo','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+! reset sigoo
      sigoo = czero
+
+! loop over nsite and nspin
+!
+! we count the final `mcut` frequency points, then we try to calculate
+! the averaged values. up to now, the double counting terms have not
+! been substracted from sig_l. in other words, sig_l is still bare.
      do t=1,nsite
          do s=1,nspin
              Sm = czero
+             !
              do m=1,mcut
                  Sm = Sm + sig_l(:,:,nmesh + 1 - m,s,t)
              enddo ! over m={1,mcut} loop
+             !
              sigoo(:,:,s,t) = Sm / float(mcut)
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
