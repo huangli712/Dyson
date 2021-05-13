@@ -779,7 +779,7 @@
 !!
 !! @sub cal_eimps
 !!
-!! try to calculate local energy levels for given impurity site
+!! try to calculate local energy levels for all impurity sites
 !!
   subroutine cal_eimps(t)
      use constants, only : dp, mystd
