@@ -260,7 +260,12 @@
   subroutine dmft_try5()
      use constants, only : mystd
 
+     use control, only : cname
+     use control, only : myid, master
+
      implicit none
+
+! local variables
 
 ! call the computational subroutine to do this job
      if ( myid == master ) then
