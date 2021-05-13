@@ -255,8 +255,23 @@
 !!
 !! @sub dmft_try5
 !!
+!! try to calculate complex eigenvalues
+!!
   subroutine dmft_try5()
+     use constants, only : mystd
+
      implicit none
+
+! call the computational subroutine to do this job
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Eigen'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_eigsys()
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine dmft_try5
