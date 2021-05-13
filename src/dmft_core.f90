@@ -615,6 +615,7 @@
      use constants, only : dp, mystd
      use constants, only : czi, czero
 
+     use control, only : axis
      use control, only : nspin
      use control, only : nsite
      use control, only : nmesh
@@ -680,7 +681,12 @@
              MESH_LOOP: do m=1,nmesh
 
 ! get frequency point
-                 caux = czi * fmesh(m) + fermi
+! consider imaginary axis or real axis
+                 if ( axis == 1 ) then
+                     caux = czi * fmesh(m) + fermi
+                 else
+                     caux = fmesh(m) + fermi
+                 endif ! back if ( axis == 1 ) block
 
 ! calculate G^{-1}
                  Tm = grn_l(1:cdim,1:cdim,m,s,t)
@@ -963,7 +969,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! here we use Sl to save sig_l - sigdc. sigdc has been substracted from
-! sig_l beforehand
+! sig_l beforehand, see cal_sig_l()
      do m=1,nmesh
          Sl(:,:,m) = sig_l(1:cdim,1:cdim,m,s,t)
      enddo ! over m={1,nmesh} loop
@@ -1601,12 +1607,14 @@
 !! @sub cal_occupy
 !!
 !! for given fermi level, try to calculate the corresponding occupations.
+!! note that this subroutine only works in imaginary axis
 !!
   subroutine cal_occupy(fermi, val, eigs, einf)
      use constants, only : dp
      use constants, only : one, two
      use constants, only : czi, czero
 
+     use control, only : axis
      use control, only : nkpt, nspin
      use control, only : nmesh
      use control, only : beta
@@ -1677,10 +1685,13 @@
          call s_print_error('cal_occupy','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+! check axis
+     call s_assert2(axis == 1, 'axis is wrong')
+
 ! calculate local green's function
      gloc = czero
-     do s=1,nspin
-         do k=1,nkpt
+     SPIN_LOOP: do s=1,nspin
+         KPNT_LOOP: do k=1,nkpt
 
 ! determine the band window
 ! see remarks in cal_nelect()
@@ -1697,8 +1708,8 @@
                  enddo ! over b={1,cbnd} loop
              enddo ! over m={1,nmesh} loop
 
-         enddo ! over k={1,nkpt} loop
-     enddo ! over s={1,nspin} loop
+         enddo KPNT_LOOP ! over k={1,nkpt} loop
+     enddo SPIN_LOOP ! over s={1,nspin} loop
 
 ! calculate summation of the local green's function
      do s=1,nspin
@@ -1716,7 +1727,7 @@
              cbnd = be - bs + 1
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
-                 zocc(b,s) = zocc(b,s) + fermi_dirac(real(caux)) / real(nkpt)
+                 zocc(b,s) = zocc(b,s) + fermi_dirac( real(caux) ) / real(nkpt)
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
@@ -1822,8 +1833,9 @@
 ! i_wnd(t) returns the corresponding band window for given impurity site t
 !
 ! see remarks in cal_nelect() subroutine
-             bs = kwin(k,s,1,i_wnd(1))
-             be = kwin(k,s,2,i_wnd(1))
+             t = 1 ! t is fixed to 1
+             bs = kwin(k,s,1,i_wnd(t))
+             be = kwin(k,s,2,i_wnd(t))
 
 ! determine cbnd
              cbnd = be - bs + 1
