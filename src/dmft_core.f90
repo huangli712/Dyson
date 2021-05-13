@@ -258,12 +258,14 @@
 !! try to calculate complex eigenvalues
 !!
   subroutine dmft_try5()
-     use constants, only : mystd
+     use constants, only : dp, mystd
 
      use control, only : cname
      use control, only : nkpt, nspin
      use control, only : nmesh
      use control, only : myid, master
+
+     use context, only : qbnd
 
      implicit none
 
