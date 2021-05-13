@@ -646,7 +646,10 @@
 ! status flag
      integer :: istat
 
+! dummy variables
      complex(dp) :: caux
+
+! dummy arrays
      complex(dp), allocatable :: Tm(:,:)
      complex(dp), allocatable :: Em(:,:)
      complex(dp), allocatable :: Sm(:,:)
