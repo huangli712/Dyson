@@ -781,7 +781,7 @@
 !!
 !! try to calculate local energy levels for all impurity sites
 !!
-  subroutine cal_eimps(t)
+  subroutine cal_eimps()
      use constants, only : dp, mystd
      use constants, only : czero
 
@@ -797,16 +797,15 @@
 
      implicit none
 
-! external arguments
-! index for impurity sites
-     integer, intent(in) :: t
-
 ! local variables
 ! loop index for spin
      integer :: s
 
 ! loop index for k-points
      integer :: k
+
+! index for impurity sites
+     integer :: t
 
 ! number of dft bands for given k-point and spin
      integer :: cbnd
