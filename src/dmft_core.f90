@@ -611,7 +611,7 @@
 !!
 !! try to calculate hybridization function for all impurity sites
 !!
-  subroutine cal_hyb_l(t)
+  subroutine cal_hyb_l()
      use constants, only : dp, mystd
      use constants, only : czi, czero
 
@@ -629,13 +629,12 @@
 
      implicit none
 
-! external arguments
-! index for impurity sites
-     integer, intent(in) :: t
-
 ! local variables
 ! loop index for spin
      integer :: s
+
+! index for impurity sites
+     integer :: t
 
 ! loop index for frequency mesh
      integer :: m
