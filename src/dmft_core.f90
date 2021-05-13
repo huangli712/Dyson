@@ -563,11 +563,14 @@
 ! calculate lattice green's function
              call cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
 
-! project lattice green's function to obtain local green's function
-             call cal_gk_gl(cbnd, cdim, k, s, t, Gk, Gl)
-
-! save the final results
-             grn_l(1:cdim,1:cdim,:,s,t) = grn_l(1:cdim,1:cdim,:,s,t) + Gl * weight(k)
+! project lattice green's function to obtain local green's function, then
+! we have to save the final results
+             do t=1,nsite
+                 Gl = czero
+                 cdim = ndim(t)
+                 call cal_gk_gl(cbnd, cdim, k, s, t, Gk, Gl(1:cdim,1:cdim,:))
+                 grn_l(:,:,:,s,t) = grn_l(:,:,:,s,t) + Gl * weight(k)
+             enddo ! over t={1,nsite} loop
 
 ! deallocate memories
              if ( allocated(Sk) ) deallocate(Sk)
