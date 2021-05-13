@@ -689,9 +689,9 @@
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
 ! deallocate memory
-     deallocate(Tm)
-     deallocate(Em)
-     deallocate(Sm)
+     if ( allocated(Tm) ) deallocate(Tm)
+     if ( allocated(Em) ) deallocate(Em)
+     if ( allocated(Sm) ) deallocate(Sm)
 
      return
   end subroutine cal_hyb_l
