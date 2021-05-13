@@ -55,10 +55,11 @@
 
      implicit none
 
+! we have to preprocess the self-energy functions at first
 ! calculate sig_l -> sigoo
      call cal_sigoo()
 
-! calculate sig_l -> sig_l - sigdc
+! calculate sig_l -> sig_l - sigdc (sig_l is updated)
      call cal_sig_l()
 
      DISPATCHER: select case ( task )
