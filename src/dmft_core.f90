@@ -666,11 +666,12 @@
          call s_print_error('cal_hyb_l','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     hyb_l(:,:,:,:,t) = czero
+! reset hyb_l
+     hyb_l = czero
 
 ! print some useful information
      if ( myid == master ) then
-         write(mystd,'(4X,a,i4)') 'calculate hyb_l for site:', t
+         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate hyb_l for', nsite, 'sites'
      endif ! back if ( myid == master ) block
 
      SPIN_LOOP: do s=1,nspin
