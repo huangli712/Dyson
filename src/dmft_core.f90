@@ -266,6 +266,23 @@
      implicit none
 
 ! local variables
+! status flag
+     integer  :: istat
+
+! dummy arrays, used to save the eigenvalues of H + \Sigma
+     complex(dp), allocatable :: eigs(:,:,:,:)
+     complex(dp), allocatable :: einf(:,:,:)
+
+! allocate memory
+     allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('dmft_try5','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
+     allocate(einf(qbnd,nkpt,nspin),       stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('dmft_try5','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! call the computational subroutine to do this job
      if ( myid == master ) then
@@ -277,6 +294,10 @@
      if ( myid == master ) then
          write(mystd,*)
      endif ! back if ( myid == master ) block
+
+! deallocate memory
+     if ( allocated(eigs) ) deallocate(eigs)
+     if ( allocated(einf) ) deallocate(einf)
 
      return
   end subroutine dmft_try5
