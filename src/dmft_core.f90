@@ -261,6 +261,8 @@
      use constants, only : mystd
 
      use control, only : cname
+     use control, only : nkpt, nspin
+     use control, only : nmesh
      use control, only : myid, master
 
      implicit none
