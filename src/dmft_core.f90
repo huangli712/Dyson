@@ -112,8 +112,10 @@
 
      use control, only : cname
      use control, only : lfermi
+     use control, only : fermi
      use control, only : myid, master
 
+     use context, only : eimps
      use context, only : grn_l
      use context, only : wss_l, hyb_l
 
@@ -168,6 +170,15 @@
 ! write the calculated results, only the master node can do it
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
+         !
+         write(mystd,'(4X,a)') 'save fermi...'
+         call dmft_dump_fermi(fermi)
+         !
+         write(mystd,'(4X,a)') 'save eimps...'
+         call dmft_dump_eimps(eimps)
+         !
+         write(mystd,'(4X,a)') 'save grn_l...'
+         call dmft_dump_grn_l(grn_l)
          !
          write(mystd,'(4X,a)') 'save grn_l...'
          call dmft_dump_grn_l(grn_l)
