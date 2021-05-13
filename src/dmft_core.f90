@@ -627,7 +627,7 @@
      use context, only : ndim
      use context, only : fmesh
      use context, only : eimps
-     use context, only : sig_l
+     use context, only : sigdc, sig_l
      use context, only : grn_l
      use context, only : hyb_l
 
@@ -695,7 +695,7 @@
                  call s_inv_z(cdim, Tm)
 
 ! get self-energy function
-                 Sm = sig_l(1:cdim,1:cdim,m,s,t)
+                 Sm = sig_l(1:cdim,1:cdim,m,s,t) + sigdc(1:cdim,1:cdim,s,t)
 
 ! get impurity level
                  Em = eimps(1:cdim,1:cdim,s,t)
