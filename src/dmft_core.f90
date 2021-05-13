@@ -456,6 +456,7 @@
      use constants, only : czero, czi
 
      use control, only : nkpt, nspin
+     use control, only : nsite
      use control, only : nmesh
      use control, only : myid, master
 
@@ -510,8 +511,8 @@
 
 ! print some useful information
      if ( myid == master ) then
-         write(mystd,'(4X,a,i4)') 'calculate grn_l for site:', t
-         write(mystd,'(4X,a)')  'add contributions from ...'
+         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate grn_l for', nsite, 'sites'
+         write(mystd,'(4X,a,2X,i4,2X,a)') 'add contributions from', nkpt, 'kpoints'
      endif ! back if ( myid == master ) block
 
      SPIN_LOOP: do s=1,nspin
