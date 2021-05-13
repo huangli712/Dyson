@@ -449,9 +449,9 @@
 !!
 !! @sub cal_grn_l
 !!
-!! try to calculate local green's function for given impurity site
+!! try to calculate local green's function for all the impurity sites
 !!
-  subroutine cal_grn_l(t)
+  subroutine cal_grn_l()
      use constants, only : dp, mystd
      use constants, only : czero, czi
 
