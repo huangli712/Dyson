@@ -676,25 +676,32 @@
              call s_print_error('cal_hyb_l','can not allocate enough memory')
          endif ! back if ( istat /= 0 ) block
 
-     SPIN_LOOP: do s=1,nspin
-         MESH_LOOP: do m=1,nmesh
-             caux = czi * fmesh(m) + fermi
+         SPIN_LOOP: do s=1,nspin
+             MESH_LOOP: do m=1,nmesh
 
-             Tm = grn_l(1:cdim,1:cdim,m,s,t)
-             call s_inv_z(cdim, Tm)
+! get frequency point
+                 caux = czi * fmesh(m) + fermi
 
-             Em = eimps(1:cdim,1:cdim,s,t)
+! calculate G^{-1}
+                 Tm = grn_l(1:cdim,1:cdim,m,s,t)
+                 call s_inv_z(cdim, Tm)
 
-             Sm = sig_l(1:cdim,1:cdim,m,s,t) - sigdc(1:cdim,1:cdim,s,t)
+! get self-energy function
+                 Sm = sig_l(1:cdim,1:cdim,m,s,t)
 
-             hyb_l(1:cdim,1:cdim,m,s,t) = caux - Em - Sm - Tm
-         enddo MESH_LOOP ! over m={1,nmesh} loop
-     enddo SPIN_LOOP ! over s={1,nspin} loop
+! get impurity level
+                 Em = eimps(1:cdim,1:cdim,s,t)
+
+! assemble the hybridization function
+                 hyb_l(1:cdim,1:cdim,m,s,t) = caux - Em - Sm - Tm
+
+             enddo MESH_LOOP ! over m={1,nmesh} loop
+         enddo SPIN_LOOP ! over s={1,nspin} loop
 
 ! deallocate memory
-     if ( allocated(Tm) ) deallocate(Tm)
-     if ( allocated(Em) ) deallocate(Em)
-     if ( allocated(Sm) ) deallocate(Sm)
+         if ( allocated(Tm) ) deallocate(Tm)
+         if ( allocated(Em) ) deallocate(Em)
+         if ( allocated(Sm) ) deallocate(Sm)
 
      enddo SITE_LOOP ! over t={1,nsite} loop
 
