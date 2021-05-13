@@ -461,6 +461,7 @@
      use control, only : myid, master
 
      use context, only : i_wnd
+     use context, only : qdim
      use context, only : ndim
      use context, only : kwin
      use context, only : weight
@@ -499,6 +500,12 @@
 
 ! dummy array: for local green's function
      complex(dp), allocatable :: Gl(:,:,:)
+
+! allocate memory for Gl
+     allocate(Gl(qdim,qdim,nmesh), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_grn_l','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! init cbnd and cdim
 ! cbnd will be k-dependent and cdim will be impurity-dependent. they will
@@ -544,10 +551,14 @@
                  call s_print_error('cal_grn_l','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-     allocate(Gl(cdim,cdim,nmesh), stat = istat)
-
 ! build self-energy function, and then embed it into Kohn-Sham basis
-             call cal_sl_sk(cdim, cbnd, k, s, t, Sk)
+             Sk = czero
+             do t=1,nsite
+                 Xk = czero
+                 cdim = ndim(t)
+                 call cal_sl_sk(cdim, cbnd, k, s, t, Sk)
+                 Sk = Sk + Xk
+             enddo ! over t={1,nsite} loop
 
 ! calculate lattice green's function
              call cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
@@ -560,6 +571,7 @@
 
 ! deallocate memories
              if ( allocated(Sk) ) deallocate(Sk)
+             if ( allocated(Xk) ) deallocate(Xk)
              if ( allocated(Gk) ) deallocate(Gk)
 
          enddo KPNT_LOOP ! over k={1,nkpt} loop
