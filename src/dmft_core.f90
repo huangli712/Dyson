@@ -598,7 +598,7 @@
 !!
 !! @sub cal_wss_l
 !!
-!! try to calculate local weiss's function for given impurity site
+!! try to calculate local weiss's function for all impurity sites
 !!
   subroutine cal_wss_l()
      implicit none
@@ -609,7 +609,7 @@
 !!
 !! @sub cal_hyb_l
 !!
-!! try to calculate local hybridization function for given impurity site
+!! try to calculate hybridization function for all impurity sites
 !!
   subroutine cal_hyb_l(t)
      use constants, only : dp, mystd
