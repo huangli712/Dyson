@@ -467,16 +467,15 @@
 
      implicit none
 
-! external arguments
-! index for impurity sites
-     integer, intent(in) :: t
-
 ! local variables
 ! loop index for spin
      integer :: s
 
 ! loop index for k-points
      integer :: k
+
+! loop index for impurity sites
+     integer :: t
 
 ! number of dft bands for given k-point and spin
      integer :: cbnd
