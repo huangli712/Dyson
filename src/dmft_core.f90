@@ -641,6 +641,8 @@
 
 ! number of correlated orbitals for given impurity site
      integer :: cdim
+
+! status flag
      integer :: istat
 
      complex(dp) :: caux
