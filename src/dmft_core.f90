@@ -520,6 +520,8 @@
 
 ! evaluate band window for the current k-point and spin
 ! i_wnd(t) returns the corresponding band window for given impurity site t
+! see remarks in cal_nelect() for more details
+             t = 1 ! t is fixed to 1
              bs = kwin(k,s,1,i_wnd(t))
              be = kwin(k,s,2,i_wnd(t))
 
@@ -533,13 +535,16 @@
                  write(mystd,'(2X,a,3i3)') 'window: ', bs, be, cbnd
              endif ! back if ( myid == master ) block
 
-! allocate memories for Sk and Gk. their sizes are k-dependent
+! allocate memories Sk, Xk, and Gk. their sizes are k-dependent
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
+             allocate(Xk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Gk(cbnd,cbnd,nmesh), stat = istat)
-     allocate(Gl(cdim,cdim,nmesh), stat = istat)
+             !
              if ( istat /= 0 ) then
                  call s_print_error('cal_grn_l','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
+
+     allocate(Gl(cdim,cdim,nmesh), stat = istat)
 
 ! build self-energy function, and then embed it into Kohn-Sham basis
              call cal_sl_sk(cdim, cbnd, k, s, t, Sk)
