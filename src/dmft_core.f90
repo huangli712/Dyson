@@ -854,6 +854,8 @@
 
 ! evaluate band window for the current k-point and spin
 ! i_wnd(t) returns the corresponding band window for given impurity site t
+! see remarks in cal_nelect()
+             t = 1 ! t is fixed to 1
              bs = kwin(k,s,1,i_wnd(t))
              be = kwin(k,s,2,i_wnd(t))
 
@@ -880,11 +882,14 @@
 ! convert `Em` to diagonal matrix `Hm`
              call s_diag_z(cbnd, Em, Hm)
 
-! project hamiltonian to local basis
-             call one_psi_chi(cbnd, cdim, k, s, t, Hm, Eimp)
+! project effective hamiltonian to local basis
+             do t=1,nsite
+                 Xe = czero
+                 cdim = ndim(t)
+                 call one_psi_chi(cbnd, cdim, k, s, t, Hm, Eimp)
 
-! save the final results
              eimps(1:cdim,1:cdim,s,t) = eimps(1:cdim,1:cdim,s,t) + Eimp * weight(k)
+             enddo ! over t={1,nsite} loop
 
 ! deallocate memory
              if ( allocated(Em) ) deallocate(Em)
