@@ -227,7 +227,7 @@
 
      implicit none
 
-! check lfermi
+! check lfermi at first
      call s_assert2(lfermi .eqv. .true., 'lfermi must be true')
 
 ! call the computational subroutine to do this job
@@ -274,7 +274,7 @@
 !!
 !! @sub dmft_try5
 !!
-!! try to calculate complex eigenvalues
+!! try to calculate all the complex eigenvalues
 !!
   subroutine dmft_try5()
      use constants, only : dp, mystd
