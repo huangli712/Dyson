@@ -786,9 +786,11 @@
      use constants, only : czero
 
      use control, only : nkpt, nspin
+     use control, only : nsite
      use control, only : myid, master
 
      use context, only : i_wnd
+     use context, only : qdim
      use context, only : ndim
      use context, only : kwin
      use context, only : weight
@@ -839,12 +841,12 @@
      cdim = 0
 
 ! reset eimps
-     eimps(:,:,:,t) = czero
+     eimps = czero
 
 ! print some useful information
      if ( myid == master ) then
-         write(mystd,'(4X,a,i4)') 'calculate eimps for site:', t
-         write(mystd,'(4X,a)')  'add contributions from ...'
+         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate eimps for', nsite, 'sites'
+         write(mystd,'(4X,a,2X,i4,2X,a)') 'add contributions from', nkpt, 'kpoints'
      endif ! back if ( myid == master ) block
 
      SPIN_LOOP: do s=1,nspin
