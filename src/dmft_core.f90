@@ -491,6 +491,7 @@
 
 ! dummy array: for self-energy function (projected to Kohn-Sham basis)
      complex(dp), allocatable :: Sk(:,:,:)
+     complex(dp), allocatable :: Xk(:,:,:)
 
 ! dummy array: for lattice green's function
      complex(dp), allocatable :: Gk(:,:,:)
@@ -499,18 +500,13 @@
      complex(dp), allocatable :: Gl(:,:,:)
 
 ! init cbnd and cdim
-! cbnd will be k-dependent. it will be updated later
+! cbnd will be k-dependent and cdim will be impurity-dependent. they will
+! be updated later
      cbnd = 0
-     cdim = ndim(t)
-
-! allocate memory for Gl
-     allocate(Gl(cdim,cdim,nmesh), stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('cal_grn_l','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
+     cdim = 0
 
 ! reset grn_l
-     grn_l(:,:,:,:,t) = czero
+     grn_l = czero
 
 ! print some useful information
      if ( myid == master ) then
@@ -539,6 +535,7 @@
 ! allocate memories for Sk and Gk. their sizes are k-dependent
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Gk(cbnd,cbnd,nmesh), stat = istat)
+     allocate(Gl(cdim,cdim,nmesh), stat = istat)
              if ( istat /= 0 ) then
                  call s_print_error('cal_grn_l','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
