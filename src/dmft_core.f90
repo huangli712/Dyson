@@ -654,6 +654,16 @@
      complex(dp), allocatable :: Em(:,:)
      complex(dp), allocatable :: Sm(:,:)
 
+! reset hyb_l
+     hyb_l = czero
+
+! print some useful information
+     if ( myid == master ) then
+         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate hyb_l for', nsite, 'sites'
+     endif ! back if ( myid == master ) block
+
+     SITE_LOOP: do t=1,nsite
+
 ! allocate memory
      allocate(Tm(cdim,cdim), stat = istat)
      if ( istat /= 0 ) then
@@ -669,14 +679,6 @@
      if ( istat /= 0 ) then
          call s_print_error('cal_hyb_l','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
-
-! reset hyb_l
-     hyb_l = czero
-
-! print some useful information
-     if ( myid == master ) then
-         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate hyb_l for', nsite, 'sites'
-     endif ! back if ( myid == master ) block
 
      SPIN_LOOP: do s=1,nspin
          MESH_LOOP: do m=1,nmesh
@@ -697,6 +699,8 @@
      if ( allocated(Tm) ) deallocate(Tm)
      if ( allocated(Em) ) deallocate(Em)
      if ( allocated(Sm) ) deallocate(Sm)
+
+     enddo SITE_LOOP ! over t={1,nsite} loop
 
      return
   end subroutine cal_hyb_l
