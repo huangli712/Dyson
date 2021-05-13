@@ -886,9 +886,8 @@
              do t=1,nsite
                  Xe = czero
                  cdim = ndim(t)
-                 call one_psi_chi(cbnd, cdim, k, s, t, Hm, Eimp)
-
-             eimps(1:cdim,1:cdim,s,t) = eimps(1:cdim,1:cdim,s,t) + Eimp * weight(k)
+                 call one_psi_chi(cbnd, cdim, k, s, t, Hm, Eimp(1:cdim,1:cdim))
+                 eimps(:,:,s,t) = eimps(:,:,s,t) + Eimp * weight(k)
              enddo ! over t={1,nsite} loop
 
 ! deallocate memory
@@ -899,10 +898,10 @@
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
 ! renormalize impurity levels
-     eimps(:,:,:,t) = eimps(:,:,:,t) / float(nkpt)
+     eimps = eimps / float(nkpt)
 
 ! deallocate memory
-     if ( allocated(Eimp) ) deallocate(Eimp)
+     if ( allocated(Xe) ) deallocate(Xe)
 
      return
   end subroutine cal_eimps
