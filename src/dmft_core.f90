@@ -650,12 +650,21 @@
      complex(dp), allocatable :: Em(:,:)
      complex(dp), allocatable :: Sm(:,:)
 
-     cdim = ndim(t)
-
 ! allocate memory
      allocate(Tm(cdim,cdim), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_hyb_l','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
      allocate(Em(cdim,cdim), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_hyb_l','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
      allocate(Sm(cdim,cdim), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_hyb_l','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      hyb_l(:,:,:,:,t) = czero
 
