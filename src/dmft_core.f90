@@ -156,12 +156,23 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! call the computational subroutine to compute the local hybridization function
+! call the computational subroutine to compute the hybridization function
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Hybri'
      endif ! back if ( myid == master ) block
      !
      call cal_hyb_l()
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+! call the computational subroutine to compute the local weiss's function
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Weiss'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_wss_l()
      !
      if ( myid == master ) then
          write(mystd,*)
