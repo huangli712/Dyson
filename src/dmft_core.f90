@@ -35,7 +35,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/13/2021 by li huang (last modified)
+!!!           05/14/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -128,6 +128,8 @@
      !
      if ( lfermi .eqv. .true. ) then
          call cal_fermi()
+     else
+         write(mystd,'(4X,a)') 'SKIP'
      endif ! back if ( lfermi .eqv. .true. ) block
      !
      if ( myid == master ) then
@@ -587,9 +589,9 @@
      if ( allocated(Gl) ) deallocate(Gl)
 
 !! DEBUG CODE
-!<     do s=1,cdim
-!<         print *, s, grn_l(s,s,1,1,1)
-!<     enddo ! over s={1,cdim} loop
+     do s=1,cdim
+         print *, s, grn_l(s,s,1,1,1)
+     enddo ! over s={1,cdim} loop
 !! DEBUG CODE
 
      return
