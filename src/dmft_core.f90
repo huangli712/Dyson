@@ -804,6 +804,7 @@
      use context, only : weight
      use context, only : enk
      use context, only : eimps
+     use context, only : sigdc
 
      implicit none
 
@@ -907,6 +908,14 @@
 
 ! renormalize impurity levels
      eimps = eimps / float(nkpt)
+
+! substract the double counting terms
+     do t=1,nsite
+         do s=1,nspin
+             cdim = ndim(t)
+             eimps(1:cdim,1:cdim,s,t) = eimps(1:cdim,1:cdim,s,t) - sigdc(1:cdim,1:cdim,s,t)
+         enddo ! over s={1,nspin} loop
+     enddo ! over t={1,nsite} loop
 
 ! deallocate memory
      if ( allocated(Xe) ) deallocate(Xe)
