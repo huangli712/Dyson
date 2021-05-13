@@ -823,18 +823,20 @@
      complex(dp), allocatable :: Em(:)
      complex(dp), allocatable :: Hm(:,:)
 
-     complex(dp), allocatable :: Eimp(:,:)
-
-! init cbnd and cdim
-! cbnd will be k-dependent. it will be updated later
-     cbnd = 0
-     cdim = ndim(t)
+! dummy array, used to build site-dependent impurity level
+     complex(dp), allocatable :: Xe(:,:)
 
 ! allocate memory
-     allocate(Eimp(cdim,cdim), stat = istat)
+     allocate(Xe(qdim,qdim), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_eimps','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+! init cbnd and cdim
+! cbnd will be k-dependent and cdim will be impurity-dependent. they will
+! be updated later
+     cbnd = 0
+     cdim = 0
 
 ! reset eimps
      eimps(:,:,:,t) = czero
