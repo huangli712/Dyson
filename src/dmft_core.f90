@@ -581,7 +581,7 @@
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
 ! renormalize local green's function
-     grn_l(:,:,:,:,t) = grn_l(:,:,:,:,t) / float(nkpt)
+     grn_l = grn_l / float(nkpt)
 
 ! deallocate memory
      if ( allocated(Gl) ) deallocate(Gl)
