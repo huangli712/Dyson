@@ -9,21 +9,32 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/09/2021 by li huang (last modified)
+!!!           05/14/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  subroutine dmft_dump_fermi()
+!!
+!! @sub dmft_dump_fermi
+!!
+!! write out fermi level
+!!
+  subroutine dmft_dump_fermi(fermi)
+     use constants, only : dp
+     use constants, only : mytmp
+
      implicit none
-     STOP
+
+! external arguments
+! fermi level
+     real(dp), intent(in) :: fermi
+
      return
   end subroutine dmft_dump_fermi
 
   subroutine dmft_dump_eimps()
      implicit none
-     STOP
      return
   end subroutine dmft_dump_eimps
 
