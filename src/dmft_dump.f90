@@ -127,6 +127,13 @@
 ! eigenvalues for H(k) + \Sigma(i\omega_n)
      complex(dp), intent(out) :: eigs(qbnd,nmesh,nkpt,nspin)
 
+! local variables
+! loop index
+     integer :: s
+     integer :: t
+     integer :: q
+     integer :: k
+
 ! open data file: dmft_eigen.dat
      open(mytmp, file='dmft_eigen.dat', form='formatted', status='unknown')
 
