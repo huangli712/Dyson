@@ -34,7 +34,7 @@
      open(mytmp, file='dmft_fermi.dat', form='formatted', status='unknown')
 
 ! write parameters
-     write(mytmp,'(a9,i4)') '# fermi: ', fermi
+     write(mytmp,'(a9,f16.8)') '# fermi: ', fermi
 
 ! close data file
      close(mytmp)
