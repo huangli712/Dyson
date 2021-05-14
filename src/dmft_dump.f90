@@ -130,6 +130,16 @@
 ! open data file: dmft_eigen.dat
      open(mytmp, file='dmft_eigen.dat', form='formatted', status='unknown')
 
+! write parameters
+     write(mytmp,'(a9,i4)') '# nkpt : ', nkpt
+     write(mytmp,'(a9,i4)') '# nspin: ', nspin
+     write(mytmp,'(a9,i4)') '# nmesh: ', nmesh
+     write(mytmp,'(a9,i4)') '# qbnd : ', qbnd
+
+! write separators
+     write(mytmp,*)
+     write(mytmp,*)
+
 ! close data file
      close(mytmp)
 
