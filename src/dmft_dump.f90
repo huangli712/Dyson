@@ -131,15 +131,23 @@
      complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
 
 ! local variables
-! loop index
-     integer :: s
-     integer :: t
-     integer :: m
-     integer :: q
+! loop index for k-points
      integer :: k
 
+! loop index for spins
+     integer :: s
+
+! loop index for impurity sites
+     integer :: t
+
+! number of dft bands for given k-point and spin
      integer :: cbnd
+
+! band window: start index and end index for bands
      integer :: bs, be
+
+     integer :: m
+     integer :: q
 
 ! open data file: dmft_eigen.dat
      open(mytmp, file='dmft_eigen.dat', form='formatted', status='unknown')
