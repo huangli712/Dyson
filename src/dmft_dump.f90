@@ -45,12 +45,17 @@
 !!
 !! @sub dmft_dump_eimps
 !!
+!! write out local impurity levels
 !!
   subroutine dmft_dump_eimps(eimps)
      use constants, only : dp
      use constants, only : mytmp
 
      implicit none
+
+! external arguments
+! local impurity levels
+     complex(dp), intent(in) :: eimps(qdim,qdim,nspin,nsite)
 
 ! open data file: dmft_eimps.dat
      open(mytmp, file='dmft_eimps.dat', form='formatted', status='unknown')
