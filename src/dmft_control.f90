@@ -317,14 +317,14 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.3.0 @ 2021.05.14D'
+     character(len=20), public, parameter :: V_FULL = 'v0.3.1 @ 2021.05.14D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.3.0'
+     character(len=06), public, parameter :: V_CURR = 'v0.3.1'
 
 !!
 !! @var V_DATE
