@@ -42,8 +42,22 @@
      return
   end subroutine dmft_dump_fermi
 
-  subroutine dmft_dump_eimps()
+!!
+!! @sub dmft_dump_eimps
+!!
+!!
+  subroutine dmft_dump_eimps(eimps)
+     use constants, only : dp
+     use constants, only : mytmp
+
      implicit none
+
+! open data file: dmft_eimps.dat
+     open(mytmp, file='dmft_eimps.dat', form='formatted', status='unknown')
+
+! close data file
+     close(mytmp)
+
      return
   end subroutine dmft_dump_eimps
 
