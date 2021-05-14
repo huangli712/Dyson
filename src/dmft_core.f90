@@ -337,7 +337,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Eigen'
      endif ! back if ( myid == master ) block
      !
-     call cal_eigsys()
+     call cal_eigsys(eigs, einf)
      !
      if ( myid == master ) then
          write(mystd,*)
