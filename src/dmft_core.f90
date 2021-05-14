@@ -268,6 +268,8 @@
      use control, only : cname
      use control, only : myid, master
 
+     use context, only : eimps
+
      implicit none
 
 ! call the computational subroutine to do this job
@@ -278,6 +280,16 @@
      call cal_eimps()
      !
      if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+! write the calculated results, only the master node can do it
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Write'
+         !
+         write(mystd,'(4X,a)') 'save eimps...'
+         call dmft_dump_eimps(eimps)
+         !
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
