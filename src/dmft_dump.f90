@@ -51,6 +51,12 @@
      use constants, only : dp
      use constants, only : mytmp
 
+     use control, only : nspin
+     use control, only : nsite
+
+     use context, only : qdim
+     use context, only : ndim
+
      implicit none
 
 ! external arguments
