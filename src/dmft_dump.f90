@@ -63,6 +63,12 @@
 ! local impurity levels
      complex(dp), intent(in) :: eimps(qdim,qdim,nspin,nsite)
 
+! local variables
+! loop index
+     integer :: t
+     integer :: s
+     integer :: p, q
+
 ! open data file: dmft_eimps.dat
      open(mytmp, file='dmft_eimps.dat', form='formatted', status='unknown')
 
@@ -70,6 +76,21 @@
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
      write(mytmp,'(a9,i4)') '# nspin: ', nspin
      write(mytmp,'(a9,i4)') '# qdim : ', qdim
+
+! write separators
+     write(mytmp,*)
+     write(mytmp,*)
+
+! write body
+     do t=1,nsite
+         do s=1,nspin
+
+! write separators
+             write(mytmp,*)
+             write(mytmp,*)
+
+         enddo ! over s={1,nspin} loop
+     enddo ! over t={1,nsite} loop
 
 ! close data file
      close(mytmp)
