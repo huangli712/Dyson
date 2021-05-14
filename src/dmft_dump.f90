@@ -140,14 +140,17 @@
 ! loop index for impurity sites
      integer :: t
 
+! loop index for frequency grid
+     integer :: m
+
+! loop index for bands in band window
+     integer :: q
+
 ! number of dft bands for given k-point and spin
      integer :: cbnd
 
 ! band window: start index and end index for bands
      integer :: bs, be
-
-     integer :: m
-     integer :: q
 
 ! open data file: dmft_eigen.dat
      open(mytmp, file='dmft_eigen.dat', form='formatted', status='unknown')
