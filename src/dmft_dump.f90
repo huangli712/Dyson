@@ -30,6 +30,15 @@
 ! fermi level
      real(dp), intent(in) :: fermi
 
+! open data file: dmft_fermi.dat
+     open(mytmp, file='dmft_fermi.dat', form='formatted', status='unknown')
+
+! write parameters
+     write(mytmp,'(a9,i4)') '# fermi: ', fermi
+
+! close data file
+     close(mytmp)
+
      return
   end subroutine dmft_dump_fermi
 
