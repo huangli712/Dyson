@@ -112,7 +112,7 @@
 !!
 !! write out complex dft + dmft eigenvalues
 !!
-  subroutine dmft_dump_eigen(eigen)
+  subroutine dmft_dump_eigen(eigs)
      use constants, only : dp
      use constants, only : mytmp
 
@@ -126,6 +126,12 @@
 ! external arguments
 ! eigenvalues for H(k) + \Sigma(i\omega_n)
      complex(dp), intent(out) :: eigs(qbnd,nmesh,nkpt,nspin)
+
+! open data file: dmft_eigen.dat
+     open(mytmp, file='dmft_eigen.dat', form='formatted', status='unknown')
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine dmft_dump_eigen
