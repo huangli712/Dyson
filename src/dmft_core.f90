@@ -335,11 +335,22 @@
 ! call the computational subroutine to do this job
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Eigen'
+         write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
      endif ! back if ( myid == master ) block
      !
      call cal_eigsys(eigs, einf)
      !
      if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+! write the calculated results, only the master node can do it
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Write'
+         !
+         write(mystd,'(4X,a)') 'save eigen...'
+         call dmft_dump_eigen(eigs)
+         !
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
