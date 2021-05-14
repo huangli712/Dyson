@@ -2,6 +2,7 @@
 !!! project : jacaranda
 !!! program : dmft_dump_fermi
 !!!           dmft_dump_eimps
+!!!           dmft_dump_eigen
 !!!           dmft_dump_grn_l
 !!!           dmft_dump_wss_l
 !!!           dmft_dump_hyb_l
@@ -105,6 +106,29 @@
 
      return
   end subroutine dmft_dump_eimps
+
+!!
+!! @sub dmft_dump_eigen
+!!
+!! write out complex dft + dmft eigenvalues
+!!
+  subroutine dmft_dump_eigen(eigen)
+     use constants, only : dp
+     use constants, only : mytmp
+
+     use control, only : nkpt, nspin
+     use control, only : nmesh
+
+     use context, only : qbnd
+
+     implicit none
+
+! external arguments
+! eigenvalues for H(k) + \Sigma(i\omega_n)
+     complex(dp), intent(out) :: eigs(qbnd,nmesh,nkpt,nspin)
+
+     return
+  end subroutine dmft_dump_eigen
 
 !!
 !! @sub dmft_dump_grn_l
