@@ -140,6 +140,37 @@
      write(mytmp,*)
      write(mytmp,*)
 
+! write body
+     do s=1,nspin
+         do k=1,nkpt
+
+! evaluate band window for the current k-point and spin
+! i_wnd(t) returns the corresponding band window for given impurity site t
+!
+! see remarks in cal_nelect() subroutine
+             t = 1 ! t is fixed to 1
+             bs = kwin(k,s,1,i_wnd(t))
+             be = kwin(k,s,2,i_wnd(t))
+
+! determine cbnd
+             cbnd = be - bs + 1
+
+! write data for given spin and site
+             write(mytmp,'(3(a,i4,2X))') '# kpt:', k, 'spin:', s, 'cbnd:', cbnd
+             do m=1,nmesh
+                 write(mytmp,'(a2,i6,f16.8)') 'w:', m, fmesh(m)
+                 do q=1,cbnd
+                     write(mytmp,'(i4,2f16.8)') q, eigs(q,m,k,s)
+                 enddo ! over q={1,cbnd} loop
+             enddo ! over m={1,nmesh} loop
+
+! write separators
+             write(mytmp,*)
+             write(mytmp,*)
+
+         enddo ! over k={1,nkpt} loop
+     enddo ! over s={1,nspin} loop
+
 ! close data file
      close(mytmp)
 
