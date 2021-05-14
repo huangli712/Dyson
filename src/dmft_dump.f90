@@ -120,6 +120,7 @@
      use control, only : nmesh
 
      use context, only : qbnd
+     use context, only : fmesh
 
      implicit none
 
@@ -131,6 +132,7 @@
 ! loop index
      integer :: s
      integer :: t
+     integer :: m
      integer :: q
      integer :: k
 
