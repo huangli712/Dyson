@@ -119,14 +119,16 @@
      use control, only : nkpt, nspin
      use control, only : nmesh
 
+     use context, only : i_wnd
      use context, only : qbnd
+     use context, only : kwin
      use context, only : fmesh
 
      implicit none
 
 ! external arguments
 ! eigenvalues for H(k) + \Sigma(i\omega_n)
-     complex(dp), intent(out) :: eigs(qbnd,nmesh,nkpt,nspin)
+     complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
 
 ! local variables
 ! loop index
@@ -135,6 +137,9 @@
      integer :: m
      integer :: q
      integer :: k
+
+     integer :: cbnd
+     integer :: bs, be
 
 ! open data file: dmft_eigen.dat
      open(mytmp, file='dmft_eigen.dat', form='formatted', status='unknown')
