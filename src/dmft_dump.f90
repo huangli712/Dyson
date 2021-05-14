@@ -85,6 +85,14 @@
      do t=1,nsite
          do s=1,nspin
 
+! write data for given spin and site
+             write(mytmp,'(a7,i4,2X,a5,i4)') "# site:", t, "spin:", s
+             do q=1,ndim(t)
+                 do p=1,ndim(t)
+                     write(mytmp,'(2i4,2f16.8)') p, q, eimps(p,q,s,t)
+                 enddo ! over p={1,ndim(t)} loop
+             enddo ! over q={1,ndim(t)} loop
+
 ! write separators
              write(mytmp,*)
              write(mytmp,*)
