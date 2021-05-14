@@ -66,6 +66,11 @@
 ! open data file: dmft_eimps.dat
      open(mytmp, file='dmft_eimps.dat', form='formatted', status='unknown')
 
+! write parameters
+     write(mytmp,'(a9,i4)') '# nsite: ', nsite
+     write(mytmp,'(a9,i4)') '# nspin: ', nspin
+     write(mytmp,'(a9,i4)') '# qdim : ', qdim
+
 ! close data file
      close(mytmp)
 
