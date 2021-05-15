@@ -35,7 +35,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/14/2021 by li huang (last modified)
+!!!           05/15/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -1583,8 +1583,10 @@
      enddo ! over do while loop
      !
      if ( abs(occ3 - desired) < mc ) then
-         write(mystd,'(6X,a)',advance = 'no') 'final results ->'
-         write(mystd,'(2(2X,a,f12.8))') 'EF: ', mu3, 'density: ', occ3
+         if ( myid == master ) then
+             write(mystd,'(6X,a)',advance = 'no') 'final results ->'
+             write(mystd,'(2(2X,a,f12.8))') 'EF: ', mu3, 'density: ', occ3
+         endif ! back if ( myid == master ) block
      else
          call s_print_error('dichotomy', 'fail to locate the fermi level')
      endif ! back if ( abs(occ3 - desired) < mc ) block
@@ -1922,7 +1924,8 @@
 ! provide some useful information
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
              write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
-             write(mystd,'(2X,a,3i3)') 'window: ', bs, be, cbnd
+             write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
+             write(mystd,'(2X,a,i2)') 'pr: ', myid
 
 ! allocate memory
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
