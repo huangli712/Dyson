@@ -829,7 +829,7 @@
 
      use control, only : nkpt, nspin
      use control, only : nsite
-     use control, only : myid, master
+     use control, only : myid, master, nprocs
 
      use context, only : i_wnd
      use context, only : qdim
@@ -871,11 +871,14 @@
 ! dummy array, used to build site-dependent impurity level
      complex(dp), allocatable :: Xe(:,:)
 
+     complex(dp), allocatable :: eimps_mpi(:,:,:,:)
+
 ! allocate memory
      allocate(Xe(qdim,qdim), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_eimps','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+     allocate(eimps_mpi(qdim,qdim,nspin,nsite))
 
 ! init cbnd and cdim
 ! cbnd will be k-dependent and cdim will be impurity-dependent. they will
@@ -885,6 +888,7 @@
 
 ! reset eimps
      eimps = czero
+     eimps_mpi = czero
 
 ! print some useful information
      if ( myid == master ) then
@@ -893,7 +897,7 @@
      endif ! back if ( myid == master ) block
 
      SPIN_LOOP: do s=1,nspin
-         KPNT_LOOP: do k=1,nkpt
+         KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
 ! evaluate band window for the current k-point and spin
 ! i_wnd(t) returns the corresponding band window for given impurity site t
@@ -906,11 +910,12 @@
              cbnd = be - bs + 1
 
 ! provide some useful information
-             if ( myid == master ) then
+             !!if ( myid == master ) then
                  write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
                  write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
-                 write(mystd,'(2X,a,3i3)') 'window: ', bs, be, cbnd
-             endif ! back if ( myid == master ) block
+                 write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
+                 write(mystd,'(2X,a,i2)') 'pr: ', myid
+             !!endif ! back if ( myid == master ) block
 
 ! allocate memory
              allocate(Em(cbnd),      stat = istat)
