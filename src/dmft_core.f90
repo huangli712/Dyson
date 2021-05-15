@@ -1826,9 +1826,13 @@
      use constants, only : dp, mystd
      use constants, only : czero
 
+     use mmpi, only : mp_barrier
+     use mmpi, only : mp_allreduce
+ 
      use control, only : nkpt, nspin
      use control, only : nsite
      use control, only : nmesh
+     use control, only : myid, master, nprocs
 
      use context, only : i_wnd
      use context, only : ndim
@@ -1886,9 +1890,18 @@
 ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), allocatable :: Eo(:)
 
+     complex(dp), allocatable :: eigs_mpi(:,:,:,:)
+     complex(dp), allocatable :: einf_mpi(:,:,:)
+
+     allocate(eigs_mpi(qbnd,nmesh,nkpt,nspin), stat = istat)
+     allocate(einf_mpi(qbnd,nkpt,nspin), stat = istat)
+
 ! initialization
      eigs = czero
      einf = czero
+
+     eigs_mpi = czero
+     einf_mpi = czero
 
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
@@ -1973,6 +1986,9 @@
 
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
+
+     deallocate(eigs_mpi)
+     deallocate(einf_mpi)
 
      return
   end subroutine cal_eigsys
