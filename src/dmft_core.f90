@@ -827,7 +827,7 @@
      use constants, only : dp, mystd
      use constants, only : czero
 
-     use mmpi, only : mp_barrier
+     use mmpi, only : mp_barrier, mp_allreduce
 
      use control, only : nkpt, nspin
      use control, only : nsite
