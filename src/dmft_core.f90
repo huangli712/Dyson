@@ -827,6 +827,8 @@
      use constants, only : dp, mystd
      use constants, only : czero
 
+     use mmpi, only : mp_barrier
+
      use control, only : nkpt, nspin
      use control, only : nsite
      use control, only : myid, master, nprocs
@@ -895,6 +897,8 @@
          write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate eimps for', nsite, 'sites'
          write(mystd,'(4X,a,2X,i4,2X,a)') 'add contributions from', nkpt, 'kpoints'
      endif ! back if ( myid == master ) block
+
+     call mp_barrier()
 
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
