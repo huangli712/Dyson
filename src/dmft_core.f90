@@ -827,7 +827,8 @@
      use constants, only : dp, mystd
      use constants, only : czero
 
-     use mmpi, only : mp_barrier, mp_allreduce
+     use mmpi, only : mp_barrier
+     use mmpi, only : mp_allreduce
 
      use control, only : nkpt, nspin
      use control, only : nsite
@@ -880,7 +881,11 @@
      if ( istat /= 0 ) then
          call s_print_error('cal_eimps','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
-     allocate(eimps_mpi(qdim,qdim,nspin,nsite))
+     !
+     allocate(eimps_mpi(qdim,qdim,nspin,nsite), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_eimps','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! init cbnd and cdim
 ! cbnd will be k-dependent and cdim will be impurity-dependent. they will
@@ -966,6 +971,7 @@
 
 ! deallocate memory
      if ( allocated(Xe) ) deallocate(Xe)
+     if ( allocated(eimps_mpi) ) deallocate(eimps_mpi)
 
      return
   end subroutine cal_eimps
