@@ -1903,8 +1903,10 @@
      eigs_mpi = czero
      einf_mpi = czero
 
+     call mp_barrier()
+
      SPIN_LOOP: do s=1,nspin
-         KPNT_LOOP: do k=1,nkpt
+         KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
 ! evaluate band window for the current k-point and spin
 ! i_wnd(t) returns the corresponding band window for given impurity site t
@@ -1986,6 +1988,18 @@
 
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
+
+     call mp_barrier()
+
+     call mp_allreduce(eigs, eigs_mpi)
+     call mp_allreduce(einf, einf_mpi)
+
+     call mp_barrier()
+
+     eigs = eigs_mpi
+     einf = einf_mpi
+
+     call mp_barrier()
 
      deallocate(eigs_mpi)
      deallocate(einf_mpi)
