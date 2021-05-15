@@ -949,8 +949,12 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
+     call mp_barrier()
+     call mp_allreduce(eimps, eimps_mpi)
+     call mp_barrier()
+
 ! renormalize impurity levels
-     eimps = eimps / float(nkpt)
+     eimps = eimps_mpi / float(nkpt)
 
 ! substract the double counting terms
      do t=1,nsite
