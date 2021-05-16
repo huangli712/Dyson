@@ -396,7 +396,7 @@
 !!
 !! band levels
 !!
-     complex(dp), public, save, allocatable :: eimpk(:,:,:)
+!!     complex(dp), public, save, allocatable :: eimpk(:,:,:)
 
 !!
 !! @var eimps
