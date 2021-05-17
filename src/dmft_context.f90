@@ -839,7 +839,7 @@
      implicit none
 
 ! allocate memory
-     allocate(eimpk(qbnd,qbnd,nspin),       stat = istat)
+     !allocate(eimpk(qbnd,qbnd,nspin),       stat = istat)
      allocate(eimps(qdim,qdim,nspin,nsite), stat = istat)
 
 ! check the status
@@ -848,7 +848,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     eimpk = czero
+     !eimpk = czero
      eimps = czero
 
      return
