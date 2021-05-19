@@ -392,13 +392,6 @@
      implicit none
 
 !!
-!! @var eimpk
-!!
-!! band levels
-!!
-!!     complex(dp), public, save, allocatable :: eimpk(:,:,:)
-
-!!
 !! @var eimps
 !!
 !! impurity levels
