@@ -686,6 +686,12 @@
 
      complex(dp), allocatable :: Gl(:,:)
 
+! allocate memory
+     allocate(Gl(qdim,qdim), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_wss_l','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
      do t=1,nsite
          do s=1,nspin
              do m=1,nmesh
