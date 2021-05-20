@@ -339,7 +339,7 @@
 !! `I` means the index for correlated sites, \alpha means the index for
 !! correlated orbitals. `b`, `k`, `s` are indices for dft bands, k-points,
 !! and spins, respectively. of course, `b` is restricted by band windows,
-!! and depends on k-points.
+!! and depends on k-points as well. so, chipsi is a rank-5 array.
 !!
      complex(dp), public, save, allocatable :: chipsi(:,:,:,:,:)
 
@@ -384,7 +384,7 @@
 !!
 !! @mod dmft_eimps
 !!
-!! contain the band levels and impurity levels
+!! contain the local impurity levels
 !!
   module dmft_eimps
      use constants, only : dp
@@ -394,7 +394,7 @@
 !!
 !! @var eimps
 !!
-!! impurity levels
+!! local impurity levels
 !!
      complex(dp), public, save, allocatable :: eimps(:,:,:,:)
 
