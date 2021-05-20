@@ -660,6 +660,8 @@
      use constants, only : dp
      use constants, only : czero
 
+     use context, only : qdim
+     use context, only : ndim
      use context, only : sig_l
      use context, only : grn_l
      use context, only : wss_l
@@ -676,6 +678,11 @@
 ! loop index for impurity sites
      integer :: t
 
+! status flag
+     integer :: istat
+
+     complex(dp), allocatable :: Gl(:,:)
+
      do t=1,nsite
          do s=1,nspin
              do m=1,nmesh
@@ -684,6 +691,9 @@
              enddo ! over m={1,nmesh} loop
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
+
+! deallocate memory
+     if ( allocated(Gl) ) deallocate(Gl)
 
      return
   end subroutine cal_wss_l
