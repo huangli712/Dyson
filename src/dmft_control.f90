@@ -82,6 +82,7 @@
 !! @var axis
 !!
 !! control flag, determine the working axis for brillouin zone integration
+!! and fermi level search
 !!
 !! if axis == 1:
 !!     imaginary axis
@@ -112,7 +113,8 @@
 !! @var ltetra
 !!
 !! control flag, determine whether the analytical tetrahedron method is
-!! used to perform the brillouin zone integration
+!! used to perform the brillouin zone integration. this feature has not
+!! been implemented.
 !!
 !! if ltetra == .true.
 !!     use the analytical tetrahedron algorithm
@@ -195,7 +197,7 @@
 !! number of groups of projectors, which are used to create the Hilbert
 !! subspace for correlated or non-correlated orbitals. note that `ngrp`
 !! is always larger or equal to `nsite`. in other words, multiple groups
-!! of projectors are permitted. some of them might be non-correlated.
+!! of projectors are permitted. but some of them might be non-correlated.
 !!
      integer, public, save :: ngrp   = 1
 
@@ -317,21 +319,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.3.1 @ 2021.05.14D'
+     character(len=20), public, parameter :: V_FULL = 'v0.4.0 @ 2021.05.20D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.3.1'
+     character(len=06), public, parameter :: V_CURR = 'v0.4.0'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2021.05.14'
+     character(len=11), public, parameter :: V_DATE = '2021.05.20'
 
 !!
 !! @var V_STAT
