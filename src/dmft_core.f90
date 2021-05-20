@@ -812,12 +812,13 @@
          SPIN_LOOP: do s=1,nspin
              MESH_LOOP: do m=1,nmesh
 
-! get frequency point
-! consider imaginary axis or real axis
+! get frequency point. note that the fermi level (chemical potential) is
+! already included in the impurity levels `eimps`. so here we just ignore
+! the fermi level. 
                  if ( axis == 1 ) then
-                     caux = czi * fmesh(m) + fermi
+                     caux = czi * fmesh(m)
                  else
-                     caux = fmesh(m) + fermi
+                     caux = fmesh(m)
                  endif ! back if ( axis == 1 ) block
 
 ! calculate G^{-1}
