@@ -663,7 +663,6 @@
      use control, only : nspin
      use control, only : nsite, nmesh
 
-     use context, only : qdim
      use context, only : ndim
      use context, only : sig_l
      use context, only : grn_l
@@ -697,7 +696,7 @@
 !     G^{-1}_{0} = G^{-1} + \Sigma
 ! please be aware that the double counting terms have been substracted
 ! from the self-energy function. see subroutine cal_sig_l().
-     do t=1,nsite
+     SITE_LOOP: do t=1,nsite
 ! get size of orbital space 
          cdim = ndim(t)
 
@@ -711,8 +710,8 @@
          Gl = czero
 
 ! loop over spins and frequency mesh
-         do s=1,nspin
-             do m=1,nmesh
+         SPIN_LOOP: do s=1,nspin
+             MESH_LOOP: do m=1,nmesh
 
 ! back local green's function to Gl
                  Gl = grn_l(1:cdim,1:cdim,m,s,t)
@@ -728,13 +727,13 @@
 
 ! save the final resuls to wss_l
                  wss_l(1:cdim,1:cdim,m,s,t) = Gl
-             enddo ! over m={1,nmesh} loop
-         enddo ! over s={1,nspin} loop
+             enddo MESH_LOOP ! over m={1,nmesh} loop
+         enddo SPIN_LOOP ! over s={1,nspin} loop
 
 ! deallocate memory
          if ( allocated(Gl) ) deallocate(Gl)
 
-     enddo ! over t={1,nsite} loop
+     enddo SITE_LOOP ! over t={1,nsite} loop
 
      return
   end subroutine cal_wss_l
