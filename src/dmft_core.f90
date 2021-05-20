@@ -122,7 +122,7 @@
 
      implicit none
 
-! call the computational subroutine to search the fermi level
+! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
      endif ! back if ( myid == master ) block
@@ -137,7 +137,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! call the computational subroutine to compute the local impurity levels
+! try to compute the local impurity levels
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Level'
      endif ! back if ( myid == master ) block
@@ -148,7 +148,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! call the computational subroutine to compute the local green's function
+! try to compute the local green's function
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Green'
      endif ! back if ( myid == master ) block
@@ -159,7 +159,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! call the computational subroutine to compute the hybridization function
+! try to compute the hybridization function
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Hybri'
      endif ! back if ( myid == master ) block
@@ -170,7 +170,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! call the computational subroutine to compute the local weiss's function
+! try to compute the local weiss's function
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Weiss'
      endif ! back if ( myid == master ) block
