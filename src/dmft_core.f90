@@ -829,11 +829,12 @@
 ! self-energy functions. see cal_sig_l() subroutine for more details.
                  Sm = sig_l(1:cdim,1:cdim,m,s,t)
 
-! get local impurity levels
-! the local impurity levels are actually \sum e_{nk} - \mu
+! get local impurity levels. the local impurity levels are actually equal
+! to \sum e_{nk} - \mu. see cal_eimps() subroutine for more details. 
                  Em = eimps(1:cdim,1:cdim,s,t)
 
-! assemble the hybridization function
+! assemble the hybridization function. actually, Sm + Tm is G^{-1}_0.
+! please see cal_wss_l() subroutine for more details.
                  hyb_l(1:cdim,1:cdim,m,s,t) = caux - Em - Sm - Tm
 
              enddo MESH_LOOP ! over m={1,nmesh} loop
