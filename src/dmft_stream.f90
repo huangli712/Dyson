@@ -815,7 +815,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in brillouin zone information if available
+! read in brillouin zone information. the code can not run without
+! the file `kmesh.ir`.
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
