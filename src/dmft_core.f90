@@ -421,6 +421,9 @@
 ! dummy array for the Matsubara self-energy functions
      complex(dp), allocatable :: Sm(:,:)
 
+! check working axis
+     call s_assert2(axis == 1, 'axis is wrong')
+
 ! allocate memory
      allocate(Sm(qdim,qdim), stat = istat)
      if ( istat /= 0 ) then
