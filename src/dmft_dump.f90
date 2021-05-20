@@ -65,9 +65,13 @@
      complex(dp), intent(in) :: eimps(qdim,qdim,nspin,nsite)
 
 ! local variables
-! loop index
+! loop index for impurity sites
      integer :: t
+
+! loop index for spins
      integer :: s
+
+! loop index for correlated orbitals
      integer :: p, q
 
 ! open data file: dmft_eimps.dat
@@ -225,10 +229,16 @@
      complex(dp), intent(in) :: grn_l(qdim,qdim,nmesh,nspin,nsite)
 
 ! local variables
-! loop index
+! loop index for impurity sites
      integer :: t
+
+! loop index for spins
      integer :: s
+
+! loop index for frequency grid
      integer :: m
+
+! loop index for correlated orbitals
      integer :: p, q
 
 ! open data file: dmft_grn_l.dat
