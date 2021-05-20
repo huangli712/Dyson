@@ -619,8 +619,8 @@
 ! calculate lattice green's function
              call cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
 
-! project lattice green's function to obtain local green's function, then
-! we have to save the final results
+! downfold the lattice green's function to obtain local green's function,
+! then we have to save the final results
              do t=1,nsite
                  Gl = czero
                  cdim = ndim(t)
@@ -643,9 +643,9 @@
      if ( allocated(Gl) ) deallocate(Gl)
 
 !! DEBUG CODE
-     do s=1,cdim
+     do s=1,qdim
          print *, s, grn_l(s,s,1,1,1)
-     enddo ! over s={1,cdim} loop
+     enddo ! over s={1,qdim} loop
 !! DEBUG CODE
 
      return
