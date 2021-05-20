@@ -382,13 +382,15 @@
 !!
 !! @sub cal_sigoo
 !!
-!! try to calculate the asymptotic values for self-energy functions. this
-!! function works for Matsubara self-energy functions (bare) only. 
+!! try to calculate the asymptotic values for self-energy functions. the
+!! double-counting terms will be removed as well. this function works for
+!! Matsubara self-energy functions (bare) only. 
 !!
   subroutine cal_sigoo()
      use constants, only : dp
      use constants, only : czero
 
+     use control, only : axis
      use control, only : nspin
      use control, only : nsite
      use control, only : nmesh
