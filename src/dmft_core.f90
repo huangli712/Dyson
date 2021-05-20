@@ -681,9 +681,13 @@
 ! loop index for impurity sites
      integer :: t
 
+! number of correlated orbitals for given impurity site
+     integer :: cdim
+
 ! status flag
      integer :: istat
 
+! dummy array: for local green's function
      complex(dp), allocatable :: Gl(:,:)
 
 ! allocate memory
@@ -693,6 +697,7 @@
      endif ! back if ( istat /= 0 ) block
 
      do t=1,nsite
+         cdim = ndim(t)
          do s=1,nspin
              do m=1,nmesh
              enddo ! over m={1,nmesh} loop
