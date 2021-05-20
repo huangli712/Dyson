@@ -396,7 +396,7 @@
      use control, only : nmesh
 
      use context, only : qdim
-     use context, only : sigoo, sig_l
+     use context, only : sigdc, sigoo, sig_l
 
      implicit none
 
@@ -435,7 +435,7 @@
 
 ! loop over nsite and nspin
 !
-! we count the final `mcut` frequency points, then we try to calculate
+! we count the last `mcut` frequency points, then we try to calculate
 ! the averaged values. up to now, the double counting terms have not
 ! been substracted from sig_l. in other words, sig_l is still bare.
      do t=1,nsite
@@ -449,6 +449,9 @@
              sigoo(:,:,s,t) = Sm / float(mcut)
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
+
+! we substract the double counting terms from sigoo
+     sigoo = sigoo - sigdc
 
 ! deallocate memory
      if ( allocated(Sm) ) deallocate(Sm)
