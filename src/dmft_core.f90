@@ -320,8 +320,10 @@
 ! status flag
      integer  :: istat
 
-! dummy arrays, used to save the eigenvalues of H + \Sigma
+! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
      complex(dp), allocatable :: eigs(:,:,:,:)
+
+! dummy array, used to save the eigenvalues of H + \Sigma(ioo)
      complex(dp), allocatable :: einf(:,:,:)
 
 ! allocate memory
@@ -335,7 +337,7 @@
          call s_print_error('dmft_try5','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! call the computational subroutine to do this job
+! try to diagonalize the effective hamiltonian
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Eigen'
          write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
