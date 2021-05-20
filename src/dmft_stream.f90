@@ -359,7 +359,7 @@
      character(len = 2) :: chr2
 
 ! read in mappings or connections between quantum impurity problems and
-! groups of projectors. this code can not run without file `maps.ir`
+! groups of projectors. this code can not run without the file `maps.ir`
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -483,7 +483,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in groups of projectors if available
+! read in groups of projectors. apparently, this code can not run without
+! the file `groups.ir`.
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -522,7 +523,7 @@
 
 ! evaluate and check qdim
          itmp = maxval(ndim)
-         call s_assert2(itmp == qdim, 'ndim is wrong')
+         call s_assert2(itmp == qdim, 'ndim or qdim is wrong')
 
 ! close file handler
          close(mytmp)
