@@ -271,7 +271,7 @@
 !! @mod dmft_tetra
 !!
 !! contain the tetrahedron information, which is used to carry out the
-!! brillouin zone integration
+!! brillouin zone integration. this feature has not been implemented.
 !!
   module dmft_tetra
      implicit none
