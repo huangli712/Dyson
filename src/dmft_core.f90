@@ -699,6 +699,10 @@
 ! reset wss_l
      wss_l = czero
 
+! try to calculate bath weiss's function using the following equation:
+!     G^{-1}_{0} = G^{-1} + \Sigma
+! please be aware that the double counting terms have been substracted
+! from the self-energy function. see subroutine cal_sig_l().
      do t=1,nsite
          cdim = ndim(t)
          do s=1,nspin
