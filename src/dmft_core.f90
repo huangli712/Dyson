@@ -751,7 +751,6 @@
      use control, only : nspin
      use control, only : nsite
      use control, only : nmesh
-     use control, only : fermi
      use control, only : myid, master
 
      use context, only : ndim
