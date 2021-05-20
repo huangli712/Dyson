@@ -1066,7 +1066,6 @@
   subroutine cat_free_eimps()
      implicit none
 
-     !if ( allocated(eimpk) ) deallocate(eimpk)
      if ( allocated(eimps) ) deallocate(eimps)
 
      return
