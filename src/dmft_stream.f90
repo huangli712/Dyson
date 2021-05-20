@@ -882,7 +882,8 @@
 !!
 !! @sub dmft_input_tetra
 !!
-!! read in data for tetrahedron integration (see module dmft_tetra)
+!! read in data for tetrahedron integration (see module dmft_tetra).
+!! note that this subroutine is only called when `ltetra` is true.
 !!
   subroutine dmft_input_tetra()
      use constants, only : dp, mytmp
