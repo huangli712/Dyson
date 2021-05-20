@@ -1252,7 +1252,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in double counting terms if available
+! read in double counting terms. the code can not run without the
+! file `sigma.dc`.
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -1321,9 +1322,6 @@
      call mp_barrier()
 
 # endif  /* MPI */
-
-! FOR DEBUG PURPOSE
-     sigdc = czero
 
      return
   end subroutine dmft_input_sigdc
