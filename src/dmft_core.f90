@@ -657,6 +657,13 @@
 !! try to calculate local weiss's function for all impurity sites
 !!
   subroutine cal_wss_l()
+     use constants, only : dp
+     use constants, only : czero
+
+     use context, only : sig_l
+     use context, only : grn_l
+     use context, only : wss_l
+
      implicit none
 
 ! local variables
@@ -668,6 +675,15 @@
 
 ! loop index for impurity sites
      integer :: t
+
+     do t=1,nsite
+         do s=1,nspin
+             do m=1,nmesh
+
+                 sig_l(:,:,m,s,t) = sig_l(:,:,m,s,t) - sigdc(:,:,s,t)
+             enddo ! over m={1,nmesh} loop
+         enddo ! over s={1,nspin} loop
+     enddo ! over t={1,nsite} loop
 
      return
   end subroutine cal_wss_l
