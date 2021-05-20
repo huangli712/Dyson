@@ -278,7 +278,7 @@
 
 # endif  /* MPI */
 
-! reset fermi to zero, because it is calibrated by the adaptor
+! reset fermi to zero, because it was calibrated by the adaptor.
 ! see ZenCore -> plo.jl -> plo_fermi() function for more details.
      fermi = zero
 
