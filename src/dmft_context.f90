@@ -418,14 +418,16 @@
 !! @var sigdc
 !!
 !! dobule counting term for self-energy functions, which are determined
-!! by the Zen framework
+!! by the Zen framework. this code will read it from file sigma.dc.
 !!
      complex(dp), public, save, allocatable :: sigdc(:,:,:,:)
 
 !!
 !! @var sigoo
 !!
-!! asymptotic values for (sig_l - sigdc) when \omega goes to \infty
+!! asymptotic values for bare self-energy functions (when \omega goes
+!! to \infty). note that the double counting terms should be subtracted
+!! from them.
 !!
      complex(dp), public, save, allocatable :: sigoo(:,:,:,:)
 
@@ -433,8 +435,9 @@
 !! @var sig_l
 !!
 !! impurity self-energy functions. they are usually taken from the output
-!! of various quantum impurity solver. note that the double counting terms
-!! have not been subtracted from them.
+!! of various quantum impurity solver. this code will read them from file
+!! sigma.bare. note that the double counting terms should be subtracted
+!! from them.
 !!
      complex(dp), public, save, allocatable :: sig_l(:,:,:,:,:)
 
