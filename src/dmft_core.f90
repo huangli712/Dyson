@@ -696,6 +696,9 @@
          call s_print_error('cal_wss_l','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+! reset wss_l
+     wss_l = czero
+
      do t=1,nsite
          cdim = ndim(t)
          do s=1,nspin
