@@ -305,10 +305,16 @@
      complex(dp), intent(in) :: wss_l(qdim,qdim,nmesh,nspin,nsite)
 
 ! local variables
-! loop index
+! loop index for impurity sites
      integer :: t
+
+! loop index for spins
      integer :: s
+
+! loop index for frequency grid
      integer :: m
+
+! loop index for correlated orbitals
      integer :: p, q
 
 ! open data file: dmft_wss_l.dat
@@ -375,10 +381,16 @@
      complex(dp), intent(in) :: hyb_l(qdim,qdim,nmesh,nspin,nsite)
 
 ! local variables
-! loop index
+! loop index for impurity sites
      integer :: t
+
+! loop index for spins
      integer :: s
+
+! loop index for frequency grid
      integer :: m
+
+! loop index for correlated orbitals
      integer :: p, q
 
 ! open data file: dmft_hyb_l.dat
