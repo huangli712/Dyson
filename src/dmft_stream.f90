@@ -1227,7 +1227,7 @@
      use control, only : myid, master
 
      use context, only : i_grp
-     use context, only : ndim
+     use context, only : qdim, ndim
      use context, only : sigdc
 
      implicit none
@@ -1286,6 +1286,7 @@
          do i=1,nsite
              read(mytmp,*) chr1, chr2, itmp
              call s_assert2(itmp == ndim(i_grp(i)), 'ndim is wrong')
+             call s_assert2(itmp <= qdim, 'ndim is wrong')
          enddo ! over i={1,nsite} loop
          read(mytmp,*) ! empty line
 
@@ -1374,7 +1375,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in local self-energy functions if available
+! read in local self-energy functions. this code can not run without
+! the file `sigma.bare`.
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
