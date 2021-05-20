@@ -695,8 +695,6 @@
      do t=1,nsite
          do s=1,nspin
              do m=1,nmesh
-
-                 sig_l(:,:,m,s,t) = sig_l(:,:,m,s,t) - sigdc(:,:,s,t)
              enddo ! over m={1,nmesh} loop
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
