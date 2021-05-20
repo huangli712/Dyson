@@ -720,6 +720,8 @@
 ! inverse it again to obtain bath weiss's function
                  call s_inv_z(cdim, Gl(1:cdim,1:cdim))
 
+! save the final resuls to wss_l
+                 wss_l(1:cdim,1:cdim,m,s,t) = Gl(1:cdim,1:cdim)
              enddo ! over m={1,nmesh} loop
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
