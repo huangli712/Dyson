@@ -606,12 +606,13 @@
                  call s_print_error('cal_grn_l','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-! build self-energy function, and then embed it into Kohn-Sham basis
+! build self-energy function, and then upfold it into Kohn-Sham basis
+! Sk should contain contributions from all impurity sites
              Sk = czero
              do t=1,nsite
                  Xk = czero
                  cdim = ndim(t)
-                 call cal_sl_sk(cdim, cbnd, k, s, t, Sk)
+                 call cal_sl_sk(cdim, cbnd, k, s, t, Xk)
                  Sk = Sk + Xk
              enddo ! over t={1,nsite} loop
 
