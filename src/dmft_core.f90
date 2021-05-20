@@ -825,9 +825,12 @@
                  call s_inv_z(cdim, Tm)
 
 ! get self-energy function
-                 Sm = sig_l(1:cdim,1:cdim,m,s,t) + sigdc(1:cdim,1:cdim,s,t)
+! be aware that the double counting terms have been removed from the
+! self-energy functions. see cal_sig_l() subroutine for more details.
+                 Sm = sig_l(1:cdim,1:cdim,m,s,t)
 
-! get impurity level
+! get local impurity levels
+! the local impurity levels are actually \sum e_{nk} - \mu
                  Em = eimps(1:cdim,1:cdim,s,t)
 
 ! assemble the hybridization function
