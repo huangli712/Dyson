@@ -707,6 +707,19 @@
          cdim = ndim(t)
          do s=1,nspin
              do m=1,nmesh
+! back local green's function to Gl
+                 Gl = czero
+                 Gl(1:cdim,1:cdim) = grn_l(1:cdim,1:cdim,m,s,t)
+
+! inverse local green's function
+                 call s_inv_z(cdim, Gl(1:cdim,1:cdim))
+
+! plus the self-energy function
+                 Gl(1:cdim,1:cdim) = Gl(1:cdim,1:cdim) + sig_l(1:cdim,1:cdim,m,s,t)
+
+! inverse it again to obtain bath weiss's function
+                 call s_inv_z(cdim, Gl(1:cdim,1:cdim))
+
              enddo ! over m={1,nmesh} loop
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
