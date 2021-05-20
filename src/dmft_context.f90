@@ -18,7 +18,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/10/2021 by li huang (last modified)
+!!!           05/20/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -110,14 +110,14 @@
 !!
 !! @var site
 !!
-!! the corresponding atomic site of group
+!! the corresponding atomic site of this group
 !!
      integer, public, save, allocatable :: site(:)
 
 !!
 !! @var l
 !!
-!! the corresponding angular momentum quantum number of group
+!! the corresponding angular momentum quantum number of this group
 !!
      integer, public, save, allocatable :: l(:)
 
@@ -257,7 +257,7 @@
 !! @var weight
 !!
 !! integration weights for k-points. please pay attention to that they
-!! have not been renormalized.
+!! have not been renormalized. we have to ensure sum(weight) = nkpt.
 !!
      real(dp), public, save, allocatable :: weight(:)
 
