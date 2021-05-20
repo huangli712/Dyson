@@ -467,6 +467,7 @@
 !! functions (bare) only. 
 !!
   subroutine cal_sig_l()
+     use control, only : axis
      use control, only : nspin
      use control, only : nsite
      use control, only : nmesh
@@ -485,6 +486,10 @@
 ! loop index for impurity sites
      integer :: t
 
+! check working axis
+     call s_assert2(axis == 1, 'axis is wrong')
+
+! substract the double counting terms
      do t=1,nsite
          do s=1,nspin
              do m=1,nmesh
