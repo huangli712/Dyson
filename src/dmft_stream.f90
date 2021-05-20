@@ -851,6 +851,10 @@
              read(mytmp,*) kmesh(i,:), weight(i)
          enddo ! over i={1,nkpt} loop
 
+! until now, `weight' has not been renormalized. their summations should
+! be equal to nkpt.
+         call s_assert2(sum(weight) == float(nkpt), 'weight is wrong')
+
 ! close file handler
          close(mytmp)
 
