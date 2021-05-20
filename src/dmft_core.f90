@@ -546,7 +546,7 @@
 ! status flag
      integer :: istat
 
-! dummy array: for self-energy function (projected to Kohn-Sham basis)
+! dummy array: for self-energy function (upfolded to Kohn-Sham basis)
      complex(dp), allocatable :: Sk(:,:,:)
      complex(dp), allocatable :: Xk(:,:,:)
 
@@ -563,8 +563,8 @@
      endif ! back if ( istat /= 0 ) block
 
 ! init cbnd and cdim
-! cbnd will be k-dependent and cdim will be impurity-dependent. they will
-! be updated later
+! cbnd will be k-dependent and cdim will be impurity-dependent. we will
+! update them later.
      cbnd = 0
      cdim = 0
 
