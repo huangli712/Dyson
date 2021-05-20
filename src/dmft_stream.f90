@@ -555,8 +555,8 @@
 !!
 !! @sub dmft_input_window
 !!
-!! read in windows of projectors (see module dmft_window). the data are
-!! used to upfold or downfold the self-energy functions and green's
+!! read in band windows of projectors (see module dmft_window). the data
+!! are used to upfold or downfold the self-energy functions and green's
 !! functions.
 !!
   subroutine dmft_input_window()
@@ -590,7 +590,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in windows of projectors if available
+! read in band windows of projectors. apparently, this code can not run
+! without the file `windows.ir`.
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -633,7 +634,7 @@
 
 ! evaluate and check qbnd
          itmp = maxval(nbnd)
-         call s_assert2(itmp == qbnd, 'nbnd is wrong')
+         call s_assert2(itmp == qbnd, 'nbnd or qbnd is wrong')
 
 ! close file handler
          close(mytmp)
