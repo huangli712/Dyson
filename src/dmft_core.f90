@@ -219,7 +219,7 @@
 !! @sub dmft_try3
 !!
 !! try to search the fermi level, the global variable `fermi` may be
-!! updated in this subroutine.
+!! updated in this subroutine. it is just for testing purpose.
 !!
   subroutine dmft_try3()
      use constants, only : mystd
@@ -234,7 +234,7 @@
 ! check lfermi at first
      call s_assert2(lfermi .eqv. .true., 'lfermi must be true')
 
-! call the computational subroutine to do this job
+! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
      endif ! back if ( myid == master ) block
@@ -261,7 +261,8 @@
 !!
 !! @sub dmft_try4
 !!
-!! try to determine the local impurity levels.
+!! try to determine the local impurity levels. this subroutine is just
+!! for testing purpose.
 !!
   subroutine dmft_try4()
      use constants, only : mystd
@@ -273,7 +274,7 @@
 
      implicit none
 
-! call the computational subroutine to do this job
+! try to calculate the local impurity levels
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Level'
      endif ! back if ( myid == master ) block
