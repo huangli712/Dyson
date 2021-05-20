@@ -301,7 +301,8 @@
 !!
 !! @sub dmft_try5
 !!
-!! try to calculate all the complex eigenvalues
+!! try to calculate all the complex dft + dmft eigenvalues. the subroutine
+!! can be used in the postprocessing procedure.
 !!
   subroutine dmft_try5()
      use constants, only : dp, mystd
