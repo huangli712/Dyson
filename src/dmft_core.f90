@@ -105,7 +105,8 @@
 !!
 !! to calculate the local green's function, generate key inputs for the
 !! quantum impurity solvers. the fermi level may be updated, depending
-!! on the configuration parameter.
+!! on the configuration parameter. this subroutine is suitable for the
+!! one-shot dft + dmft calculations.
 !!
   subroutine dmft_try1()
      use constants, only : mystd
