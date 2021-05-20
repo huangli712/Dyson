@@ -35,7 +35,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/15/2021 by li huang (last modified)
+!!!           05/20/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -48,7 +48,7 @@
 !!
 !! @sub dmft_driver
 !!
-!! core subroutine, dispatch the computational task
+!! core subroutine, dispatch all the computational tasks
 !!
   subroutine dmft_driver()
      use control, only : task
@@ -56,7 +56,7 @@
      implicit none
 
 ! we have to preprocess the self-energy functions at first
-! calculate sig_l -> sigoo
+! calculate sig_l -> sigoo -> sigoo - sigdc
      call cal_sigoo()
 
 ! calculate sig_l -> sig_l - sigdc (sig_l is updated)
@@ -76,11 +76,11 @@
          case (3)
              call dmft_try3()
 
-! task = 4, calculate the impurity level
+! task = 4, calculate the impurity levels
          case (4)
              call dmft_try4()
 
-! task = 5, calculate complex eigenvalues
+! task = 5, calculate complex dft + dmft eigenvalues
          case (5)
              call dmft_try5()
 
