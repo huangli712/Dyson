@@ -698,7 +698,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in crystallography information if available
+! read in crystallography information. this code can not run without
+! the file `lattice.ir`.
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
