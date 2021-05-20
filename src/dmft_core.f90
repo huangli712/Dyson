@@ -690,12 +690,6 @@
 ! dummy array: for local green's function
      complex(dp), allocatable :: Gl(:,:)
 
-! allocate memory
-     allocate(Gl(qdim,qdim), stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('cal_wss_l','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
 ! reset wss_l
      wss_l = czero
 
@@ -704,30 +698,43 @@
 ! please be aware that the double counting terms have been substracted
 ! from the self-energy function. see subroutine cal_sig_l().
      do t=1,nsite
+! get size of orbital space 
          cdim = ndim(t)
+
+! allocate memory
+         allocate(Gl(cdim,cdim), stat = istat)
+         !
+         if ( istat /= 0 ) then
+             call s_print_error('cal_wss_l','can not allocate enough memory')
+         endif ! back if ( istat /= 0 ) block
+         !
+         Gl = czero
+
+! loop over spins and frequency mesh
          do s=1,nspin
              do m=1,nmesh
+
 ! back local green's function to Gl
-                 Gl = czero
-                 Gl(1:cdim,1:cdim) = grn_l(1:cdim,1:cdim,m,s,t)
+                 Gl = grn_l(1:cdim,1:cdim,m,s,t)
 
-! inverse local green's function
-                 call s_inv_z(cdim, Gl(1:cdim,1:cdim))
+! inverse local green's function. now Gl is G^{-1}
+                 call s_inv_z(cdim, Gl)
 
-! plus the self-energy function
-                 Gl(1:cdim,1:cdim) = Gl(1:cdim,1:cdim) + sig_l(1:cdim,1:cdim,m,s,t)
+! plus the self-energy function. now Gl is G^{-1} + \Sigma
+                 Gl = Gl + sig_l(1:cdim,1:cdim,m,s,t)
 
-! inverse it again to obtain bath weiss's function
-                 call s_inv_z(cdim, Gl(1:cdim,1:cdim))
+! inverse it again to obtain bath weiss's function. now Gl is G_0
+                 call s_inv_z(cdim, Gl)
 
 ! save the final resuls to wss_l
-                 wss_l(1:cdim,1:cdim,m,s,t) = Gl(1:cdim,1:cdim)
+                 wss_l(1:cdim,1:cdim,m,s,t) = Gl
              enddo ! over m={1,nmesh} loop
          enddo ! over s={1,nspin} loop
-     enddo ! over t={1,nsite} loop
 
 ! deallocate memory
-     if ( allocated(Gl) ) deallocate(Gl)
+         if ( allocated(Gl) ) deallocate(Gl)
+
+     enddo ! over t={1,nsite} loop
 
      return
   end subroutine cal_wss_l
