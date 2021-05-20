@@ -1007,7 +1007,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in Kohn-Sham band structure information if available
+! read in Kohn-Sham band structure information. this code can not run
+! without the file `eigen.ir`.
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -1115,7 +1116,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in local orbital projectors if available
+! read in local orbital projectors. this code can not run without the
+! file `projs.ir`.
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
