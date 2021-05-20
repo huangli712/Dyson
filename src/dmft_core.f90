@@ -463,7 +463,8 @@
 !! @sub cal_sig_l
 !!
 !! try to substract the double counting terms from the bare Matsubara
-!! self-energy functions
+!! self-energy functions. this function works for Matsubara self-energy
+!! functions (bare) only. 
 !!
   subroutine cal_sig_l()
      use control, only : nspin
