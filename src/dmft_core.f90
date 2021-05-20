@@ -660,6 +660,9 @@
      use constants, only : dp
      use constants, only : czero
 
+     use control, only : nspin
+     use control, only : nsite, nmesh
+
      use context, only : qdim
      use context, only : ndim
      use context, only : sig_l
