@@ -659,6 +659,16 @@
   subroutine cal_wss_l()
      implicit none
 
+! local variables
+! loop index for frequency mesh
+     integer :: m
+
+! loop index for spins
+     integer :: s
+
+! loop index for impurity sites
+     integer :: t
+
      return
   end subroutine cal_wss_l
 
