@@ -18,7 +18,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/20/2021 by li huang (last modified)
+!!!           05/21/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -397,6 +397,13 @@
 !! local impurity levels
 !!
      complex(dp), public, save, allocatable :: eimps(:,:,:,:)
+
+!!
+!! @var eimpx
+!!
+!! local impurity levels
+!!
+     complex(dp), public, save, allocatable :: eimpx(:,:,:,:)
 
   end module dmft_eimps
 
