@@ -1031,12 +1031,13 @@
 ! allocate memory
              allocate(Em(cbnd),      stat = istat)
              allocate(Hm(cbnd,cbnd), stat = istat)
+             !
              if ( istat /= 0 ) then
                  call s_print_error('cal_eimps','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
 ! evaluate Em, which is just some dft eigenvalues
-             Em = enk(bs:be,k,s)
+             Em = enk(bs:be,k,s) - fermi
 
 ! convert `Em` to diagonal matrix `Hm`
              call s_diag_z(cbnd, Em, Hm)
