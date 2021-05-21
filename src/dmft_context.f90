@@ -394,14 +394,15 @@
 !!
 !! @var eimps
 !!
-!! local impurity levels
+!! local impurity levels. eimps = \sum enk - mu
 !!
      complex(dp), public, save, allocatable :: eimps(:,:,:,:)
 
 !!
 !! @var eimpx
 !!
-!! local impurity levels
+!! local impurity levels shifted by double counting terms. in other words,
+!! eimpx = eimps - sigdc
 !!
      complex(dp), public, save, allocatable :: eimpx(:,:,:,:)
 
