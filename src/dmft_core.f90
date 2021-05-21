@@ -874,8 +874,10 @@
 ! desired charge density
      real(dp) :: ndens
 
-! dummy arrays, used to save the eigenvalues of H + \Sigma
+! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
      complex(dp), allocatable :: eigs(:,:,:,:)
+
+! dummy array, used to save the eigenvalues of H + \Sigma(oo)
      complex(dp), allocatable :: einf(:,:,:)
 
 ! allocate memory
