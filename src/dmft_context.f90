@@ -844,6 +844,7 @@
 
 ! allocate memory
      allocate(eimps(qdim,qdim,nspin,nsite), stat = istat)
+     allocate(eimpx(qdim,qdim,nspin,nsite), stat = istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -852,6 +853,7 @@
 
 ! initialize them
      eimps = czero
+     eimpx = czero
 
      return
   end subroutine cat_alloc_eimps
@@ -1075,6 +1077,7 @@
      implicit none
 
      if ( allocated(eimps) ) deallocate(eimps)
+     if ( allocated(eimpx) ) deallocate(eimpx)
 
      return
   end subroutine cat_free_eimps
