@@ -1013,7 +1013,7 @@
      !
      call mp_barrier()
      !
-# endif  /* MPI */
+# endif /* MPI */
 
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
@@ -1063,10 +1063,20 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
-! 
+! collect data from all mpi processes
+# if defined (MPI)
+     !
      call mp_barrier()
+     !
      call mp_allreduce(eimps, eimps_mpi)
+     !
      call mp_barrier()
+     !
+# else  /* MPI */
+
+     eimps_mpi = eimps
+
+# endif /* MPI */
 
 ! renormalize impurity levels
      eimps = eimps_mpi / float(nkpt)

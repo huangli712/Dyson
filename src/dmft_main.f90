@@ -39,7 +39,7 @@
 ! determines the size of the group associated with a communicator
      call mp_comm_size(nprocs)
 
-# endif  /* MPI */
+# endif /* MPI */
 
      DMFT_START: BLOCK
 
@@ -97,7 +97,7 @@
 ! terminates mpi execution environment
      call mp_finalize()
 
-# endif  /* MPI */
+# endif /* MPI */
 
 !!========================================================================
   END PROGRAM DMFT_MAIN !                                              <<<
