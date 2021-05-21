@@ -1023,12 +1023,10 @@
              cbnd = be - bs + 1
 
 ! provide some useful information
-             !!if ( myid == master ) then
-                 write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
-                 write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
-                 write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
-                 write(mystd,'(2X,a,i2)') 'pr: ', myid
-             !!endif ! back if ( myid == master ) block
+             write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
+             write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
+             write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
+             write(mystd,'(2X,a,i2)') 'proc: ', myid
 
 ! allocate memory
              allocate(Em(cbnd),      stat = istat)
