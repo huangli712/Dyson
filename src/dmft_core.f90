@@ -945,7 +945,6 @@
      use context, only : weight
      use context, only : enk
      use context, only : eimps
-     use context, only : sigdc
 
      implicit none
 
