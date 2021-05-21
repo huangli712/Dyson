@@ -948,7 +948,7 @@
      implicit none
 
 ! local variables
-! loop index for spin
+! loop index for spins
      integer :: s
 
 ! loop index for k-points
@@ -976,6 +976,7 @@
 ! dummy array, used to build site-dependent impurity level
      complex(dp), allocatable :: Xe(:,:)
 
+! dummy array, used to perform mpi reduce operation for eimps
      complex(dp), allocatable :: eimps_mpi(:,:,:,:)
 
 ! allocate memory
@@ -1005,6 +1006,7 @@
          write(mystd,'(4X,a,2X,i4,2X,a)') 'add contributions from', nkpt, 'kpoints'
      endif ! back if ( myid == master ) block
 
+! mpi barrier. waiting all processes reach here.
      call mp_barrier()
 
      SPIN_LOOP: do s=1,nspin
