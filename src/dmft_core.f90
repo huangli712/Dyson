@@ -1719,9 +1719,9 @@
 !!
 !! @sub cal_nelect
 !!
-!! try to calculate the number of valence electrons by dft occupations.
-!! actually, what we obtain is the occupation numbers in the selected
-!! band window
+!! try to calculate the number of valence electrons by dft occupations
+!! and weights. actually, what we obtain is the occupation numbers in
+!! the selected band window.
 !!
   subroutine cal_nelect(nelect)
      use constants, only : dp
