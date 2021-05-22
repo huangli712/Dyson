@@ -1321,7 +1321,7 @@
 ! status flag
      integer :: istat
 
-! dummy array: for asymptotic self-energy function (substracted by sigdc)
+! dummy array: for asymptotic self-energy function
      complex(dp), allocatable :: Sl(:,:)
 
 ! allocate memory
@@ -1332,9 +1332,6 @@
 
 ! here we use Sl to save parts of sigoo
      Sl = sigoo(1:cdim,1:cdim,s,t)
-
-! reset So
-     So = czero
 
 ! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
      call one_chi_psi(cdim, cbnd, k, s, t, Sl, So)
