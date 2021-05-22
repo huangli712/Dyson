@@ -1294,7 +1294,7 @@
      use constants, only : dp
      use constants, only : czero
 
-     use context, only : sigdc, sigoo
+     use context, only : sigoo
 
      implicit none
 
