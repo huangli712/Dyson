@@ -1761,8 +1761,8 @@
 ! impurity problems. basically, now we require that all the quantum
 ! impurity problems share the same band window. so in this subroutine,
 ! we only need to consider ONE band window, which is defined by
-! i_wnd(1) or i_wnd(2). whatever, they point to the same band window
-! according to our assumption.
+! i_wnd(1) or i_wnd(2). whatever, they should point to the same band
+! window according to our assumption.
 !
 
 ! reset nelect
@@ -1792,7 +1792,7 @@
 !! @sub cal_occupy
 !!
 !! for given fermi level, try to calculate the corresponding occupations.
-!! note that this subroutine only works in imaginary axis
+!! note that this subroutine only works in imaginary axis.
 !!
   subroutine cal_occupy(fermi, val, eigs, einf)
      use constants, only : dp
