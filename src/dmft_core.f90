@@ -1105,8 +1105,8 @@
 !! @sub cal_sl_sk
 !!
 !! try to upfold the self-energy function from local basis to Kohn-Sham
-!! basis. we assume that the double counting terms have been substracted
-!! from the self-energy functions.
+!! basis. here, we don't care whether the double counting terms have been
+!! substracted from the self-energy functions.
 !!
   subroutine cal_sl_sk(cdim, cbnd, k, s, t, Sk)
      use constants, only : dp
