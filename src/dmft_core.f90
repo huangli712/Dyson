@@ -944,7 +944,7 @@
      use context, only : kwin
      use context, only : weight
      use context, only : enk
-     use context, only : eimps
+     use context, only : eimps, eimpx
 
      implicit none
 
