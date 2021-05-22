@@ -1321,7 +1321,7 @@
 ! status flag
      integer :: istat
 
-! dummy array: for local self-energy function (substracted by sigdc)
+! dummy array: for asymptotic self-energy function (substracted by sigdc)
      complex(dp), allocatable :: Sl(:,:)
 
 ! allocate memory
@@ -1330,8 +1330,8 @@
          call s_print_error('cal_sl_so','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! here we use Sl to save sigoo - sigdc
-     Sl = sigoo(1:cdim,1:cdim,s,t) - sigdc(1:cdim,1:cdim,s,t)
+! here we use Sl to save parts of sigoo
+     Sl = sigoo(1:cdim,1:cdim,s,t)
 
 ! reset So
      So = czero
