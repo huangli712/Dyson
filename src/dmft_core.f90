@@ -1447,7 +1447,7 @@
 !! try to calculate lattice green's function at given k-point and spin.
 !! this subroutine needs the self-energy function at Kohn-Sham basis (i.e
 !! `Sk`), that is the reason why it is called `cal_sk_gk`. note that Sk
-!! contains the full contributions from all impurity sites.
+!! have to contain the full contributions from all impurity sites.
 !!
   subroutine cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
      use constants, only : dp
