@@ -1153,13 +1153,13 @@
          call s_print_error('cal_sl_sk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! here we use Sl to save sig_l - sigdc. sigdc has been substracted from
-! sig_l beforehand, see cal_sig_l()
+! we use Sl to store parts of sig_l. note that actually sigdc has been
+! substracted from sig_l beforehand, see cal_sig_l() for more details.
      do m=1,nmesh
          Sl(:,:,m) = sig_l(1:cdim,1:cdim,m,s,t)
      enddo ! over m={1,nmesh} loop
 
-! mapping: Sl (local basis) -> Sk (Kohn-Sham basis)
+! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
      call map_chi_psi(cdim, cbnd, nmesh, k, s, t, Sl, Sk)
 
 ! deallocate memory
