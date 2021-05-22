@@ -924,7 +924,8 @@
 !! @sub cal_eimps
 !!
 !! try to calculate local energy levels for all impurity sites. here,
-!! eimps is defined as \sum_k \epsilon_{n,k} - \mu.
+!! eimps is defined as \sum_k \epsilon_{n,k} - \mu. eimpx is calculated
+!! as well. it is equal to eimps - sigdc.
 !!
   subroutine cal_eimps()
      use constants, only : dp, mystd
@@ -945,6 +946,7 @@
      use context, only : weight
      use context, only : enk
      use context, only : eimps, eimpx
+     use context, only : sigdc
 
      implicit none
 
