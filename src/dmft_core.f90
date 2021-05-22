@@ -1080,11 +1080,11 @@
 ! renormalize the impurity levels
      eimps = eimps_mpi / float(nkpt)
 
-! substract the double counting terms from eimps to build eimpk
+! substract the double counting terms from eimps to build eimpx
      do t=1,nsite
          do s=1,nspin
              cdim = ndim(t)
-             eimpk(1:cdim,1:cdim,s,t) = eimps(1:cdim,1:cdim,s,t) - sigdc(1:cdim,1:cdim,s,t)
+             eimpx(1:cdim,1:cdim,s,t) = eimps(1:cdim,1:cdim,s,t) - sigdc(1:cdim,1:cdim,s,t)
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
 
