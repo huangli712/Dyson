@@ -209,7 +209,7 @@
 !! the current implementation, `nwnd` can be larger than 1. but for the
 !! correlated projectors or orbitals, they have to share the same energy
 !! window or band window. in order words, the array `i_wnd` has only one
-!! unique element. see comments in dmft_context.f90 and dmft_stream.f90. 
+!! unique element. see comments in dmft_context.f90 and dmft_stream.f90.
 !!
      integer, public, save :: nwnd   = 1
 

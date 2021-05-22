@@ -384,7 +384,7 @@
 !!
 !! try to calculate the asymptotic values for self-energy functions. the
 !! double-counting terms will be removed as well. this function works for
-!! Matsubara self-energy functions (bare) only. 
+!! Matsubara self-energy functions (bare) only.
 !!
   subroutine cal_sigoo()
      use constants, only : dp
@@ -464,7 +464,7 @@
 !!
 !! try to substract the double counting terms from the bare Matsubara
 !! self-energy functions. this function works for Matsubara self-energy
-!! functions (bare) only. 
+!! functions (bare) only.
 !!
   subroutine cal_sig_l()
      use control, only : axis
@@ -697,7 +697,7 @@
 ! please be aware that the double counting terms have been substracted
 ! from the self-energy function. see subroutine cal_sig_l().
      SITE_LOOP: do t=1,nsite
-! get size of orbital space 
+! get size of orbital space
          cdim = ndim(t)
 
 ! allocate memory
@@ -813,7 +813,7 @@
 
 ! get frequency point. note that the fermi level (chemical potential) is
 ! already included in the impurity levels `eimps`. so here we just ignore
-! the fermi level. 
+! the fermi level.
                  if ( axis == 1 ) then
                      caux = czi * fmesh(m)
                  else
@@ -830,7 +830,7 @@
                  Sm = sig_l(1:cdim,1:cdim,m,s,t)
 
 ! get local impurity levels. the local impurity levels are actually equal
-! to \sum e_{nk} - \mu. see cal_eimps() subroutine for more details. 
+! to \sum e_{nk} - \mu. see cal_eimps() subroutine for more details.
                  Em = eimps(1:cdim,1:cdim,s,t)
 
 ! assemble the hybridization function. actually, Sm + Tm is G^{-1}_0.
@@ -1285,9 +1285,10 @@
 !!
 !! @sub cal_sl_so
 !!
-!! try to substract the double-counting term from the asymptotic values
-!! of bare self-energy functions (i.e `sigoo`). and then upfolding them
-!! from local basis to Kohn-Sham basis.
+!! try to upfold the asymptotic values of self-energy functions at high
+!! frequency (i.e `sigoo`) from local basis to Kohn-Sham basis. note that
+!! the double-counting terms have been substracted from sigoo beforehand.
+!! please see cal_sigoo() for more details.
 !!
   subroutine cal_sl_so(cdim, cbnd, k, s, t, So)
      use constants, only : dp
@@ -1764,7 +1765,7 @@
 ! impurity problems share the same band window. so in this subroutine,
 ! we only need to consider ONE band window, which is defined by
 ! i_wnd(1) or i_wnd(2). whatever, they point to the same band window
-! according to our assumption. 
+! according to our assumption.
 !
 
 ! reset nelect
@@ -1951,7 +1952,7 @@
 
      use mmpi, only : mp_barrier
      use mmpi, only : mp_allreduce
- 
+
      use control, only : nkpt, nspin
      use control, only : nsite
      use control, only : nmesh
