@@ -1941,7 +1941,7 @@
 !! @sub cal_eigsys
 !!
 !! try to diagonalize H(k) + \Sigma(i\omega_n) and H(k) + \Sigma(\infty)
-!! to obtain the corresponding eigenvalues
+!! to obtain the corresponding eigenvalues.
 !!
   subroutine cal_eigsys(eigs, einf)
      use constants, only : dp, mystd
@@ -1953,7 +1953,7 @@
      use control, only : nkpt, nspin
      use control, only : nsite
      use control, only : nmesh
-     use control, only : myid, master, nprocs
+     use control, only : myid, nprocs
 
      use context, only : i_wnd
      use context, only : ndim
