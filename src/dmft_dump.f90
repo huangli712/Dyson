@@ -227,8 +227,8 @@
 ! band window: start index and end index for bands
      integer :: bs, be
 
-! open data file: dmft_eigen.dat
-     open(mytmp, file='dmft_eigen.dat', form='formatted', status='unknown')
+! open data file: dmft.eigen
+     open(mytmp, file='dmft.eigen', form='formatted', status='unknown')
 
 ! write parameters
      write(mytmp,'(a9,i4)') '# nkpt : ', nkpt
