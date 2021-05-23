@@ -675,6 +675,7 @@
 
 ! deallocate memory
      if ( allocated(Gl) ) deallocate(Gl)
+     if ( allocated(grn_l_mpi) ) deallocate(grn_l_mpi)
 
 !! DEBUG CODE
      do s=1,qdim
