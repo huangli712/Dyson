@@ -741,6 +741,9 @@
   end subroutine cal_eimps
 
   subroutine cal_eimpx()
+     use control, only : nspin
+     use control, only : nsite
+
      implicit none
 
 ! substract the double counting terms from eimps to build eimpx
