@@ -312,8 +312,8 @@
 ! loop index for correlated orbitals
      integer :: p, q
 
-! open data file: dmft_grn_l.dat
-     open(mytmp, file='dmft_grn_l.dat', form='formatted', status='unknown')
+! open data file: dmft.grn_l
+     open(mytmp, file='dmft.grn_l', form='formatted', status='unknown')
 
 ! write parameters
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
@@ -388,8 +388,8 @@
 ! loop index for correlated orbitals
      integer :: p, q
 
-! open data file: dmft_wss_l.dat
-     open(mytmp, file='dmft_wss_l.dat', form='formatted', status='unknown')
+! open data file: dmft.wss_l
+     open(mytmp, file='dmft.wss_l', form='formatted', status='unknown')
 
 ! write parameters
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
