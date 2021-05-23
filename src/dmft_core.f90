@@ -740,11 +740,21 @@
      return
   end subroutine cal_eimps
 
+!!
+!! @sub cal_eimpx
+!!
   subroutine cal_eimpx()
      use control, only : nspin
      use control, only : nsite
 
      implicit none
+
+! local variables
+! loop index for spins
+     integer :: s
+
+! index for impurity sites
+     integer :: t
 
 ! substract the double counting terms from eimps to build eimpx
      do t=1,nsite
