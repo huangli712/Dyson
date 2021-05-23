@@ -273,7 +273,7 @@
      use control, only : cname
      use control, only : myid, master
 
-     use context, only : eimps
+     use context, only : eimps, eimpx
 
      implicit none
 
