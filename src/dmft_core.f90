@@ -289,6 +289,8 @@
      !
      call cal_eimps()
      !
+     call cal_eimpx()
+     !
      if ( myid == master ) then
          write(mystd,*)
      endif ! back if ( myid == master ) block
