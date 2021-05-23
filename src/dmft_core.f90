@@ -116,7 +116,7 @@
      use control, only : fermi
      use control, only : myid, master
 
-     use context, only : eimps
+     use context, only : eimps, eimpx
      use context, only : grn_l
      use context, only : wss_l, hyb_l
 
@@ -190,6 +190,9 @@
          !
          write(mystd,'(4X,a)') 'save eimps...'
          call dmft_dump_eimps(eimps)
+         !
+         write(mystd,'(4X,a)') 'save eimpx...'
+         call dmft_dump_eimpx(eimpx)
          !
          write(mystd,'(4X,a)') 'save grn_l...'
          call dmft_dump_grn_l(grn_l)
