@@ -577,6 +577,9 @@
      endif ! back if ( istat /= 0 ) block
      !
      allocate(grn_l_mpi(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_grn_l','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! init cbnd and cdim
 ! cbnd will be k-dependent and cdim will be impurity-dependent. we will
@@ -586,6 +589,7 @@
 
 ! reset grn_l
      grn_l = czero
+     grn_l_mpi = czero
 
 ! print some useful information
      if ( myid == master ) then
