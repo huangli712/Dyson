@@ -524,7 +524,7 @@
      use control, only : nkpt, nspin
      use control, only : nsite
      use control, only : nmesh
-     use control, only : myid, master
+     use control, only : myid, master, nprocs
 
      use context, only : i_wnd
      use context, only : qdim
@@ -598,7 +598,7 @@
      endif ! back if ( myid == master ) block
 
      SPIN_LOOP: do s=1,nspin
-         KPNT_LOOP: do k=1,nkpt
+         KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
 ! evaluate band window for the current k-point and spin
 ! i_wnd(t) returns the corresponding band window for given impurity site t
