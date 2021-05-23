@@ -568,13 +568,15 @@
      complex(dp), allocatable :: Gl(:,:,:)
 
 ! dummy array: used to perform mpi reduce operation for grn_l
-     complex(dp), allocatable :: grl_l_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: grn_l_mpi(:,:,:,:,:)
 
 ! allocate memory for Gl
      allocate(Gl(qdim,qdim,nmesh), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_grn_l','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+     !
+     allocate(grn_l_mpi(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
 ! init cbnd and cdim
 ! cbnd will be k-dependent and cdim will be impurity-dependent. we will
