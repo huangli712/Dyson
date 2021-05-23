@@ -518,6 +518,9 @@
      use constants, only : dp, mystd
      use constants, only : czero, czi
 
+     use mmpi, only : mp_barrier
+     use mmpi, only : mp_allreduce
+
      use control, only : nkpt, nspin
      use control, only : nsite
      use control, only : nmesh
