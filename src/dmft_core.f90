@@ -660,17 +660,18 @@
      !
      call mp_barrier()
      !
-     call mp_allreduce(eimps, eimps_mpi)
+     call mp_allreduce(grn_l, grn_l_mpi)
      !
      call mp_barrier()
      !
 # else  /* MPI */
 
-     eimps_mpi = eimps
+     grn_l_mpi = grn_l
 
 # endif /* MPI */
+
 ! renormalize local green's function
-     grn_l = grn_l / float(nkpt)
+     grn_l = grn_l_mpi / float(nkpt)
 
 ! deallocate memory
      if ( allocated(Gl) ) deallocate(Gl)
