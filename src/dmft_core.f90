@@ -2060,7 +2060,7 @@
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
              write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
-             write(mystd,'(2X,a,i2)') 'pr: ', myid
+             write(mystd,'(2X,a,i2)') 'proc: ', myid
 
 ! allocate memory
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
@@ -2127,18 +2127,27 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
+! collect data from all mpi processes
+# if defined (MPI)
+     !
      call mp_barrier()
-
+     !
      call mp_allreduce(eigs, eigs_mpi)
      call mp_allreduce(einf, einf_mpi)
-
+     !
      call mp_barrier()
+     !
+# else  /* MPI */
+
+     eigs_mpi = eigs
+     einf_mpi = einf
+
+# endif /* MPI */
 
      eigs = eigs_mpi
      einf = einf_mpi
 
-     call mp_barrier()
-
+! deallocate memory
      deallocate(eigs_mpi)
      deallocate(einf_mpi)
 
