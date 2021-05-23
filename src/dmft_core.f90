@@ -130,7 +130,9 @@
      if ( lfermi .eqv. .true. ) then
          call cal_fermi()
      else
-         write(mystd,'(4X,a)') 'SKIP'
+         if ( myid == master ) then
+             write(mystd,'(4X,a)') 'SKIP'
+         endif ! back if ( myid == master ) block
      endif ! back if ( lfermi .eqv. .true. ) block
      !
      if ( myid == master ) then
