@@ -731,7 +731,6 @@
 ! renormalize the impurity levels
      eimps = eimps_mpi / float(nkpt)
 
-
 ! deallocate memory
      if ( allocated(Xe) ) deallocate(Xe)
      if ( allocated(eimps_mpi) ) deallocate(eimps_mpi)
@@ -746,6 +745,7 @@
      use control, only : nspin
      use control, only : nsite
 
+     use context, only : ndim
      use context, only : eimps, eimpx
      use context, only : sigdc
 
@@ -757,6 +757,9 @@
 
 ! index for impurity sites
      integer :: t
+
+! number of correlated orbitals for given impurity site
+     integer :: cdim
 
 ! substract the double counting terms from eimps to build eimpx
      do t=1,nsite
