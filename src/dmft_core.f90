@@ -597,6 +597,13 @@
          write(mystd,'(4X,a,2X,i4,2X,a)') 'add contributions from', nkpt, 'kpoints'
      endif ! back if ( myid == master ) block
 
+! mpi barrier. waiting all processes reach here.
+# if defined (MPI)
+     !
+     call mp_barrier()
+     !
+# endif /* MPI */
+
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
