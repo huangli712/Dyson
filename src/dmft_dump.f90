@@ -47,7 +47,8 @@
 !!
 !! @sub dmft_dump_eimps
 !!
-!! write out local impurity levels
+!! write out local impurity levels, eimps. note that the double counting
+!! terms have not been substracted from them.
 !!
   subroutine dmft_dump_eimps(eimps)
      use constants, only : dp
@@ -75,8 +76,8 @@
 ! loop index for correlated orbitals
      integer :: p, q
 
-! open data file: dmft_eimps.dat
-     open(mytmp, file='dmft_eimps.dat', form='formatted', status='unknown')
+! open data file: dmft.eimps
+     open(mytmp, file='dmft.eimps', form='formatted', status='unknown')
 
 ! write parameters
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
