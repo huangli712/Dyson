@@ -663,11 +663,12 @@
 !! try to calculate local weiss's function for all impurity sites
 !!
   subroutine cal_wss_l()
-     use constants, only : dp
+     use constants, only : dp, mystd
      use constants, only : czero
 
      use control, only : nspin
      use control, only : nsite, nmesh
+     use control, only : myid, master
 
      use context, only : ndim
      use context, only : sig_l
@@ -698,10 +699,17 @@
 ! reset wss_l
      wss_l = czero
 
+! print some useful information
+     if ( myid == master ) then
+         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate wss_l for', nsite, 'sites'
+     endif ! back if ( myid == master ) block
+
+!
 ! try to calculate bath weiss's function using the following equation:
 !     G^{-1}_{0} = G^{-1} + \Sigma
 ! please be aware that the double counting terms have been substracted
 ! from the self-energy function. see subroutine cal_sig_l().
+!
      SITE_LOOP: do t=1,nsite
 ! get size of orbital space
          cdim = ndim(t)
@@ -733,6 +741,7 @@
 
 ! save the final resuls to wss_l
                  wss_l(1:cdim,1:cdim,m,s,t) = Gl
+
              enddo MESH_LOOP ! over m={1,nmesh} loop
          enddo SPIN_LOOP ! over s={1,nspin} loop
 
