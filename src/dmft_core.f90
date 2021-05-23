@@ -9,9 +9,10 @@
 !!!           dmft_try999
 !!!           cal_sigoo
 !!!           cal_sig_l
-!!!           cal_grn_l
 !!!           cal_fermi
 !!!           cal_eimps
+!!!           cal_eimpx
+!!!           cal_grn_l
 !!!           cal_wss_l
 !!!           cal_hyb_l
 !!!           cal_sl_sk
@@ -145,6 +146,8 @@
      endif ! back if ( myid == master ) block
      !
      call cal_eimps()
+     !
+     call cal_eimpx()
      !
      if ( myid == master ) then
          write(mystd,*)
