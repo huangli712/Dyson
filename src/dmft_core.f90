@@ -353,7 +353,6 @@
 ! try to diagonalize the effective hamiltonian
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Eigen'
-         write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
      endif ! back if ( myid == master ) block
      !
      call cal_eigsys(eigs, einf)
@@ -525,7 +524,6 @@
 
      use control, only : nkpt, nspin
      use control, only : nmesh
-     use control, only : myid, master
 
      use context, only : qbnd
 
