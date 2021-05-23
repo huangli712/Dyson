@@ -464,8 +464,8 @@
 ! loop index for correlated orbitals
      integer :: p, q
 
-! open data file: dmft_hyb_l.dat
-     open(mytmp, file='dmft_hyb_l.dat', form='formatted', status='unknown')
+! open data file: dmft.hyb_l
+     open(mytmp, file='dmft.hyb_l', form='formatted', status='unknown')
 
 ! write parameters
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
