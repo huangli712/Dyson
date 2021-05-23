@@ -563,10 +563,6 @@
 
 ! search the fermi level using bisection algorithm
 ! the global variable `fermi` will be updated within `dichotomy()`
-     if ( myid == master ) then
-         write(mystd,'(4X,a)') 'searching fermi level'
-     endif ! back if ( myid == master ) block
-     !
      call dichotomy(ndens, eigs, einf)
 
 ! deallocate memory
@@ -1676,6 +1672,10 @@
 ! sign
      real(dp) :: sign
 
+     if ( myid == master ) then
+         write(mystd,'(4X,a)') 'searching fermi level'
+     endif ! back if ( myid == master ) block
+
 ! initialization, determine mu1, mu2, occ1, occ2, and sign
 !
 ! (1) if sign < 0, it means occ1 < desired, we should push mu2 to higher
@@ -2006,7 +2006,7 @@
      use control, only : nkpt, nspin
      use control, only : nsite
      use control, only : nmesh
-     use control, only : myid, nprocs
+     use control, only : myid, master, nprocs
 
      use context, only : i_wnd
      use context, only : ndim
