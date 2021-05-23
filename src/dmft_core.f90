@@ -567,6 +567,9 @@
 ! dummy array: for local green's function
      complex(dp), allocatable :: Gl(:,:,:)
 
+! dummy array: used to perform mpi reduce operation for grn_l
+     complex(dp), allocatable :: grl_l_mpi(:,:,:,:,:)
+
 ! allocate memory for Gl
      allocate(Gl(qdim,qdim,nmesh), stat = istat)
      if ( istat /= 0 ) then
