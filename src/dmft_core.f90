@@ -559,10 +559,6 @@
      call cal_nelect(ndens)
 
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
-     if ( myid == master ) then
-         write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
-     endif ! back if ( myid == master ) block
-     !
      call cal_eigsys(eigs, einf)
 
 ! search the fermi level using bisection algorithm
@@ -1776,7 +1772,7 @@
 !! the selected band window.
 !!
   subroutine cal_nelect(nelect)
-     use constants, only : dp, myid
+     use constants, only : dp, mystd
      use constants, only : zero, two
 
      use control, only : nkpt, nspin
@@ -2073,6 +2069,10 @@
 
 ! dummy array, used to perform mpi reduce operation for einf
      complex(dp), allocatable :: einf_mpi(:,:,:)
+
+     if ( myid == master ) then
+         write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
+     endif ! back if ( myid == master ) block
 
 ! allocate memory
      allocate(eigs_mpi(qbnd,nmesh,nkpt,nspin), stat = istat)
