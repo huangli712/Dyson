@@ -48,7 +48,7 @@
 !! @sub dmft_dump_eimps
 !!
 !! write out local impurity levels, eimps. note that the double counting
-!! terms have not been substracted from them.
+!! terms have NOT been substracted from them.
 !!
   subroutine dmft_dump_eimps(eimps)
      use constants, only : dp
@@ -112,6 +112,75 @@
 
      return
   end subroutine dmft_dump_eimps
+
+!!
+!! @sub dmft_dump_eimpx
+!!
+!! write out local impurity levels, eimps. note that the double counting
+!! terms have been substracted from them.
+!!
+  subroutine dmft_dump_eimpx(eimpx)
+     use constants, only : dp
+     use constants, only : mytmp
+
+     use control, only : nspin
+     use control, only : nsite
+
+     use context, only : qdim
+     use context, only : ndim
+
+     implicit none
+
+! external arguments
+! local impurity levels. eimpx = eimps - sigdc
+     complex(dp), intent(in) :: eimpx(qdim,qdim,nspin,nsite)
+
+! local variables
+! loop index for impurity sites
+     integer :: t
+
+! loop index for spins
+     integer :: s
+
+! loop index for correlated orbitals
+     integer :: p, q
+
+! open data file: dmft.eimpx
+     open(mytmp, file='dmft.eimpx', form='formatted', status='unknown')
+
+! write parameters
+     write(mytmp,'(a9,i4)') '# nsite: ', nsite
+     write(mytmp,'(a9,i4)') '# nspin: ', nspin
+     write(mytmp,'(a9,i4)') '# qdim : ', qdim
+
+! write separators
+     write(mytmp,*)
+     write(mytmp,*)
+
+! write body
+     do t=1,nsite
+         do s=1,nspin
+
+! write data for given spin and site
+             write(mytmp,'(3(a,i4,2X))') '# site:', t, 'spin:', s, 'dims:', ndim(t)
+             do q=1,ndim(t)
+                 do p=1,ndim(t)
+                     write(mytmp,'(2i4,2f16.8)') p, q, eimpx(p,q,s,t)
+                 enddo ! over p={1,ndim(t)} loop
+             enddo ! over q={1,ndim(t)} loop
+
+! write separators
+             write(mytmp,*)
+             write(mytmp,*)
+
+         enddo ! over s={1,nspin} loop
+     enddo ! over t={1,nsite} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine dmft_dump_eimpx
 
 !!
 !! @sub dmft_dump_eigen
