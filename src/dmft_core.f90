@@ -35,7 +35,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/20/2021 by li huang (last modified)
+!!!           05/23/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -2144,6 +2144,7 @@
 
 # endif /* MPI */
 
+! save the final results
      eigs = eigs_mpi
      einf = einf_mpi
 
