@@ -2011,11 +2011,22 @@
 ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), allocatable :: Eo(:)
 
+! dummy array, used to perform mpi reduce operation for eigs
      complex(dp), allocatable :: eigs_mpi(:,:,:,:)
+
+! dummy array, used to perform mpi reduce operation for einf
      complex(dp), allocatable :: einf_mpi(:,:,:)
 
+! allocate memory
      allocate(eigs_mpi(qbnd,nmesh,nkpt,nspin), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_eigsys','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
      allocate(einf_mpi(qbnd,nkpt,nspin), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_eigsys','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialization
      eigs = czero
