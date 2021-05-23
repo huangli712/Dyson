@@ -295,6 +295,9 @@
          write(mystd,'(4X,a)') 'save eimps...'
          call dmft_dump_eimps(eimps)
          !
+         write(mystd,'(4X,a)') 'save eimpx...'
+         call dmft_dump_eimpx(eimpx)
+         !
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
