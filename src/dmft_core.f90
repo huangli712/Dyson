@@ -611,11 +611,10 @@
              cbnd = be - bs + 1
 
 ! provide some useful information
-             if ( myid == master ) then
-                 write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
-                 write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
-                 write(mystd,'(2X,a,3i3)') 'window: ', bs, be, cbnd
-             endif ! back if ( myid == master ) block
+             write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
+             write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
+             write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
+             write(mystd,'(2X,a,i2)') 'proc: ', myid
 
 ! allocate memories Sk, Xk, and Gk. their sizes are k-dependent
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
@@ -656,6 +655,20 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
+! collect data from all mpi processes
+# if defined (MPI)
+     !
+     call mp_barrier()
+     !
+     call mp_allreduce(eimps, eimps_mpi)
+     !
+     call mp_barrier()
+     !
+# else  /* MPI */
+
+     eimps_mpi = eimps
+
+# endif /* MPI */
 ! renormalize local green's function
      grn_l = grn_l / float(nkpt)
 
