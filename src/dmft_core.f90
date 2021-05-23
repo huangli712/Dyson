@@ -556,10 +556,6 @@
      endif ! back if ( istat /= 0 ) block
 
 ! calculate the nominal charge density according to the dft eigenvalues
-     if ( myid == master ) then
-         write(mystd,'(4X,a)') 'calculating desired charge density'
-     endif ! back if ( myid == master ) block
-     !
      call cal_nelect(ndens)
 
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
@@ -1780,10 +1776,11 @@
 !! the selected band window.
 !!
   subroutine cal_nelect(nelect)
-     use constants, only : dp
+     use constants, only : dp, myid
      use constants, only : zero, two
 
      use control, only : nkpt, nspin
+     use control, only : myid, master
 
      use context, only : i_wnd
      use context, only : kwin
@@ -1805,6 +1802,10 @@
 
 ! band window: start index and end index for bands
      integer :: bs, be
+
+     if ( myid == master ) then
+         write(mystd,'(4X,a)') 'calculating desired charge density'
+     endif ! back if ( myid == master ) block
 
 !
 ! important remarks:
