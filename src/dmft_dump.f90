@@ -2,6 +2,7 @@
 !!! project : jacaranda
 !!! program : dmft_dump_fermi
 !!!           dmft_dump_eimps
+!!!           dmft_dump_eimpx
 !!!           dmft_dump_eigen
 !!!           dmft_dump_grn_l
 !!!           dmft_dump_wss_l
@@ -10,7 +11,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/20/2021 by li huang (last modified)
+!!!           05/23/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -31,8 +32,8 @@
 ! fermi level
      real(dp), intent(in) :: fermi
 
-! open data file: dmft_fermi.dat
-     open(mytmp, file='dmft_fermi.dat', form='formatted', status='unknown')
+! open data file: dmft.fermi
+     open(mytmp, file='dmft.fermi', form='formatted', status='unknown')
 
 ! write parameters
      write(mytmp,'(a9,f16.8)') '# fermi: ', fermi
