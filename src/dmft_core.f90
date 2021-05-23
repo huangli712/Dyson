@@ -595,8 +595,7 @@
      use context, only : kwin
      use context, only : weight
      use context, only : enk
-     use context, only : eimps, eimpx
-     use context, only : sigdc
+     use context, only : eimps
 
      implicit none
 
@@ -747,6 +746,9 @@
      use control, only : nspin
      use control, only : nsite
 
+     use context, only : eimps, eimpx
+     use context, only : sigdc
+
      implicit none
 
 ! local variables
@@ -763,6 +765,7 @@
              eimpx(1:cdim,1:cdim,s,t) = eimps(1:cdim,1:cdim,s,t) - sigdc(1:cdim,1:cdim,s,t)
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
+
      return
   end subroutine cal_eimpx
 
