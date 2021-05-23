@@ -574,8 +574,7 @@
 !! @sub cal_eimps
 !!
 !! try to calculate local energy levels for all impurity sites. here,
-!! eimps is defined as \sum_k \epsilon_{n,k} - \mu. eimpx is calculated
-!! as well. it is equal to eimps - sigdc.
+!! eimps is defined as \sum_k \epsilon_{n,k} - \mu.
 !!
   subroutine cal_eimps()
      use constants, only : dp, mystd
@@ -740,6 +739,9 @@
 
 !!
 !! @sub cal_eimpx
+!!
+!! try to calculate local energy levels for all impurity sites. here,
+!! eimpx is equal to eimps - sigdc.
 !!
   subroutine cal_eimpx()
      use control, only : nspin
