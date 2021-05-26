@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/23/2021 by li huang (last modified)
+!!!           05/25/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -949,12 +949,6 @@
      if ( allocated(Gl) ) deallocate(Gl)
      if ( allocated(grn_l_mpi) ) deallocate(grn_l_mpi)
 
-!! DEBUG CODE
-     do s=1,qdim
-         print *, s, grn_l(s,s,1,1,1)
-     enddo ! over s={1,qdim} loop
-!! DEBUG CODE
-
      return
   end subroutine cal_grn_l
 
@@ -1098,6 +1092,7 @@
      complex(dp) :: caux
 
 ! dummy arrays
+     complex(dp), allocatable :: Im(:,:)
      complex(dp), allocatable :: Tm(:,:)
      complex(dp), allocatable :: Em(:,:)
      complex(dp), allocatable :: Sm(:,:)
@@ -1116,6 +1111,7 @@
          cdim = ndim(t)
 
 ! allocate memory
+         allocate(Im(cdim,cdim), stat = istat)
          allocate(Tm(cdim,cdim), stat = istat)
          allocate(Em(cdim,cdim), stat = istat)
          allocate(Sm(cdim,cdim), stat = istat)
@@ -1126,6 +1122,9 @@
 
          SPIN_LOOP: do s=1,nspin
              MESH_LOOP: do m=1,nmesh
+
+! build identify
+                 call s_identity_z(cdim, Im)
 
 ! get frequency point. note that the fermi level (chemical potential) is
 ! already included in the impurity levels `eimps`. so here we just ignore
@@ -1151,12 +1150,13 @@
 
 ! assemble the hybridization function. actually, Sm + Tm is G^{-1}_0.
 ! please see cal_wss_l() subroutine for more details.
-                 hyb_l(1:cdim,1:cdim,m,s,t) = caux - Em - Sm - Tm
+                 hyb_l(1:cdim,1:cdim,m,s,t) = caux * Im - Em - Sm - Tm
 
              enddo MESH_LOOP ! over m={1,nmesh} loop
          enddo SPIN_LOOP ! over s={1,nspin} loop
 
 ! deallocate memory
+         if ( allocated(Im) ) deallocate(Im)
          if ( allocated(Tm) ) deallocate(Tm)
          if ( allocated(Em) ) deallocate(Em)
          if ( allocated(Sm) ) deallocate(Sm)
@@ -1558,12 +1558,18 @@
      integer :: istat
 
 ! dummy array: for band dispersion (vector)
+     complex(dp), allocatable :: Fm(:)
      complex(dp), allocatable :: Em(:)
 
 ! dummy array: for effective hamiltonian (diagonal matrix)
      complex(dp), allocatable :: Hm(:,:)
 
 ! allocate memory
+     allocate(Fm(cbnd),      stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_sk_gk','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
      allocate(Em(cbnd),      stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_sk_gk','can not allocate enough memory')
@@ -1574,17 +1580,17 @@
          call s_print_error('cal_sk_gk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! evaluate Em, which is k-dependent, but frequency-independent
+! evaluate Fm, which is k-dependent, but frequency-independent
 ! if you want to consider magnetic field, you can add your codes here
-     Em = fermi - enk(bs:be,k,s)
+     Fm = fermi - enk(bs:be,k,s)
 
      FREQ_LOOP: do m=1,nmesh
 
 ! consider imaginary axis or real axis
          if ( axis == 1 ) then
-             Em = czi * fmesh(m) + Em
+             Em = czi * fmesh(m) + Fm
          else
-             Em = fmesh(m) + Em
+             Em = fmesh(m) + Fm
          endif ! back if ( axis == 1 ) block
 
 ! convert Em (vector) to Hm (diagonal matrix)
@@ -1599,6 +1605,7 @@
      enddo FREQ_LOOP ! over m={1,nmesh} loop
 
 ! deallocate memory
+     if ( allocated(Fm) ) deallocate(Fm)
      if ( allocated(Em) ) deallocate(Em)
      if ( allocated(Hm) ) deallocate(Hm)
 
