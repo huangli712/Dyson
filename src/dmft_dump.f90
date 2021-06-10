@@ -389,7 +389,7 @@
      integer :: p, q
 
 ! open data file: dmft.weiss
-     open(mytmp, file='dmft.wss_l', form='formatted', status='unknown')
+     open(mytmp, file='dmft.weiss', form='formatted', status='unknown')
 
 ! write parameters
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
@@ -411,7 +411,7 @@
                  write(mytmp,'(a2,i6,f16.8)') 'w:', m, fmesh(m)
                  do q=1,ndim(t)
                      do p=1,ndim(t)
-                         write(mytmp,'(2i4,2f16.8)') p, q, wss_l(p,q,m,s,t)
+                         write(mytmp,'(2i4,2f16.8)') p, q, weiss(p,q,m,s,t)
                      enddo ! over p={1,ndim(t)} loop
                  enddo ! over q={1,ndim(t)} loop
              enddo ! over m={1,nmesh} loop
@@ -427,7 +427,7 @@
      close(mytmp)
 
      return
-  end subroutine dmft_dump_wss_l
+  end subroutine dmft_dump_weiss
 
 !!
 !! @sub dmft_dump_hyb_l
