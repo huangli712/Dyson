@@ -996,7 +996,7 @@
 
 ! print some useful information
      if ( myid == master ) then
-         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate wss_l for', nsite, 'sites'
+         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate weiss for', nsite, 'sites'
      endif ! back if ( myid == master ) block
 
 !
@@ -1013,7 +1013,7 @@
          allocate(Gl(cdim,cdim), stat = istat)
          !
          if ( istat /= 0 ) then
-             call s_print_error('cal_wss_l','can not allocate enough memory')
+             call s_print_error('cal_weiss','can not allocate enough memory')
          endif ! back if ( istat /= 0 ) block
          !
          Gl = czero
@@ -1034,8 +1034,8 @@
 ! inverse it again to obtain bath weiss's function. now Gl is G_0
                  call s_inv_z(cdim, Gl)
 
-! save the final resuls to wss_l
-                 wss_l(1:cdim,1:cdim,m,s,t) = Gl
+! save the final resuls to weiss
+                 weiss(1:cdim,1:cdim,m,s,t) = Gl
 
              enddo MESH_LOOP ! over m={1,nmesh} loop
          enddo SPIN_LOOP ! over s={1,nspin} loop
@@ -1046,7 +1046,7 @@
      enddo SITE_LOOP ! over t={1,nsite} loop
 
      return
-  end subroutine cal_wss_l
+  end subroutine cal_weiss
 
 !!
 !! @sub cal_hyb_l
@@ -1149,7 +1149,7 @@
                  Em = eimps(1:cdim,1:cdim,s,t)
 
 ! assemble the hybridization function. actually, Sm + Tm is G^{-1}_0.
-! please see cal_wss_l() subroutine for more details.
+! please see cal_weiss() subroutine for more details.
                  hyb_l(1:cdim,1:cdim,m,s,t) = caux * Im - Em - Sm - Tm
 
              enddo MESH_LOOP ! over m={1,nmesh} loop
