@@ -938,7 +938,7 @@
      !
 # else  /* MPI */
 
-     grn_l_mpi = grn_l
+     green_mpi = green
 
 # endif /* MPI */
 
