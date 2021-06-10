@@ -1171,6 +1171,8 @@
   end subroutine cal_delta
 
   subroutine cal_gamma()
+     use constants, only : dp
+
      implicit none
 
 ! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
