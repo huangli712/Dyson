@@ -221,6 +221,8 @@
   subroutine dmft_try2()
      implicit none
 
+     call cal_gamma()
+
      return
   end subroutine dmft_try2
 
