@@ -507,8 +507,27 @@
 
   end module dmft_weiss
 
+!!========================================================================
+!!>>> module dmft_gamma                                                <<<
+!!========================================================================
+
+!!
+!! @mod dmft_weiss
+!!
+!! contain dft + dmft correction for density matrix
+!!
   module dmft_gamma
      use constants, only : dp
+
+     implicit none
+
+!!
+!! @var gamma
+!!
+!! dft + dmft correction for density matrix, which is used to perform
+!! charge fully-consistent dft + dmft calculations
+!!
+     complex(dp), public, save, allocatable :: gamma(:,:,:,:)
 
   end module dmft_gamma
 
