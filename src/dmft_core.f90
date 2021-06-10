@@ -202,8 +202,8 @@
          write(mystd,'(4X,a)') 'save green...'
          call dmft_dump_green(green)
          !
-         write(mystd,'(4X,a)') 'save hyb_l...'
-         call dmft_dump_hyb_l(hyb_l)
+         write(mystd,'(4X,a)') 'save delta...'
+         call dmft_dump_delta(delta)
          !
          write(mystd,'(4X,a)') 'save weiss...'
          call dmft_dump_weiss(weiss)
@@ -1049,11 +1049,11 @@
   end subroutine cal_weiss
 
 !!
-!! @sub cal_hyb_l
+!! @sub cal_delta
 !!
 !! try to calculate hybridization function for all impurity sites
 !!
-  subroutine cal_hyb_l()
+  subroutine cal_delta()
      use constants, only : dp, mystd
      use constants, only : czi, czero
 
