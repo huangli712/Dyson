@@ -594,6 +594,7 @@
      public :: cat_alloc_sigma
      public :: cat_alloc_green
      public :: cat_alloc_weiss
+     public :: cat_alloc_gamma
 
 ! declaration of module procedures: deallocate memory
      public :: cat_free_map
@@ -609,6 +610,7 @@
      public :: cat_free_sigma
      public :: cat_free_green
      public :: cat_free_weiss
+     public :: cat_free_gamma
 
   contains ! encapsulated functionality
 
