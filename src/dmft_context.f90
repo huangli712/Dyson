@@ -492,11 +492,11 @@
      implicit none
 
 !!
-!! @var wss_l
+!! @var weiss
 !!
 !! local weiss functions
 !!
-     complex(dp), public, save, allocatable :: wss_l(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: weiss(:,:,:,:,:)
 
 !!
 !! @var hyb_l
@@ -943,7 +943,7 @@
      implicit none
 
 ! allocate memory
-     allocate(wss_l(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     allocate(weiss(qdim,qdim,nmesh,nspin,nsite), stat = istat)
      allocate(hyb_l(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
 ! check the status
@@ -952,7 +952,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     wss_l = czero
+     weiss = czero
      hyb_l = czero
 
      return
@@ -1168,7 +1168,7 @@
   subroutine cat_free_weiss()
      implicit none
 
-     if ( allocated(wss_l) ) deallocate(wss_l)
+     if ( allocated(weiss) ) deallocate(weiss)
      if ( allocated(hyb_l) ) deallocate(hyb_l)
 
      return
