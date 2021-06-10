@@ -13,7 +13,7 @@
 !!!           cal_eimps
 !!!           cal_eimpx
 !!!           cal_grn_l
-!!!           cal_wss_l
+!!!           cal_weiss
 !!!           cal_hyb_l
 !!!           cal_sl_sk
 !!!           cal_sk_hk
@@ -119,7 +119,7 @@
 
      use context, only : eimps, eimpx
      use context, only : grn_l
-     use context, only : wss_l, hyb_l
+     use context, only : weiss, hyb_l
 
      implicit none
 
@@ -180,7 +180,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Weiss'
      endif ! back if ( myid == master ) block
      !
-     call cal_wss_l()
+     call cal_weiss()
      !
      if ( myid == master ) then
          write(mystd,*)
@@ -205,8 +205,8 @@
          write(mystd,'(4X,a)') 'save hyb_l...'
          call dmft_dump_hyb_l(hyb_l)
          !
-         write(mystd,'(4X,a)') 'save wss_l...'
-         call dmft_dump_wss_l(wss_l)
+         write(mystd,'(4X,a)') 'save weiss...'
+         call dmft_dump_weiss(weiss)
          !
          write(mystd,*)
      endif ! back if ( myid == master ) block
@@ -953,11 +953,11 @@
   end subroutine cal_grn_l
 
 !!
-!! @sub cal_wss_l
+!! @sub cal_weiss
 !!
 !! try to calculate local weiss's function for all impurity sites
 !!
-  subroutine cal_wss_l()
+  subroutine cal_weiss()
      use constants, only : dp, mystd
      use constants, only : czero
 
