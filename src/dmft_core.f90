@@ -1170,6 +1170,9 @@
      return
   end subroutine cal_delta
 
+!!
+!! @sub cal_gamma
+!!
   subroutine cal_gamma()
      use constants, only : dp
 
@@ -1193,13 +1196,16 @@
 ! allocate memory
      allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
-         call s_print_error('cal_fermi','can not allocate enough memory')
+         call s_print_error('cal_gamma','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
      !
      allocate(einf(qbnd,nkpt,nspin),       stat = istat)
      if ( istat /= 0 ) then
-         call s_print_error('cal_fermi','can not allocate enough memory')
+         call s_print_error('cal_gamma','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
+     call cal_eigsys(eigs, einf)
 
      return
   end subroutine cal_gamma
