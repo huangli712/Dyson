@@ -1068,7 +1068,7 @@
      use context, only : eimps
      use context, only : sigma
      use context, only : green
-     use context, only : hyb_l
+     use context, only : delta
 
      implicit none
 
@@ -1097,12 +1097,12 @@
      complex(dp), allocatable :: Em(:,:)
      complex(dp), allocatable :: Sm(:,:)
 
-! reset hyb_l
-     hyb_l = czero
+! reset delta
+     delta = czero
 
 ! print some useful information
      if ( myid == master ) then
-         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate hyb_l for', nsite, 'sites'
+         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate delta for', nsite, 'sites'
      endif ! back if ( myid == master ) block
 
      SITE_LOOP: do t=1,nsite
