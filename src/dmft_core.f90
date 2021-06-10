@@ -1173,7 +1173,16 @@
   subroutine cal_gamma()
      use constants, only : dp
 
+     use control, only : nkpt, nspin
+     use control, only : nmesh
+
+     use context, only : qbnd
+
      implicit none
+
+! local variables
+! status flag
+     integer  :: istat
 
 ! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
      complex(dp), allocatable :: eigs(:,:,:,:)
