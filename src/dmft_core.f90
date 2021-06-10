@@ -943,14 +943,14 @@
 # endif /* MPI */
 
 ! renormalize local green's function
-     grn_l = grn_l_mpi / float(nkpt)
+     green = green_mpi / float(nkpt)
 
 ! deallocate memory
      if ( allocated(Gl) ) deallocate(Gl)
-     if ( allocated(grn_l_mpi) ) deallocate(grn_l_mpi)
+     if ( allocated(green_mpi) ) deallocate(green_mpi)
 
      return
-  end subroutine cal_grn_l
+  end subroutine cal_green
 
 !!
 !! @sub cal_weiss
