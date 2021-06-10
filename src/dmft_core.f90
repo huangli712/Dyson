@@ -27,6 +27,7 @@
 !!!           dichotomy
 !!!           cal_nelect
 !!!           cal_occupy
+!!!           cal_denmat
 !!!           cal_eigsys
 !!!           fermi_dirac
 !!!           map_chi_psi
@@ -221,7 +222,6 @@
   subroutine dmft_try2()
      implicit none
 
-     print *, "hehe"
      call cal_gamma()
 
      return
@@ -2069,6 +2069,12 @@
 
      return
   end subroutine cal_occupy
+
+  subroutine cal_denmat()
+     implicit none
+
+     return
+  end subroutine cal_denmat
 
 !!
 !! @sub cal_eigsys
