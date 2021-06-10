@@ -968,7 +968,7 @@
      use context, only : ndim
      use context, only : sigma
      use context, only : grn_l
-     use context, only : wss_l
+     use context, only : weiss
 
      implicit none
 
@@ -991,8 +991,8 @@
 ! dummy array: for local green's function
      complex(dp), allocatable :: Gl(:,:)
 
-! reset wss_l
-     wss_l = czero
+! reset weiss
+     weiss = czero
 
 ! print some useful information
      if ( myid == master ) then
