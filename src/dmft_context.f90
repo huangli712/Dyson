@@ -1174,4 +1174,17 @@
      return
   end subroutine cat_free_weiss
 
+!!
+!! @sub cat_free_gamma
+!!
+!! deallocate memory for gamma-related variables
+!!
+  subroutine cat_free_gamma()
+     implicit none
+
+     if ( allocated(gamma) ) deallocate(gamma)
+
+     return
+  end subroutine cat_free_gamma
+
   end module context
