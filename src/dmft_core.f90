@@ -12,7 +12,7 @@
 !!!           cal_fermi
 !!!           cal_eimps
 !!!           cal_eimpx
-!!!           cal_grn_l
+!!!           cal_green
 !!!           cal_weiss
 !!!           cal_hyb_l
 !!!           cal_sl_sk
@@ -118,7 +118,7 @@
      use control, only : myid, master
 
      use context, only : eimps, eimpx
-     use context, only : grn_l
+     use context, only : green
      use context, only : weiss, hyb_l
 
      implicit none
