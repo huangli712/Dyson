@@ -5,13 +5,13 @@
 !!!           dmft_dump_eimpx
 !!!           dmft_dump_eigen
 !!!           dmft_dump_grn_l
-!!!           dmft_dump_wss_l
+!!!           dmft_dump_weiss
 !!!           dmft_dump_hyb_l
 !!! source  : dmft_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/23/2021 by li huang (last modified)
+!!!           06/10/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -354,11 +354,11 @@
   end subroutine dmft_dump_grn_l
 
 !!
-!! @sub dmft_dump_wss_l
+!! @sub dmft_dump_weiss
 !!
 !! write out local weiss's function in matsubara frequency space
 !!
-  subroutine dmft_dump_wss_l(wss_l)
+  subroutine dmft_dump_weiss(weiss)
      use constants, only : dp
      use constants, only : mytmp
 
@@ -373,7 +373,7 @@
 
 ! external arguments
 ! local weiss's function
-     complex(dp), intent(in) :: wss_l(qdim,qdim,nmesh,nspin,nsite)
+     complex(dp), intent(in) :: weiss(qdim,qdim,nmesh,nspin,nsite)
 
 ! local variables
 ! loop index for impurity sites
@@ -388,7 +388,7 @@
 ! loop index for correlated orbitals
      integer :: p, q
 
-! open data file: dmft.wss_l
+! open data file: dmft.weiss
      open(mytmp, file='dmft.wss_l', form='formatted', status='unknown')
 
 ! write parameters
