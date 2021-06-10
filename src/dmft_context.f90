@@ -13,12 +13,13 @@
 !!!           dmft_sigma    module
 !!!           dmft_green    module
 !!!           dmft_weiss    module
+!!!           dmft_gamma    module
 !!!           context       module
 !!! source  : dmft_context.f90
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/21/2021 by li huang (last modified)
+!!!           06/10/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -505,6 +506,11 @@
      complex(dp), public, save, allocatable :: hyb_l(:,:,:,:,:)
 
   end module dmft_weiss
+
+  module dmft_gamma
+     use constants, only : dp
+
+  end module dmft_gamma
 
 !!========================================================================
 !!>>> module context                                                   <<<
