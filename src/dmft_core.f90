@@ -1173,6 +1173,23 @@
   subroutine cal_gamma()
      implicit none
 
+! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
+     complex(dp), allocatable :: eigs(:,:,:,:)
+
+! dummy array, used to save the eigenvalues of H + \Sigma(oo)
+     complex(dp), allocatable :: einf(:,:,:)
+
+! allocate memory
+     allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_fermi','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
+     allocate(einf(qbnd,nkpt,nspin),       stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_fermi','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
      return
   end subroutine cal_gamma
 
