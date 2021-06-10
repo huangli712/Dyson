@@ -499,11 +499,11 @@
      complex(dp), public, save, allocatable :: weiss(:,:,:,:,:)
 
 !!
-!! @var hyb_l
+!! @var delta
 !!
 !! local hybridization functions
 !!
-     complex(dp), public, save, allocatable :: hyb_l(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: delta(:,:,:,:,:)
 
   end module dmft_weiss
 
@@ -944,7 +944,7 @@
 
 ! allocate memory
      allocate(weiss(qdim,qdim,nmesh,nspin,nsite), stat = istat)
-     allocate(hyb_l(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     allocate(delta(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -953,7 +953,7 @@
 
 ! initialize them
      weiss = czero
-     hyb_l = czero
+     delta = czero
 
      return
   end subroutine cat_alloc_weiss
@@ -1169,7 +1169,7 @@
      implicit none
 
      if ( allocated(weiss) ) deallocate(weiss)
-     if ( allocated(hyb_l) ) deallocate(hyb_l)
+     if ( allocated(delta) ) deallocate(delta)
 
      return
   end subroutine cat_free_weiss
