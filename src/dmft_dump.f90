@@ -6,12 +6,12 @@
 !!!           dmft_dump_eigen
 !!!           dmft_dump_green
 !!!           dmft_dump_weiss
-!!!           dmft_dump_hyb_l
+!!!           dmft_dump_delta
 !!! source  : dmft_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/10/2021 by li huang (last modified)
+!!!           06/11/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -430,11 +430,11 @@
   end subroutine dmft_dump_weiss
 
 !!
-!! @sub dmft_dump_hyb_l
+!! @sub dmft_dump_delta
 !!
 !! write out local hybridization function in matsubara frequency space
 !!
-  subroutine dmft_dump_hyb_l(hyb_l)
+  subroutine dmft_dump_delta(delta)
      use constants, only : dp
      use constants, only : mytmp
 
@@ -449,7 +449,7 @@
 
 ! external arguments
 ! local hybridization function
-     complex(dp), intent(in) :: hyb_l(qdim,qdim,nmesh,nspin,nsite)
+     complex(dp), intent(in) :: delta(qdim,qdim,nmesh,nspin,nsite)
 
 ! local variables
 ! loop index for impurity sites
@@ -464,8 +464,8 @@
 ! loop index for correlated orbitals
      integer :: p, q
 
-! open data file: dmft.hyb_l
-     open(mytmp, file='dmft.hyb_l', form='formatted', status='unknown')
+! open data file: dmft.delta
+     open(mytmp, file='dmft.delta', form='formatted', status='unknown')
 
 ! write parameters
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
@@ -487,7 +487,7 @@
                  write(mytmp,'(a2,i6,f16.8)') 'w:', m, fmesh(m)
                  do q=1,ndim(t)
                      do p=1,ndim(t)
-                         write(mytmp,'(2i4,2f16.8)') p, q, hyb_l(p,q,m,s,t)
+                         write(mytmp,'(2i4,2f16.8)') p, q, delta(p,q,m,s,t)
                      enddo ! over p={1,ndim(t)} loop
                  enddo ! over q={1,ndim(t)} loop
              enddo ! over m={1,nmesh} loop
@@ -503,4 +503,4 @@
      close(mytmp)
 
      return
-  end subroutine dmft_dump_hyb_l
+  end subroutine dmft_dump_delta
