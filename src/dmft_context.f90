@@ -441,14 +441,14 @@
      complex(dp), public, save, allocatable :: sigoo(:,:,:,:)
 
 !!
-!! @var sig_l
+!! @var sigma
 !!
 !! impurity self-energy functions. they are usually taken from the output
 !! of various quantum impurity solver. this code will read them from file
 !! sigma.bare. note that the double counting terms should be subtracted
 !! from them.
 !!
-     complex(dp), public, save, allocatable :: sig_l(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: sigma(:,:,:,:,:)
 
   end module dmft_sigma
 
@@ -897,7 +897,7 @@
 ! allocate memory
      allocate(sigdc(qdim,qdim,nspin,nsite),       stat = istat)
      allocate(sigoo(qdim,qdim,nspin,nsite),       stat = istat)
-     allocate(sig_l(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     allocate(sigma(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -907,7 +907,7 @@
 ! initialize them
      sigdc = czero
      sigoo = czero
-     sig_l = czero
+     sigma = czero
 
      return
   end subroutine cat_alloc_sigma
@@ -1142,7 +1142,7 @@
 
      if ( allocated(sigdc) ) deallocate(sigdc)
      if ( allocated(sigoo) ) deallocate(sigoo)
-     if ( allocated(sig_l) ) deallocate(sig_l)
+     if ( allocated(sigma) ) deallocate(sigma)
 
      return
   end subroutine cat_free_sigma
