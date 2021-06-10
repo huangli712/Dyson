@@ -7,6 +7,7 @@
 !!!           dmft_dump_green
 !!!           dmft_dump_weiss
 !!!           dmft_dump_delta
+!!!           dmft_dump_gamma
 !!! source  : dmft_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -504,3 +505,9 @@
 
      return
   end subroutine dmft_dump_delta
+
+  subroutine dmft_dump_gamma()
+     implicit none
+
+     return
+  end subroutine dmft_dump_gamma
