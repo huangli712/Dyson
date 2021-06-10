@@ -967,7 +967,7 @@
 
      use context, only : ndim
      use context, only : sigma
-     use context, only : grn_l
+     use context, only : green
      use context, only : weiss
 
      implicit none
@@ -1023,7 +1023,7 @@
              MESH_LOOP: do m=1,nmesh
 
 ! back local green's function to Gl
-                 Gl = grn_l(1:cdim,1:cdim,m,s,t)
+                 Gl = green(1:cdim,1:cdim,m,s,t)
 
 ! inverse local green's function. now Gl is G^{-1}
                  call s_inv_z(cdim, Gl)
@@ -1067,7 +1067,7 @@
      use context, only : fmesh
      use context, only : eimps
      use context, only : sigma
-     use context, only : grn_l
+     use context, only : green
      use context, only : hyb_l
 
      implicit none
@@ -1136,7 +1136,7 @@
                  endif ! back if ( axis == 1 ) block
 
 ! calculate G^{-1}
-                 Tm = grn_l(1:cdim,1:cdim,m,s,t)
+                 Tm = green(1:cdim,1:cdim,m,s,t)
                  call s_inv_z(cdim, Tm)
 
 ! get self-energy function
