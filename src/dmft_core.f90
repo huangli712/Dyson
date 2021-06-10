@@ -1117,7 +1117,7 @@
          allocate(Sm(cdim,cdim), stat = istat)
          !
          if ( istat /= 0 ) then
-             call s_print_error('cal_hyb_l','can not allocate enough memory')
+             call s_print_error('cal_delta','can not allocate enough memory')
          endif ! back if ( istat /= 0 ) block
 
          SPIN_LOOP: do s=1,nspin
@@ -1150,7 +1150,7 @@
 
 ! assemble the hybridization function. actually, Sm + Tm is G^{-1}_0.
 ! please see cal_weiss() subroutine for more details.
-                 hyb_l(1:cdim,1:cdim,m,s,t) = caux * Im - Em - Sm - Tm
+                 delta(1:cdim,1:cdim,m,s,t) = caux * Im - Em - Sm - Tm
 
              enddo MESH_LOOP ! over m={1,nmesh} loop
          enddo SPIN_LOOP ! over s={1,nspin} loop
@@ -1164,7 +1164,7 @@
      enddo SITE_LOOP ! over t={1,nsite} loop
 
      return
-  end subroutine cal_hyb_l
+  end subroutine cal_delta
 
 !!========================================================================
 !!>>> service subroutines: set 1                                       <<<
