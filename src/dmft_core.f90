@@ -221,6 +221,7 @@
   subroutine dmft_try2()
      implicit none
 
+     print *, "hehe"
      call cal_gamma()
 
      return
