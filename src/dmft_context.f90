@@ -512,7 +512,7 @@
 !!========================================================================
 
 !!
-!! @mod dmft_weiss
+!! @mod dmft_gamma
 !!
 !! contain dft + dmft correction for density matrix
 !!
@@ -957,6 +957,9 @@
 
      return
   end subroutine cat_alloc_weiss
+
+  subroutine cat_alloc_gamma()
+  end subroutine cat_alloc_gamma
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
