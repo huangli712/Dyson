@@ -14,7 +14,7 @@
 !!!           cal_eimpx
 !!!           cal_green
 !!!           cal_weiss
-!!!           cal_hyb_l
+!!!           cal_delta
 !!!           cal_sl_sk
 !!!           cal_sk_hk
 !!!           cal_hk_ek
@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/25/2021 by li huang (last modified)
+!!!           06/11/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -119,7 +119,7 @@
 
      use context, only : eimps, eimpx
      use context, only : green
-     use context, only : weiss, hyb_l
+     use context, only : weiss, delta
 
      implicit none
 
@@ -169,7 +169,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Hybri'
      endif ! back if ( myid == master ) block
      !
-     call cal_hyb_l()
+     call cal_delta()
      !
      if ( myid == master ) then
          write(mystd,*)
