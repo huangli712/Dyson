@@ -967,7 +967,7 @@
      implicit none
 
 ! allocate memory
-     allocate(wss_l(qbnd,qbnd,nkpt,nspin), stat = istat)
+     allocate(gamma(qbnd,qbnd,nkpt,nspin), stat = istat)
 
 ! check the status
      if ( istat /= 0 ) then
