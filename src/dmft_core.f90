@@ -158,7 +158,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Green'
      endif ! back if ( myid == master ) block
      !
-     call cal_grn_l()
+     call cal_green()
      !
      if ( myid == master ) then
          write(mystd,*)
@@ -199,8 +199,8 @@
          write(mystd,'(4X,a)') 'save eimpx...'
          call dmft_dump_eimpx(eimpx)
          !
-         write(mystd,'(4X,a)') 'save grn_l...'
-         call dmft_dump_grn_l(grn_l)
+         write(mystd,'(4X,a)') 'save green...'
+         call dmft_dump_green(green)
          !
          write(mystd,'(4X,a)') 'save hyb_l...'
          call dmft_dump_hyb_l(hyb_l)
@@ -775,11 +775,11 @@
   end subroutine cal_eimpx
 
 !!
-!! @sub cal_grn_l
+!! @sub cal_green
 !!
 !! try to calculate local green's function for all the impurity sites
 !!
-  subroutine cal_grn_l()
+  subroutine cal_green()
      use constants, only : dp, mystd
      use constants, only : czero, czi
 
@@ -796,7 +796,7 @@
      use context, only : ndim
      use context, only : kwin
      use context, only : weight
-     use context, only : grn_l
+     use context, only : green
 
      implicit none
 
@@ -832,8 +832,8 @@
 ! dummy array: for local green's function
      complex(dp), allocatable :: Gl(:,:,:)
 
-! dummy array: used to perform mpi reduce operation for grn_l
-     complex(dp), allocatable :: grn_l_mpi(:,:,:,:,:)
+! dummy array: used to perform mpi reduce operation for green
+     complex(dp), allocatable :: green_mpi(:,:,:,:,:)
 
 ! allocate memory for Gl
      allocate(Gl(qdim,qdim,nmesh), stat = istat)
