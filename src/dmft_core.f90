@@ -838,12 +838,12 @@
 ! allocate memory for Gl
      allocate(Gl(qdim,qdim,nmesh), stat = istat)
      if ( istat /= 0 ) then
-         call s_print_error('cal_grn_l','can not allocate enough memory')
+         call s_print_error('cal_green','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
      !
-     allocate(grn_l_mpi(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     allocate(green_mpi(qdim,qdim,nmesh,nspin,nsite), stat = istat)
      if ( istat /= 0 ) then
-         call s_print_error('cal_grn_l','can not allocate enough memory')
+         call s_print_error('cal_green','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! init cbnd and cdim
@@ -852,13 +852,13 @@
      cbnd = 0
      cdim = 0
 
-! reset grn_l
-     grn_l = czero
-     grn_l_mpi = czero
+! reset green
+     green = czero
+     green_mpi = czero
 
 ! print some useful information
      if ( myid == master ) then
-         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate grn_l for', nsite, 'sites'
+         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate green for', nsite, 'sites'
          write(mystd,'(4X,a,2X,i4,2X,a)') 'add contributions from', nkpt, 'kpoints'
      endif ! back if ( myid == master ) block
 
@@ -894,7 +894,7 @@
              allocate(Gk(cbnd,cbnd,nmesh), stat = istat)
              !
              if ( istat /= 0 ) then
-                 call s_print_error('cal_grn_l','can not allocate enough memory')
+                 call s_print_error('cal_green','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
 ! build self-energy function, and then upfold it into Kohn-Sham basis
@@ -916,7 +916,7 @@
                  Gl = czero
                  cdim = ndim(t)
                  call cal_gk_gl(cbnd, cdim, k, s, t, Gk, Gl(1:cdim,1:cdim,:))
-                 grn_l(:,:,:,s,t) = grn_l(:,:,:,s,t) + Gl * weight(k)
+                 green(:,:,:,s,t) = green(:,:,:,s,t) + Gl * weight(k)
              enddo ! over t={1,nsite} loop
 
 ! deallocate memories
@@ -932,7 +932,7 @@
      !
      call mp_barrier()
      !
-     call mp_allreduce(grn_l, grn_l_mpi)
+     call mp_allreduce(green, green_mpi)
      !
      call mp_barrier()
      !
