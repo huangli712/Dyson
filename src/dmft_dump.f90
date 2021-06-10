@@ -4,7 +4,7 @@
 !!!           dmft_dump_eimps
 !!!           dmft_dump_eimpx
 !!!           dmft_dump_eigen
-!!!           dmft_dump_grn_l
+!!!           dmft_dump_green
 !!!           dmft_dump_weiss
 !!!           dmft_dump_hyb_l
 !!! source  : dmft_dump.f90
@@ -278,11 +278,11 @@
   end subroutine dmft_dump_eigen
 
 !!
-!! @sub dmft_dump_grn_l
+!! @sub dmft_dump_green
 !!
 !! write out local green's function in matsubara frequency space
 !!
-  subroutine dmft_dump_grn_l(grn_l)
+  subroutine dmft_dump_green(green)
      use constants, only : dp
      use constants, only : mytmp
 
@@ -297,7 +297,7 @@
 
 ! external arguments
 ! local green's function
-     complex(dp), intent(in) :: grn_l(qdim,qdim,nmesh,nspin,nsite)
+     complex(dp), intent(in) :: green(qdim,qdim,nmesh,nspin,nsite)
 
 ! local variables
 ! loop index for impurity sites
@@ -312,8 +312,8 @@
 ! loop index for correlated orbitals
      integer :: p, q
 
-! open data file: dmft.grn_l
-     open(mytmp, file='dmft.grn_l', form='formatted', status='unknown')
+! open data file: dmft.green
+     open(mytmp, file='dmft.green', form='formatted', status='unknown')
 
 ! write parameters
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
@@ -335,7 +335,7 @@
                  write(mytmp,'(a2,i6,f16.8)') 'w:', m, fmesh(m)
                  do q=1,ndim(t)
                      do p=1,ndim(t)
-                         write(mytmp,'(2i4,2f16.8)') p, q, grn_l(p,q,m,s,t)
+                         write(mytmp,'(2i4,2f16.8)') p, q, green(p,q,m,s,t)
                      enddo ! over p={1,ndim(t)} loop
                  enddo ! over q={1,ndim(t)} loop
              enddo ! over m={1,nmesh} loop
@@ -351,7 +351,7 @@
      close(mytmp)
 
      return
-  end subroutine dmft_dump_grn_l
+  end subroutine dmft_dump_green
 
 !!
 !! @sub dmft_dump_weiss
