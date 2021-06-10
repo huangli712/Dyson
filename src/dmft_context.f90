@@ -565,6 +565,7 @@
      use dmft_sigma
      use dmft_green
      use dmft_weiss
+     use dmft_gamma
 
      implicit none
 
