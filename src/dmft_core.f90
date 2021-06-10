@@ -15,6 +15,7 @@
 !!!           cal_green
 !!!           cal_weiss
 !!!           cal_delta
+!!!           cal_gamma
 !!!           cal_sl_sk
 !!!           cal_sk_hk
 !!!           cal_hk_ek
@@ -1165,6 +1166,12 @@
 
      return
   end subroutine cal_delta
+
+  subroutine cal_gamma()
+     implicit none
+
+     return
+  end subroutine cal_gamma
 
 !!========================================================================
 !!>>> service subroutines: set 1                                       <<<
