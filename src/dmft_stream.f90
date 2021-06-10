@@ -19,7 +19,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/20/2021 by li huang (last modified)
+!!!           06/10/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -1499,6 +1499,8 @@
      call cat_alloc_green()
      call cat_alloc_weiss()
 
+     call cat_alloc_gamma()
+
      return
   end subroutine dmft_alloc_array
 
@@ -1528,6 +1530,8 @@
      call cat_free_sigma()
      call cat_free_green()
      call cat_free_weiss()
+
+     call cat_free_gamma()
 
      return
   end subroutine dmft_final_array
