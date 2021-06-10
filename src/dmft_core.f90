@@ -1207,6 +1207,10 @@
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
      call cal_eigsys(eigs, einf)
 
+! deallocate memory
+     if ( allocated(eigs) ) deallocate(eigs)
+     if ( allocated(einf) ) deallocate(einf)
+
      return
   end subroutine cal_gamma
 
