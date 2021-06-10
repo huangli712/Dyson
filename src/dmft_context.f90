@@ -958,7 +958,26 @@
      return
   end subroutine cat_alloc_weiss
 
+!!
+!! @sub cat_alloc_gamma
+!!
+!! allocate memory for gamma-related variables
+!!
   subroutine cat_alloc_gamma()
+     implicit none
+
+! allocate memory
+     allocate(wss_l(qbnd,qbnd,nkpt,nspin), stat = istat)
+
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('cat_alloc_gamma','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     gamma = czero
+
+     return
   end subroutine cat_alloc_gamma
 
 !!========================================================================
