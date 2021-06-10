@@ -6,7 +6,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           05/23/2021 by li huang (last modified)
+!!!           06/10/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -65,7 +65,6 @@
 !! if task == 2:
 !!     the code will do the following jobs:
 !!     (1) calculate charge correction due to the electronic correlation,
-!!     (2) calculate total energy.
 !!
 !! if task == 3:
 !!     search the fermi level only (depends on `lfermi`)
@@ -321,21 +320,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.4.1 @ 2021.05.23D'
+     character(len=20), public, parameter :: V_FULL = 'v0.5.0 @ 2021.06.10D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.4.1'
+     character(len=06), public, parameter :: V_CURR = 'v0.5.0'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2021.05.23'
+     character(len=11), public, parameter :: V_DATE = '2021.06.10'
 
 !!
 !! @var V_STAT
