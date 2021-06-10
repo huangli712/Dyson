@@ -467,13 +467,13 @@
      implicit none
 
 !!
-!! @var grn_l
+!! @var green
 !!
 !! local green's functions. note that within the dynamical mean-field
 !! theory, local green's functions should be equal to impurity green's
 !! functions.
 !!
-     complex(dp), public, save, allocatable :: grn_l(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: green(:,:,:,:,:)
 
   end module dmft_green
 
@@ -921,7 +921,7 @@
      implicit none
 
 ! allocate memory
-     allocate(grn_l(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     allocate(green(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -929,7 +929,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     grn_l = czero
+     green = czero
 
      return
   end subroutine cat_alloc_green
@@ -1155,7 +1155,7 @@
   subroutine cat_free_green()
      implicit none
 
-     if ( allocated(grn_l) ) deallocate(grn_l)
+     if ( allocated(green) ) deallocate(green)
 
      return
   end subroutine cat_free_green
