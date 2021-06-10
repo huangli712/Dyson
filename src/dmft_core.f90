@@ -8,7 +8,7 @@
 !!!           dmft_try5
 !!!           dmft_try999
 !!!           cal_sigoo
-!!!           cal_sig_l
+!!!           cal_sigma
 !!!           cal_fermi
 !!!           cal_eimps
 !!!           cal_eimpx
@@ -57,11 +57,11 @@
      implicit none
 
 ! we have to preprocess the self-energy functions at first
-! calculate sig_l -> sigoo -> sigoo - sigdc
+! calculate sigma -> sigoo -> sigoo - sigdc
      call cal_sigoo()
 
-! calculate sig_l -> sig_l - sigdc (sig_l is updated)
-     call cal_sig_l()
+! calculate sigma -> sigma - sigdc (sigma is updated)
+     call cal_sigma()
 
      DISPATCHER: select case ( task )
 
@@ -408,7 +408,7 @@
      use control, only : nmesh
 
      use context, only : qdim
-     use context, only : sigdc, sigoo, sig_l
+     use context, only : sigdc, sigoo, sigma
 
      implicit none
 
@@ -449,13 +449,13 @@
 !
 ! we count the last `mcut` frequency points, then we try to calculate
 ! the averaged values. up to now, the double counting terms have not
-! been substracted from sig_l. in other words, sig_l is still bare.
+! been substracted from sigma. in other words, sigma is still bare.
      do t=1,nsite
          do s=1,nspin
              Sm = czero
              !
              do m=1,mcut
-                 Sm = Sm + sig_l(:,:,nmesh + 1 - m,s,t)
+                 Sm = Sm + sigma(:,:,nmesh + 1 - m,s,t)
              enddo ! over m={1,mcut} loop
              !
              sigoo(:,:,s,t) = Sm / float(mcut)
@@ -472,19 +472,19 @@
   end subroutine cal_sigoo
 
 !!
-!! @sub cal_sig_l
+!! @sub cal_sigma
 !!
 !! try to substract the double counting terms from the bare Matsubara
 !! self-energy functions. this function works for Matsubara self-energy
 !! functions (bare) only.
 !!
-  subroutine cal_sig_l()
+  subroutine cal_sigma()
      use control, only : axis
      use control, only : nspin
      use control, only : nsite
      use control, only : nmesh
 
-     use context, only : sigdc, sig_l
+     use context, only : sigdc, sigma
 
      implicit none
 
@@ -505,13 +505,13 @@
      do t=1,nsite
          do s=1,nspin
              do m=1,nmesh
-                 sig_l(:,:,m,s,t) = sig_l(:,:,m,s,t) - sigdc(:,:,s,t)
+                 sigma(:,:,m,s,t) = sigma(:,:,m,s,t) - sigdc(:,:,s,t)
              enddo ! over m={1,nmesh} loop
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
 
      return
-  end subroutine cal_sig_l
+  end subroutine cal_sigma
 
 !!
 !! @sub cal_fermi
@@ -966,7 +966,7 @@
      use control, only : myid, master
 
      use context, only : ndim
-     use context, only : sig_l
+     use context, only : sigma
      use context, only : grn_l
      use context, only : wss_l
 
@@ -1003,7 +1003,7 @@
 ! try to calculate bath weiss's function using the following equation:
 !     G^{-1}_{0} = G^{-1} + \Sigma
 ! please be aware that the double counting terms have been substracted
-! from the self-energy function. see subroutine cal_sig_l().
+! from the self-energy function. see subroutine cal_sigma().
 !
      SITE_LOOP: do t=1,nsite
 ! get size of orbital space
@@ -1029,7 +1029,7 @@
                  call s_inv_z(cdim, Gl)
 
 ! plus the self-energy function. now Gl is G^{-1} + \Sigma
-                 Gl = Gl + sig_l(1:cdim,1:cdim,m,s,t)
+                 Gl = Gl + sigma(1:cdim,1:cdim,m,s,t)
 
 ! inverse it again to obtain bath weiss's function. now Gl is G_0
                  call s_inv_z(cdim, Gl)
@@ -1066,7 +1066,7 @@
      use context, only : ndim
      use context, only : fmesh
      use context, only : eimps
-     use context, only : sig_l
+     use context, only : sigma
      use context, only : grn_l
      use context, only : hyb_l
 
@@ -1141,8 +1141,8 @@
 
 ! get self-energy function
 ! be aware that the double counting terms have been removed from the
-! self-energy functions. see cal_sig_l() subroutine for more details.
-                 Sm = sig_l(1:cdim,1:cdim,m,s,t)
+! self-energy functions. see cal_sigma() subroutine for more details.
+                 Sm = sigma(1:cdim,1:cdim,m,s,t)
 
 ! get local impurity levels. the local impurity levels are actually equal
 ! to \sum e_{nk} - \mu. see cal_eimps() subroutine for more details.
@@ -1183,7 +1183,7 @@
 
      use control, only : nmesh
 
-     use context, only : sig_l
+     use context, only : sigma
 
      implicit none
 
@@ -1222,10 +1222,10 @@
          call s_print_error('cal_sl_sk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! we use Sl to store parts of sig_l. note that actually sigdc has been
-! substracted from sig_l beforehand, see cal_sig_l() for more details.
+! we use Sl to store parts of sigma. note that actually sigdc has been
+! substracted from sigma beforehand, see cal_sigma() for more details.
      do m=1,nmesh
-         Sl(:,:,m) = sig_l(1:cdim,1:cdim,m,s,t)
+         Sl(:,:,m) = sigma(1:cdim,1:cdim,m,s,t)
      enddo ! over m={1,nmesh} loop
 
 ! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
