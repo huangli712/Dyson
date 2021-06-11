@@ -2082,6 +2082,8 @@
      use control, only : nkpt, nspin
      use control, only : nmesh
 
+     use context, only : qbnd
+
      implicit none
 
 ! external arguments
