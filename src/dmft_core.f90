@@ -2079,6 +2079,7 @@
   subroutine cal_denmat(fermi, eigs, einf)
      use constants, only : dp
 
+     use control, only : axis
      use control, only : nkpt, nspin
      use control, only : nmesh
 
@@ -2133,6 +2134,9 @@
      if ( istat /= 0 ) then
          call s_print_error('cal_denmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+! check axis
+     call s_assert2(axis == 1, 'axis is wrong')
 
      print *, fermi
      STOP
