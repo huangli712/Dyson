@@ -525,8 +525,17 @@
 ! local hybridization function
      complex(dp), intent(in) :: gamma(qbnd,qbnd,nkpt,nspin)
 
+! local variables
+     integer :: k
+     integer :: s
+
 ! open data file: dmft.gamma
      open(mytmp, file='dmft.gamma', form='formatted', status='unknown')
+
+     do s=1,nspin
+         do k=1,nkpt
+         enddo ! over k={1,nkpt} loop
+     enddo ! over s={1,nspin} loop
 
 ! close data file
      close(mytmp)
