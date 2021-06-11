@@ -2158,7 +2158,7 @@
              do m=1,nmesh
                  caux = czi * fmesh(m) + fermi
                  do b=1,cbnd
-                     gloc(b,m,k,s) = one / ( caux - eigs(b,m,k,s) ) - one / ( caux - einf(b,k,s) )
+                     glat(b,m,k,s) = one / ( caux - eigs(b,m,k,s) ) - one / ( caux - einf(b,k,s) )
                  enddo ! over b={1,cbnd} loop
              enddo ! over m={1,nmesh} loop
 
