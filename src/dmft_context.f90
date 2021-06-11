@@ -447,7 +447,8 @@
 !! impurity self-energy functions. they are usually taken from the output
 !! of various quantum impurity solver. this code will read them from file
 !! sigma.bare. note that the double counting terms should be subtracted
-!! from them.
+!! from them. note that sigma is frequency-dependent, but sigoo and sigdc
+!! are not.
 !!
      complex(dp), public, save, allocatable :: sigma(:,:,:,:,:)
 
