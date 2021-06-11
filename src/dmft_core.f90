@@ -2078,6 +2078,7 @@
 !!
   subroutine cal_denmat(fermi, eigs, einf)
      use constants, only : dp
+     use constants, only : one, two
      use constants, only : czi, czero
 
      use control, only : axis
@@ -2157,8 +2158,7 @@
              do m=1,nmesh
                  caux = czi * fmesh(m) + fermi
                  do b=1,cbnd
-                     gloc(b,m,s) = gloc(b,m,s) + one / ( caux - eigs(b,m,k,s) )
-                     gloc(b,m,s) = gloc(b,m,s) - one / ( caux - einf(b,k,s) )
+                     gloc(b,m,k,s) = one / ( caux - eigs(b,m,k,s) ) - one / ( caux - einf(b,k,s) )
                  enddo ! over b={1,cbnd} loop
              enddo ! over m={1,nmesh} loop
 
