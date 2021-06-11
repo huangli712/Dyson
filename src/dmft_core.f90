@@ -2193,7 +2193,7 @@
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
                  kocc(b,k,s) = kocc(b,k,s) + fermi_dirac( real(caux) )
-                 print *, b, k, s, kocc(b,k,s) * two
+                 print *, b, k, s, kocc(b,k,s)
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
