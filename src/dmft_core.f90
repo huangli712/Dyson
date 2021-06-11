@@ -2075,8 +2075,14 @@
 !!
 !! @sub cal_denmat
 !!
-  subroutine cal_denmat(eigs, einf)
+  subroutine cal_denmat(fermi, eigs, einf)
+     use constants, only : dp
+
      implicit none
+
+! external arguments
+! assumed fermi level
+     real(dp), intent(in)  :: fermi
 
 ! eigenvalues for H(k) + \Sigma(i\omega_n)
      complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
