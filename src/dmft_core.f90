@@ -2183,6 +2183,10 @@
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
 
+! deallocate memory
+     if ( allocated(kocc) ) deallocate(kocc)
+     if ( allocated(glat) ) deallocate(glat)
+
      return
   end subroutine cal_denmat
 
