@@ -544,7 +544,7 @@
 !! @var gamma
 !!
 !! dft + dmft correction for density matrix, which is used to perform
-!! charge fully-consistent dft + dmft calculations
+!! charge fully-consistent dft + dmft calculations.
 !!
      complex(dp), public, save, allocatable :: gamma(:,:,:,:)
 
@@ -584,6 +584,7 @@
      use dmft_sigma
      use dmft_green
      use dmft_weiss
+     use dmft_delta
      use dmft_gamma
 
      implicit none
