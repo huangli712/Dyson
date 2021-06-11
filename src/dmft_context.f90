@@ -1211,6 +1211,19 @@
      implicit none
 
      if ( allocated(weiss) ) deallocate(weiss)
+
+     return
+  end subroutine cat_free_weiss
+
+!!
+!! @sub cat_free_weiss
+!!
+!! deallocate memory for weiss-related variables
+!!
+  subroutine cat_free_weiss()
+     implicit none
+
+     if ( allocated(weiss) ) deallocate(weiss)
      if ( allocated(delta) ) deallocate(delta)
 
      return
