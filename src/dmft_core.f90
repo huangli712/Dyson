@@ -1194,6 +1194,9 @@
 ! dummy array, used to save the eigenvalues of H + \Sigma(oo)
      complex(dp), allocatable :: einf(:,:,:)
 
+! density matrix
+     complex(dp), allocatable :: kocc(:,:,:)
+
 ! allocate memory
      allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
@@ -1203,6 +1206,11 @@
      allocate(einf(qbnd,nkpt,nspin),       stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_gamma','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
+     allocate(kocc(qbnd,nkpt,nspin),       stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_denmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
@@ -2076,7 +2084,7 @@
 !!
 !! @sub cal_denmat
 !!
-  subroutine cal_denmat(fermi, eigs, einf)
+  subroutine cal_denmat(fermi, eigs, einf, kocc)
      use constants, only : dp
      use constants, only : one, two
      use constants, only : czi, czero
@@ -2103,6 +2111,8 @@
 ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
 
+     complex(dp), intent(in) :: kocc(qbnd,nkpt,nspin)
+
 ! local variables
 ! loop index for bands
      integer  :: b
@@ -2128,9 +2138,6 @@
 ! complex(dp) dummy variable
      complex(dp) :: caux
 
-! density matrix
-     complex(dp), allocatable :: kocc(:,:,:)
-
 ! lattice green's function
      complex(dp), allocatable :: glat(:,:,:,:)
 
@@ -2139,11 +2146,6 @@
      real(dp), external :: fermi_dirac
 
 ! allocate memory
-     allocate(kocc(qbnd,nkpt,nspin),       stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('cal_denmat','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-     !
      allocate(glat(qbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_denmat','can not allocate enough memory')
@@ -2193,7 +2195,7 @@
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
                  kocc(b,k,s) = kocc(b,k,s) + fermi_dirac( real(caux) )
-                 print *, b, k, s, real(kocc(b,k,s))
+                 !! print *, b, k, s, real(kocc(b,k,s))
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
