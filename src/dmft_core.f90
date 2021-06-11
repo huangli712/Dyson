@@ -2128,6 +2128,9 @@
 ! complex(dp) dummy variable
      complex(dp) :: caux
 
+! density matrix
+     complex(dp), allocatable :: kocc(:,:,:)
+
 ! lattice green's function
      complex(dp), allocatable :: glat(:,:,:,:)
 
@@ -2170,7 +2173,7 @@
      do s=1,nspin
          do k=1,nkpt
              do b=1,qbnd
-                 kocc(b,k,s) = sum( glat(b,:,k,s) ) / real(nkpt) * ( two / beta )
+                 kocc(b,k,s) = sum( glat(b,:,k,s) ) * ( two / beta )
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
