@@ -2079,6 +2079,9 @@
   subroutine cal_denmat(fermi, eigs, einf)
      use constants, only : dp
 
+     use control, only : nkpt, nspin
+     use control, only : nmesh
+
      implicit none
 
 ! external arguments
