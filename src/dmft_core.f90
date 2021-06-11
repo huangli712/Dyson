@@ -1863,6 +1863,10 @@
 !! @sub correction
 !!
   subroutine correction(kocc, gamma)
+     use constants, only : dp
+
+     use control, only : nkpt, nspin
+
      implicit none
 
 ! external arguments
