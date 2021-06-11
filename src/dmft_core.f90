@@ -1876,6 +1876,16 @@
      complex(dp), intent(in) :: kocc(qbnd,nkpt,nspin)
      complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
 
+! local variables
+! index for k-points
+     integer :: k
+
+! index for spin
+     integer :: s
+
+! band window: start index and end index for bands
+     integer :: bs, be
+
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
              bs = kwin(k,s,1,i_wnd(1))
