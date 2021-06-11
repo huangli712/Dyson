@@ -2113,7 +2113,7 @@
      complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
 
 ! density matrix
-     complex(dp), intent(in) :: kocc(qbnd,nkpt,nspin)
+     complex(dp), intent(out) :: kocc(qbnd,nkpt,nspin)
 
 ! local variables
 ! loop index for bands
