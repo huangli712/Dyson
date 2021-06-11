@@ -1182,6 +1182,7 @@
      use control, only : fermi
 
      use context, only : qbnd
+     use context, only : gamma
 
      implicit none
 
