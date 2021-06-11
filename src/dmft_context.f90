@@ -614,6 +614,7 @@
      public :: cat_alloc_sigma
      public :: cat_alloc_green
      public :: cat_alloc_weiss
+     public :: cat_alloc_delta
      public :: cat_alloc_gamma
 
 ! declaration of module procedures: deallocate memory
