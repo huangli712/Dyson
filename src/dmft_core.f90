@@ -2072,8 +2072,17 @@
      return
   end subroutine cal_occupy
 
+!!
+!! @sub cal_denmat
+!!
   subroutine cal_denmat(eigs, einf)
      implicit none
+
+! eigenvalues for H(k) + \Sigma(i\omega_n)
+     complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
+
+! eigenvalues for H(k) + \Sigma(\infty)
+     complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
 
      return
   end subroutine cal_denmat
