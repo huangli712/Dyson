@@ -1867,6 +1867,8 @@
 
      use control, only : nkpt, nspin
 
+     use context, only : qbnd
+
      implicit none
 
 ! external arguments
