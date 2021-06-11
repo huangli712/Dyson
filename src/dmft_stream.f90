@@ -1498,6 +1498,7 @@
      call cat_alloc_sigma()
      call cat_alloc_green()
      call cat_alloc_weiss()
+     call cat_alloc_delta()
 
      call cat_alloc_gamma()
 
@@ -1530,6 +1531,7 @@
      call cat_free_sigma()
      call cat_free_green()
      call cat_free_weiss()
+     call cat_free_delta()
 
      call cat_free_gamma()
 
