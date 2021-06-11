@@ -1909,7 +1909,7 @@
              call s_diag_z(qbnd, vm, gamma(:,:,k,s))
 
              do b=1,cbnd
-                 print *, k, gamma(b,b,k,s)
+                 print *, k, b, gamma(b,b,k,s)
              enddo
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
