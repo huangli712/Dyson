@@ -248,7 +248,7 @@
 !! @var fermi
 !!
 !! default fermi level, which is usually taken from the dft calculations.
-!! when task = 1 or 3, `fermi` might be updated.
+!! when task = 1, 2, or 3, `fermi` might be updated.
 !!
      real(dp), public, save :: fermi = 0.00_dp
 
