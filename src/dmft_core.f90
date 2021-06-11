@@ -1892,12 +1892,14 @@
 ! number of dft bands for given k-point and spin
      integer  :: cbnd
 
+     complex(dp) :: vm(qbnd)
+
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
              bs = kwin(k,s,1,i_wnd(1))
              be = kwin(k,s,2,i_wnd(1))
              cbnd = be - bs + 1
-             occupy(bs:be,k,s)
+             kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
