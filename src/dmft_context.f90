@@ -1216,18 +1216,17 @@
   end subroutine cat_free_weiss
 
 !!
-!! @sub cat_free_weiss
+!! @sub cat_free_delta
 !!
-!! deallocate memory for weiss-related variables
+!! deallocate memory for delta-related variables
 !!
-  subroutine cat_free_weiss()
+  subroutine cat_free_delta()
      implicit none
 
-     if ( allocated(weiss) ) deallocate(weiss)
      if ( allocated(delta) ) deallocate(delta)
 
      return
-  end subroutine cat_free_weiss
+  end subroutine cat_free_delta
 
 !!
 !! @sub cat_free_gamma
