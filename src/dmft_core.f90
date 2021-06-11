@@ -2165,6 +2165,15 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
+! calculate summation of the lattice green's function
+     do s=1,nspin
+         do k=1,nkpt
+             do b=1,qbnd
+                 kocc(b,k,s) = sum( gloc(b,:,s) ) / real(nkpt) * ( two / beta )
+             enddo ! over b={1,cbnd} loop
+         enddo ! over k={1,nkpt} loop
+     enddo ! over s={1,nspin} loop
+
      return
   end subroutine cal_denmat
 
