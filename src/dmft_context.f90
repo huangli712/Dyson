@@ -631,6 +631,7 @@
      public :: cat_free_sigma
      public :: cat_free_green
      public :: cat_free_weiss
+     public :: cat_free_delta
      public :: cat_free_gamma
 
   contains ! encapsulated functionality
@@ -954,6 +955,28 @@
 
      return
   end subroutine cat_alloc_green
+
+!!
+!! @sub cat_alloc_weiss
+!!
+!! allocate memory for weiss-related variables
+!!
+  subroutine cat_alloc_weiss()
+     implicit none
+
+! allocate memory
+     allocate(weiss(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('cat_alloc_weiss','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     weiss = czero
+
+     return
+  end subroutine cat_alloc_weiss
 
 !!
 !! @sub cat_alloc_weiss
