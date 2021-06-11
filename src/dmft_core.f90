@@ -2096,6 +2096,9 @@
 ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
 
+     print *, fermi
+     STOP
+
      return
   end subroutine cal_denmat
 
