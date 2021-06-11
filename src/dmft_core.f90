@@ -2192,7 +2192,7 @@
              cbnd = be - bs + 1
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
-                 zocc(b,s) = zocc(b,s) + fermi_dirac( real(caux) ) / real(nkpt)
+                 kocc(b,k,s) = kocc(b,k,s) + fermi_dirac( real(caux) )
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
