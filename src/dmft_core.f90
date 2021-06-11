@@ -1896,6 +1896,7 @@
 
      complex(dp) :: vm(qbnd)
 
+     integer :: b
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
              bs = kwin(k,s,1,i_wnd(1))
@@ -1906,12 +1907,13 @@
              vm(1:cbnd) = kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
 
              call s_diag_z(qbnd, vm, gamma(:,:,k,s))
+
+             do b=1,cbnd
+                 print *, k, gamma(b,b,k,s)
+             enddo
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
-     do s = 1,qbnd
-         print *, gamma(s,s,1,1)
-     enddo
      return
   end subroutine correction
 
