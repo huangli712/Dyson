@@ -2139,7 +2139,7 @@
      call s_assert2(axis == 1, 'axis is wrong')
 
 ! calculate lattice green's function
-     gloc = czero
+     glat = czero
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
 
