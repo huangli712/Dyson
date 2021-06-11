@@ -2121,6 +2121,13 @@
 ! complex(dp) dummy variable
      complex(dp) :: caux
 
+! lattice green's function
+     complex(dp), allocatable :: glat(:,:,:,:)
+
+! external functions
+! used to calculate fermi-dirac function
+     real(dp), external :: fermi_dirac
+
      print *, fermi
      STOP
 
