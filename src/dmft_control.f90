@@ -77,6 +77,9 @@
 !! if task == 5:
 !!     calculate all complex frequency dependent eigenvalues only
 !!
+!! if task == 6:
+!!     calculate lattice green's functions
+!!
      integer, public, save :: task   = 1
 
 !!
