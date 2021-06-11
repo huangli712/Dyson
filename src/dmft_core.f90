@@ -1905,7 +1905,6 @@
 
              vm = czero
              vm(1:cbnd) = kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
-             print *, vm
              call s_diag_z(qbnd, vm, gamma(:,:,k,s))
 
              do b=1,cbnd
@@ -2244,6 +2243,7 @@
          do k=1,nkpt
              do b=1,qbnd
                  kocc(b,k,s) = sum( glat(b,:,k,s) ) * ( two / beta )
+                 print *, b, k, s, kocc(b,k,s)
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
@@ -2258,10 +2258,12 @@
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
                  kocc(b,k,s) = kocc(b,k,s) + fermi_dirac( real(caux) )
-                 !!print *, b, k, s, real(kocc(b,k,s))
+                 !print *, b, k, s, kocc(b,k,s)
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
+
+     STOP
 
 ! deallocate memory
      if ( allocated(glat) ) deallocate(glat)
