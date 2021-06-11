@@ -12,7 +12,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/11/2021 by li huang (last modified)
+!!!           06/12/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -21,7 +21,7 @@
 !!
 !! @sub dmft_dump_fermi
 !!
-!! write out fermi level
+!! write out calculated fermi level
 !!
   subroutine dmft_dump_fermi(fermi)
      use constants, only : dp
@@ -117,7 +117,7 @@
 !!
 !! @sub dmft_dump_eimpx
 !!
-!! write out local impurity levels, eimps. note that the double counting
+!! write out local impurity levels, eimpx. note that the double counting
 !! terms have been substracted from them.
 !!
   subroutine dmft_dump_eimpx(eimpx)
@@ -186,7 +186,7 @@
 !!
 !! @sub dmft_dump_eigen
 !!
-!! write out complex dft + dmft eigenvalues
+!! write out calculated dft + dmft eigenvalues (complex numbers)
 !!
   subroutine dmft_dump_eigen(eigs)
      use constants, only : dp
@@ -506,8 +506,19 @@
      return
   end subroutine dmft_dump_delta
 
-  subroutine dmft_dump_gamma()
+!!
+!! @sub dmft_dump_gamma
+!!
+!! write out the correction for density matrix
+!!
+  subroutine dmft_dump_gamma(gamma)
+     use constants, only : dp
+
      implicit none
+
+! external arguments
+! local hybridization function
+     complex(dp), intent(in) :: gamma(qbnd,qbnd,nkpt,nspin)
 
      return
   end subroutine dmft_dump_gamma
