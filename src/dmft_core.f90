@@ -2138,8 +2138,28 @@
 ! check axis
      call s_assert2(axis == 1, 'axis is wrong')
 
-     print *, fermi
-     STOP
+! calculate lattice green's function
+     gloc = czero
+     SPIN_LOOP: do s=1,nspin
+         KPNT_LOOP: do k=1,nkpt
+
+! determine the band window
+! see remarks in cal_nelect()
+             bs = kwin(k,s,1,i_wnd(1))
+             be = kwin(k,s,2,i_wnd(1))
+             cbnd = be - bs + 1
+
+! here, the asymptotic part is substracted
+             do m=1,nmesh
+                 caux = czi * fmesh(m) + fermi
+                 do b=1,cbnd
+                     gloc(b,m,s) = gloc(b,m,s) + one / ( caux - eigs(b,m,k,s) )
+                     gloc(b,m,s) = gloc(b,m,s) - one / ( caux - einf(b,k,s) )
+                 enddo ! over b={1,cbnd} loop
+             enddo ! over m={1,nmesh} loop
+
+         enddo KPNT_LOOP ! over k={1,nkpt} loop
+     enddo SPIN_LOOP ! over s={1,nspin} loop
 
      return
   end subroutine cal_denmat
