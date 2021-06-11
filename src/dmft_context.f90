@@ -337,7 +337,7 @@
 !! @var chipsi
 !!
 !! overlap matrix between the local orbitals and the Kohn-Sham basis. its
-!! definition is \langle \chi^{I}_{\alpha} | \psi_{b,k,s} \rangle, where
+!! definition is \langle \chi^{I}_{\alpha,k} | \psi_{b,k} \rangle, where
 !! `I` means the index for correlated sites, \alpha means the index for
 !! correlated orbitals. `b`, `k`, `s` are indices for dft bands, k-points,
 !! and spins, respectively. of course, `b` is restricted by band windows,
@@ -349,7 +349,7 @@
 !! @var psichi
 !!
 !! overlap matrix between the Kohn-Sham basis and the local orbitals. its
-!! definition is \langle \psi_{b,k,s} | \chi^{I}_{\alpha} \rangle.
+!! definition is \langle \psi_{b,k} | \chi^{I}_{\alpha,k} \rangle.
 !! actually, psichi can be obtained by chipsi through conjugate transpose.
 !!
      complex(dp), public, save, allocatable :: psichi(:,:,:,:,:)
@@ -396,15 +396,15 @@
 !!
 !! @var eimps
 !!
-!! local impurity levels. eimps = \sum enk - mu
+!! local impurity levels. eimps = \sum_k enk - mu
 !!
      complex(dp), public, save, allocatable :: eimps(:,:,:,:)
 
 !!
 !! @var eimpx
 !!
-!! local impurity levels shifted by double counting terms. in other words,
-!! eimpx = eimps - sigdc
+!! local impurity levels shifted by double counting terms.
+!! in other words, eimpx = eimps - sigdc
 !!
      complex(dp), public, save, allocatable :: eimpx(:,:,:,:)
 
