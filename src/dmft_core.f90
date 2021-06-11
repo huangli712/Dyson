@@ -1903,6 +1903,8 @@
 
              vm = czero
              vm(1:cbnd) = kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
+
+             call s_diag_z(qbnd, vm, gamma(:,:,k,s))
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
