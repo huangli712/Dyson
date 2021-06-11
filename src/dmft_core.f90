@@ -25,6 +25,7 @@
 !!!           cal_sk_gk
 !!!           cal_gk_gl
 !!!           dichotomy
+!!!           correction
 !!!           cal_nelect
 !!!           cal_occupy
 !!!           cal_denmat
@@ -1210,13 +1211,14 @@
      !
      allocate(kocc(qbnd,nkpt,nspin),       stat = istat)
      if ( istat /= 0 ) then
-         call s_print_error('cal_denmat','can not allocate enough memory')
+         call s_print_error('cal_gamma','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
      call cal_eigsys(eigs, einf)
 
      call cal_denmat(fermi, eigs, einf, kocc)
+
 
 ! deallocate memory
      if ( allocated(eigs) ) deallocate(eigs)
@@ -1857,6 +1859,15 @@
   end subroutine dichotomy
 
 !!
+!! @sub correction
+!!
+  subroutine correction()
+     implicit none
+
+     return
+  end subroutine correction
+
+!!
 !! @sub cal_nelect
 !!
 !! try to calculate the number of valence electrons by dft occupations
@@ -2197,7 +2208,7 @@
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
                  kocc(b,k,s) = kocc(b,k,s) + fermi_dirac( real(caux) )
-                 print *, b, k, s, real(kocc(b,k,s))
+                 !!print *, b, k, s, real(kocc(b,k,s))
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
