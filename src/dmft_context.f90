@@ -473,7 +473,7 @@
 !!
 !! local green's functions. note that within the dynamical mean-field
 !! theory, local green's functions should be equal to impurity green's
-!! functions.
+!! functions within self-consistent iterations.
 !!
      complex(dp), public, save, allocatable :: green(:,:,:,:,:)
 
@@ -486,7 +486,7 @@
 !!
 !! @mod dmft_weiss
 !!
-!! contain local weiss functions and hybridization functions
+!! contain local weiss's functions
 !!
   module dmft_weiss
      use constants, only : dp
@@ -496,18 +496,35 @@
 !!
 !! @var weiss
 !!
-!! local weiss functions
+!! local weiss's functions
 !!
      complex(dp), public, save, allocatable :: weiss(:,:,:,:,:)
+
+  end module dmft_weiss
+
+!!========================================================================
+!!>>> module dmft_delta                                                <<<
+!!========================================================================
+
+!!
+!! @mod dmft_weiss
+!!
+!! contain local hybridization functions
+!!
+  module dmft_delta
+     use constants, only : dp
+
+     implicit none
 
 !!
 !! @var delta
 !!
-!! local hybridization functions
+!! local hybridization functions. the ct-qmc quantum impurity solver will
+!! need them as input.
 !!
      complex(dp), public, save, allocatable :: delta(:,:,:,:,:)
 
-  end module dmft_weiss
+  end module dmft_delta
 
 !!========================================================================
 !!>>> module dmft_gamma                                                <<<
