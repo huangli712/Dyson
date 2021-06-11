@@ -2084,6 +2084,7 @@
      use control, only : axis
      use control, only : nkpt, nspin
      use control, only : nmesh
+     use control, only : beta
 
      use context, only : i_wnd
      use context, only : qbnd
