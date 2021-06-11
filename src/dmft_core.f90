@@ -1864,6 +1864,7 @@
 !!
   subroutine correction(kocc, gamma)
      use constants, only : dp
+     use constants, only : czero
 
      use control, only : nkpt, nspin
 
@@ -1899,7 +1900,9 @@
              bs = kwin(k,s,1,i_wnd(1))
              be = kwin(k,s,2,i_wnd(1))
              cbnd = be - bs + 1
-             kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
+
+             vm = czero
+             vm(1:cbnd) = kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
