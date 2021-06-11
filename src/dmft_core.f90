@@ -2084,8 +2084,10 @@
      use control, only : nkpt, nspin
      use control, only : nmesh
 
+     use context, only : i_wnd
      use context, only : qbnd
      use context, only : kwin
+     use context, only : fmesh
 
      implicit none
 
