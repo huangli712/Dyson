@@ -1867,7 +1867,9 @@
 
      use control, only : nkpt, nspin
 
+     use context, only : i_wnd
      use context, only : qbnd
+     use context, only : kwin
 
      implicit none
 
