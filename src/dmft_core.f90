@@ -2078,12 +2078,14 @@
 !!
   subroutine cal_denmat(fermi, eigs, einf)
      use constants, only : dp
+     use constants, only : czi, czero
 
      use control, only : axis
      use control, only : nkpt, nspin
      use control, only : nmesh
 
      use context, only : qbnd
+     use context, only : kwin
 
      implicit none
 
