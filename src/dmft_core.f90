@@ -2128,6 +2128,12 @@
 ! used to calculate fermi-dirac function
      real(dp), external :: fermi_dirac
 
+! allocate memory
+     allocate(glat(qbnd,nmesh,nkpt,nspin), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_denmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
      print *, fermi
      STOP
 
