@@ -1219,6 +1219,7 @@
 
      call cal_denmat(fermi, eigs, einf, kocc)
 
+     call correction(kocc, gamma)
 
 ! deallocate memory
      if ( allocated(eigs) ) deallocate(eigs)
@@ -1861,8 +1862,13 @@
 !!
 !! @sub correction
 !!
-  subroutine correction()
+  subroutine correction(kocc, gamma)
      implicit none
+
+! external arguments
+! density matrix
+     complex(dp), intent(in) :: kocc(qbnd,nkpt,nspin)
+     complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
 
      return
   end subroutine correction
