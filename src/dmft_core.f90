@@ -1207,6 +1207,8 @@
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
      call cal_eigsys(eigs, einf)
 
+     call cal_denmat(eigs, einf)
+
 ! deallocate memory
      if ( allocated(eigs) ) deallocate(eigs)
      if ( allocated(einf) ) deallocate(einf)
@@ -2070,7 +2072,7 @@
      return
   end subroutine cal_occupy
 
-  subroutine cal_denmat()
+  subroutine cal_denmat(eigs, einf)
      implicit none
 
      return
