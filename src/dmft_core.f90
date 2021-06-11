@@ -1178,6 +1178,7 @@
 
      use control, only : nkpt, nspin
      use control, only : nmesh
+     use control, only : fermi
 
      use context, only : qbnd
 
@@ -1207,7 +1208,7 @@
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
      call cal_eigsys(eigs, einf)
 
-     call cal_denmat(eigs, einf)
+     call cal_denmat(fermi, eigs, einf)
 
 ! deallocate memory
      if ( allocated(eigs) ) deallocate(eigs)
