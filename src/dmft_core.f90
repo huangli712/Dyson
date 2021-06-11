@@ -1876,6 +1876,14 @@
      complex(dp), intent(in) :: kocc(qbnd,nkpt,nspin)
      complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
 
+     SPIN_LOOP: do s=1,nspin
+         KPNT_LOOP: do k=1,nkpt
+             bs = kwin(k,s,1,i_wnd(1))
+             be = kwin(k,s,2,i_wnd(1))
+             nelect = nelect + sum( occupy(bs:be,k,s) ) * weight(k)
+         enddo KPNT_LOOP ! over k={1,nkpt} loop
+     enddo SPIN_LOOP ! over s={1,nspin} loop
+
      return
   end subroutine correction
 
