@@ -1216,11 +1216,12 @@
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
      call cal_eigsys(eigs, einf)
 
-     call cal_denmat(fermi, eigs, einf)
+     call cal_denmat(fermi, eigs, einf, kocc)
 
 ! deallocate memory
      if ( allocated(eigs) ) deallocate(eigs)
      if ( allocated(einf) ) deallocate(einf)
+     if ( allocated(kocc) ) deallocate(kocc)
 
      return
   end subroutine cal_gamma
@@ -2111,6 +2112,7 @@
 ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
 
+! density matrix
      complex(dp), intent(in) :: kocc(qbnd,nkpt,nspin)
 
 ! local variables
@@ -2201,7 +2203,6 @@
      enddo ! over s={1,nspin} loop
 
 ! deallocate memory
-     if ( allocated(kocc) ) deallocate(kocc)
      if ( allocated(glat) ) deallocate(glat)
 
      return
