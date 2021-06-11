@@ -1870,6 +1870,7 @@
      use context, only : i_wnd
      use context, only : qbnd
      use context, only : kwin
+     use context, only : occupy
 
      implicit none
 
@@ -1888,11 +1889,15 @@
 ! band window: start index and end index for bands
      integer :: bs, be
 
+! number of dft bands for given k-point and spin
+     integer  :: cbnd
+
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
              bs = kwin(k,s,1,i_wnd(1))
              be = kwin(k,s,2,i_wnd(1))
-             nelect = nelect + sum( occupy(bs:be,k,s) ) * weight(k)
+             cbnd = be - bs + 1
+             occupy(bs:be,k,s)
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
