@@ -2183,6 +2183,20 @@
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
 
+! consider the contribution from asymptotic part
+     do s=1,nspin
+         do k=1,nkpt
+! see remarks in cal_nelect()
+             bs = kwin(k,s,1,i_wnd(1))
+             be = kwin(k,s,2,i_wnd(1))
+             cbnd = be - bs + 1
+             do b=1,cbnd
+                 caux = einf(b,k,s) - fermi
+                 zocc(b,s) = zocc(b,s) + fermi_dirac( real(caux) ) / real(nkpt)
+             enddo ! over b={1,cbnd} loop
+         enddo ! over k={1,nkpt} loop
+     enddo ! over s={1,nspin} loop
+
 ! deallocate memory
      if ( allocated(kocc) ) deallocate(kocc)
      if ( allocated(glat) ) deallocate(glat)
