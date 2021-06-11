@@ -1905,7 +1905,7 @@
 
              vm = czero
              vm(1:cbnd) = kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
-
+             print *, vm
              call s_diag_z(qbnd, vm, gamma(:,:,k,s))
 
              do b=1,cbnd
