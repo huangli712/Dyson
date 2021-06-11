@@ -1911,7 +1911,7 @@
 
      do s = 1,qbnd
          print *, gamma(s,s,1,1)
-     end
+     enddo
      return
   end subroutine correction
 
