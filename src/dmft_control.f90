@@ -6,7 +6,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/10/2021 by li huang (last modified)
+!!!           06/11/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -64,7 +64,9 @@
 !!
 !! if task == 2:
 !!     the code will do the following jobs:
-!!     (1) calculate charge correction due to the electronic correlation,
+!!     (1) search the fermi level (depends on `lfermi`),
+!!     (2) calculate correction for density matrix,
+!!     (3) write the above calculated results.
 !!
 !! if task == 3:
 !!     search the fermi level only (depends on `lfermi`)
