@@ -1909,6 +1909,9 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
+     do s = 1,qbnd
+         print *, gamma(s,s,1,1)
+     end
      return
   end subroutine correction
 
