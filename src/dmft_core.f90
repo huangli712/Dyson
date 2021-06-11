@@ -2139,6 +2139,11 @@
      real(dp), external :: fermi_dirac
 
 ! allocate memory
+     allocate(kocc(qbnd,nkpt,nspin),       stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_denmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
      allocate(glat(qbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_denmat','can not allocate enough memory')
