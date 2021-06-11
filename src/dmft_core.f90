@@ -2232,7 +2232,8 @@
                  caux = czi * fmesh(m) + fermi
                  do b=1,cbnd
                      glat(b,m,k,s) = one / ( caux - eigs(b,m,k,s) ) - one / ( caux - einf(b,k,s) )
-                     print *, b, m, k, s, glat(b,m,k,s)
+                     !print *, b, m, k, s, glat(b,m,k,s), eigs(b,m,k,s), einf(b,k,s)
+                     !STOP
                  enddo ! over b={1,cbnd} loop
              enddo ! over m={1,nmesh} loop
 
@@ -2264,7 +2265,7 @@
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
 
-     STOP
+     !!STOP
 
 ! deallocate memory
      if ( allocated(glat) ) deallocate(glat)
