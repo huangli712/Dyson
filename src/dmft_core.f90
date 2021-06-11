@@ -2170,7 +2170,7 @@
      do s=1,nspin
          do k=1,nkpt
              do b=1,qbnd
-                 kocc(b,k,s) = sum( gloc(b,:,s) ) / real(nkpt) * ( two / beta )
+                 kocc(b,k,s) = sum( glat(b,:,k,s) ) / real(nkpt) * ( two / beta )
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
