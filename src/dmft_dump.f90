@@ -513,14 +513,23 @@
 !!
   subroutine dmft_dump_gamma(gamma)
      use constants, only : dp
+     use constants, only : mytmp
 
      use control, only : nkpt, nspin
+
+     use context, only : qbnd
 
      implicit none
 
 ! external arguments
 ! local hybridization function
      complex(dp), intent(in) :: gamma(qbnd,qbnd,nkpt,nspin)
+
+! open data file: dmft.gamma
+     open(mytmp, file='dmft.gamma', form='formatted', status='unknown')
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine dmft_dump_gamma
