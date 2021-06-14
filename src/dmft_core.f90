@@ -2015,6 +2015,9 @@
 ! dummy vector, used to save the difference of density
      complex(dp), allocatable :: vm(:)
 
+! dummy array, used to perform mpi reduce operation for gamma
+     complex(dp), allocatable :: gamma_mpi(:,:,;,:)
+
 ! allocate memory
      allocate(vm(qbnd), stat = istat)
      if ( istat /= 0 ) then
