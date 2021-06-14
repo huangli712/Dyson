@@ -574,6 +574,10 @@
 ! determine cbnd
              cbnd = be - bs + 1
 
+! write data for given spin and k-point
+             write(mytmp,'(a,i4)') 'spin:', s
+             write(mytmp,'(a,i4,2X,3f16.12)') '# kpt:', k, kmesh(k,1:3)
+             write(mytmp,'(3(a,i4,2X))') 'cbnd:', cbnd, 'bs:', bs, 'be:', be
 
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
