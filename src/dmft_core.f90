@@ -1318,6 +1318,7 @@
 ! calculate new density matrix based on the dft + dmft eigenvalues
      call cal_denmat(fermi, eigs, einf, kocc)
 
+! calculate the difference between dft and dft + dmft density matrices
      call correction(kocc, gamma)
 
 ! deallocate memory
