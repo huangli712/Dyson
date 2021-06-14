@@ -1983,8 +1983,10 @@
      implicit none
 
 ! external arguments
-! density matrix
-     complex(dp), intent(in) :: kocc(qbnd,nkpt,nspin)
+! density matrix from dft + dmft calculations
+     complex(dp), intent(in)  :: kocc(qbnd,nkpt,nspin)
+
+! correction for density matrix
      complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
 
 ! local variables
