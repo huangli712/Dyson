@@ -1868,6 +1868,7 @@
 ! sign
      real(dp) :: sign
 
+! print message in the terminal
      if ( myid == master ) then
          write(mystd,'(4X,a)') 'searching fermi level'
      endif ! back if ( myid == master ) block
@@ -1896,7 +1897,9 @@
          write(mystd,'(2X,a,f12.8)') 'diff: ', abs(occ1 - desired)
      endif ! back if ( myid == master ) block
      !
-     do while ( loop <= max_loops .and. ( occ2 - desired ) * sign > 0 .and. abs( occ2 - desired ) > mc )
+     do while ( loop <= max_loops .and. &
+                ( occ2 - desired ) * sign > 0 .and. &
+                abs( occ2 - desired ) > mc )
          loop = loop + 1
          mu2 = mu2 - sign * delta
          call cal_occupy(mu2, occ2, eigs, einf)
