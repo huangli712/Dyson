@@ -787,7 +787,7 @@
 ! convert `Em` to diagonal matrix `Hm`
              call s_diag_z(cbnd, Em, Hm)
 
-! project effective hamiltonian from kohn-sham basis to local basis
+! project effective hamiltonian from Kohn-Sham basis to local basis
              do t=1,nsite
                  Xe = czero
                  cdim = ndim(t)
@@ -1747,6 +1747,7 @@
 ! if you want to consider magnetic field, you can add your codes here
      Fm = fermi - enk(bs:be,k,s)
 
+! loop over frequency points
      FREQ_LOOP: do m=1,nmesh
 
 ! consider imaginary axis or real axis
