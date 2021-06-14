@@ -1817,7 +1817,7 @@
   end subroutine cal_gk_gl
 
 !!========================================================================
-!!>>> service subroutines: set 4, fermi level search                   <<<
+!!>>> service subroutines: set 4, fermi level and density matrix       <<<
 !!========================================================================
 
 !!
