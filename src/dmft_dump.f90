@@ -539,7 +539,7 @@
      integer :: t
 
 ! loop index for bands in band window
-     integer :: q
+     integer :: p, q
 
 ! number of dft bands for given k-point and spin
      integer :: cbnd
@@ -575,9 +575,14 @@
              cbnd = be - bs + 1
 
 ! write data for given spin and k-point
-             write(mytmp,'(a,i4)') 'spin:', s
+             write(mytmp,'(a,i4)') '# spin:', s
              write(mytmp,'(a,i4,2X,3f16.12)') '# kpt:', k, kmesh(k,1:3)
-             write(mytmp,'(3(a,i4,2X))') 'cbnd:', cbnd, 'bs:', bs, 'be:', be
+             write(mytmp,'(3(a,i4,2X))') '# cbnd:', cbnd, 'bs:', bs, 'be:', be
+             do q=1,cbnd
+                 do p=1,cbnd
+                     write(mytmp,'(2i4,2f16.8)') p, q, gamma(p,q,k,s)
+                 enddo ! over p={1,cbnd} loop
+             enddo ! over q={1,cbnd} loop
 
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
