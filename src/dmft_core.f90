@@ -226,8 +226,14 @@
 !!
 !! @sub dmft_try2
 !!
+!! to calculate the density correction, generate key inputs for the dft
+!! engine. the fermi level may be updated, depending on the configuration
+!! parameter. this subroutine is suitable for the fully self-consistent
+!! dft + dmft calculations.
+!!
   subroutine dmft_try2()
      implicit none
+
 
      call cal_gamma()
 
