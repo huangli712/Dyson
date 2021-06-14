@@ -2082,6 +2082,7 @@
 
 ! deallocate memory
      deallocate(vm)
+     deallocate(gamma_mpi)
 
      return
   end subroutine correction
