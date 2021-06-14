@@ -1164,11 +1164,11 @@
      implicit none
 
 ! local variables
-! loop index for spin
-     integer :: s
-
 ! index for impurity sites
      integer :: t
+
+! loop index for spin
+     integer :: s
 
 ! loop index for frequency mesh
      integer :: m
