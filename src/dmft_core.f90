@@ -1999,6 +1999,9 @@
 ! index for dft bands
      integer :: b
 
+! index for impurity sites
+     integer :: t
+
 ! band window: start index and end index for bands
      integer :: bs, be
 
@@ -2017,8 +2020,10 @@
          call s_print_error('correction','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+! loop over spins and k-points
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
+
              bs = kwin(k,s,1,i_wnd(1))
              be = kwin(k,s,2,i_wnd(1))
              cbnd = be - bs + 1
