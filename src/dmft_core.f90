@@ -2505,11 +2505,11 @@
      complex(dp), intent(out) :: einf(qbnd,nkpt,nspin)
 
 ! local variables
-! loop index for k-points
-     integer :: k
-
 ! loop index for spins
      integer :: s
+
+! loop index for k-points
+     integer :: k
 
 ! loop index for impurity sites
      integer :: t
@@ -2552,10 +2552,6 @@
 ! dummy array, used to perform mpi reduce operation for einf
      complex(dp), allocatable :: einf_mpi(:,:,:)
 
-     if ( myid == master ) then
-         write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
-     endif ! back if ( myid == master ) block
-
 ! allocate memory
      allocate(eigs_mpi(qbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
@@ -2573,6 +2569,11 @@
 
      eigs_mpi = czero
      einf_mpi = czero
+
+! print some useful information
+     if ( myid == master ) then
+         write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
+     endif ! back if ( myid == master ) block
 
 ! mpi barrier. waiting all processes reach here.
 # if defined (MPI)
