@@ -2021,9 +2021,16 @@
          call s_print_error('correction','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+! mpi barrier. waiting all processes reach here.
+# if defined (MPI)
+     !
+     call mp_barrier()
+     !
+# endif /* MPI */
+
 ! loop over spins and k-points
      SPIN_LOOP: do s=1,nspin
-         KPNT_LOOP: do k=1,nkpt
+         KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
 ! evaluate band window for the current k-point and spin
 ! i_wnd(t) returns the corresponding band window for given impurity site t
