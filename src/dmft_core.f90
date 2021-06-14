@@ -234,6 +234,11 @@
   subroutine dmft_try2()
      use constants, only : mystd
 
+     use control, only : cname
+     use control, only : lfermi
+     use control, only : fermi
+     use control, only : myid, master
+
      implicit none
 
 ! try to search the fermi level
