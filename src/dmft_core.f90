@@ -1970,7 +1970,7 @@
 !! dft + dmft density matrix
 !!
   subroutine correction(kocc, gamma)
-     use constants, only : dp
+     use constants, only : dp, mystd
      use constants, only : czero
 
      use control, only : nkpt, nspin
