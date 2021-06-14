@@ -621,11 +621,11 @@
      implicit none
 
 ! local variables
-! status flag
-     integer  :: istat
-
 ! desired charge density
      real(dp) :: ndens
+
+! status flag
+     integer  :: istat
 
 ! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
      complex(dp), allocatable :: eigs(:,:,:,:)
