@@ -239,6 +239,8 @@
      use control, only : fermi
      use control, only : myid, master
 
+     use context, only : gamma
+
      implicit none
 
 ! try to search the fermi level
@@ -266,6 +268,19 @@
      call cal_gamma()
      !
      if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+! write the calculated results, only the master node can do it
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Write'
+         !
+         write(mystd,'(4X,a)') 'save fermi...'
+         call dmft_dump_fermi(fermi)
+         !
+         write(mystd,'(4X,a)') 'save gamma...'
+         call dmft_dump_gamma(gamma)
+         !
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
