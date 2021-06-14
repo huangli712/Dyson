@@ -258,7 +258,16 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
+! try to compute the local impurity levels
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Level'
+     endif ! back if ( myid == master ) block
+     !
      call cal_gamma()
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine dmft_try2
