@@ -1062,14 +1062,14 @@
      implicit none
 
 ! local variables
-! loop index for frequency mesh
-     integer :: m
+! loop index for impurity sites
+     integer :: t
 
 ! loop index for spins
      integer :: s
 
-! loop index for impurity sites
-     integer :: t
+! loop index for frequency mesh
+     integer :: m
 
 ! number of correlated orbitals for given impurity site
      integer :: cdim
