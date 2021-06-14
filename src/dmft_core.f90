@@ -2339,6 +2339,8 @@
 !!
 !! @sub cal_denmat
 !!
+!! try to calculate the dft + dmft density matrix for given fermi level
+!!
   subroutine cal_denmat(fermi, eigs, einf, kocc)
      use constants, only : dp
      use constants, only : one, two
