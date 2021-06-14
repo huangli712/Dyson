@@ -1183,9 +1183,16 @@
      complex(dp) :: caux
 
 ! dummy arrays
+! for identity matrix
      complex(dp), allocatable :: Im(:,:)
-     complex(dp), allocatable :: Tm(:,:)
+
+! for local impurity levels matrix
      complex(dp), allocatable :: Em(:,:)
+
+! for green's function matrix
+     complex(dp), allocatable :: Tm(:,:)
+
+! for self-energy function matrix
      complex(dp), allocatable :: Sm(:,:)
 
 ! reset delta
@@ -1204,8 +1211,8 @@
 
 ! allocate memory
          allocate(Im(cdim,cdim), stat = istat)
-         allocate(Tm(cdim,cdim), stat = istat)
          allocate(Em(cdim,cdim), stat = istat)
+         allocate(Tm(cdim,cdim), stat = istat)
          allocate(Sm(cdim,cdim), stat = istat)
          !
          if ( istat /= 0 ) then
@@ -1216,7 +1223,7 @@
          SPIN_LOOP: do s=1,nspin
              MESH_LOOP: do m=1,nmesh
 
-! build identify
+! build identity matrix
                  call s_identity_z(cdim, Im)
 
 ! get frequency point. note that the fermi level (chemical potential) is
@@ -1250,8 +1257,8 @@
 
 ! deallocate memory
          if ( allocated(Im) ) deallocate(Im)
-         if ( allocated(Tm) ) deallocate(Tm)
          if ( allocated(Em) ) deallocate(Em)
+         if ( allocated(Tm) ) deallocate(Tm)
          if ( allocated(Sm) ) deallocate(Sm)
 
      enddo SITE_LOOP ! over t={1,nsite} loop
