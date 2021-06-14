@@ -2360,29 +2360,29 @@
 
 ! external arguments
 ! assumed fermi level
-     real(dp), intent(in)  :: fermi
+     real(dp), intent(in)     :: fermi
 
 ! eigenvalues for H(k) + \Sigma(i\omega_n)
-     complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
+     complex(dp), intent(in)  :: eigs(qbnd,nmesh,nkpt,nspin)
 
 ! eigenvalues for H(k) + \Sigma(\infty)
-     complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
+     complex(dp), intent(in)  :: einf(qbnd,nkpt,nspin)
 
 ! density matrix
      complex(dp), intent(out) :: kocc(qbnd,nkpt,nspin)
 
 ! local variables
-! loop index for bands
-     integer  :: b
+! loop index for spins
+     integer  :: s
 
 ! loop index for k-points
      integer  :: k
 
-! loop index for spins
-     integer  :: s
-
-! loop index for frequency mesh
+! loop index for frequency points
      integer  :: m
+
+! loop index for bands
+     integer  :: b
 
 ! band window: start index and end index for bands
      integer  :: bs, be
