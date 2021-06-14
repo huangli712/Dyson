@@ -584,6 +584,10 @@
                  enddo ! over p={1,cbnd} loop
              enddo ! over q={1,cbnd} loop
 
+! write separators
+             write(mytmp,*)
+             write(mytmp,*)
+
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
 
