@@ -733,7 +733,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! reset cbnd and cdim. they will be updated later
-! cbnd should be k-dependent and cdim should be impurity-dependent.      
+! cbnd should be k-dependent and cdim should be impurity-dependent.
      cbnd = 0
      cdim = 0
 
@@ -844,11 +844,11 @@
      implicit none
 
 ! local variables
-! loop index for spins
-     integer :: s
-
 ! index for impurity sites
      integer :: t
+
+! loop index for spins
+     integer :: s
 
 ! number of correlated orbitals for given impurity site
      integer :: cdim
@@ -936,9 +936,8 @@
          call s_print_error('cal_green','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! init cbnd and cdim
-! cbnd will be k-dependent and cdim will be impurity-dependent. we will
-! update them later.
+! reset cbnd and cdim. they will be updated later
+! cbnd should be k-dependent and cdim should be impurity-dependent.
      cbnd = 0
      cdim = 0
 
