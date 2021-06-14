@@ -12,7 +12,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/12/2021 by li huang (last modified)
+!!!           06/15/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -517,7 +517,9 @@
 
      use control, only : nkpt, nspin
 
+     use context, only : i_wnd
      use context, only : qbnd
+     use context, only : kwin
 
      implicit none
 
