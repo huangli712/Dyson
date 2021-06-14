@@ -1974,6 +1974,7 @@
      use constants, only : czero
 
      use control, only : nkpt, nspin
+     use control, only : myid, master, nprocs
 
      use context, only : i_wnd
      use context, only : qbnd
