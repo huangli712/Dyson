@@ -732,9 +732,8 @@
          call s_print_error('cal_eimps','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! init cbnd and cdim
-! cbnd will be k-dependent and cdim will be impurity-dependent. they will
-! be updated later
+! reset cbnd and cdim. they will be updated later
+! cbnd should be k-dependent and cdim should be impurity-dependent.      
      cbnd = 0
      cdim = 0
 
