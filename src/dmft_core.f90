@@ -2001,9 +2001,6 @@
 ! index for k-points
      integer :: k
 
-! index for dft bands
-     integer :: b
-
 ! index for impurity sites
      integer :: t
 
