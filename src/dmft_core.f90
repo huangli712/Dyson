@@ -2074,6 +2074,8 @@
 ! the dft density matrix `occupy`. the results are saved at `vm`.
              vm = czero
              vm(1:cbnd) = kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
+
+! to fill the gamma array using the values in vm
              call s_diag_z(qbnd, vm, gamma(:,:,k,s))
 
              do b=1,cbnd
