@@ -6,6 +6,7 @@
 !!!           dmft_try3
 !!!           dmft_try4
 !!!           dmft_try5
+!!!           dmft_try6
 !!!           dmft_try999
 !!!           cal_sigoo
 !!!           cal_sigma
@@ -39,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/11/2021 by li huang (last modified)
+!!!           06/14/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :

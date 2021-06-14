@@ -307,6 +307,7 @@
      call dmft_input_kmesh()
      call dmft_input_eigen()
      call dmft_input_projs()
+     !
      if ( ltetra .eqv. .true. ) then
          call dmft_input_tetra()
      endif ! back if ( ltetra .eqv. .true. ) block
