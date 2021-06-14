@@ -258,9 +258,9 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! try to compute the local impurity levels
+! try to compute the density correction
      if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Level'
+         write(mystd,'(2X,a)') cname // ' >>> Task : Gamma'
      endif ! back if ( myid == master ) block
      !
      call cal_gamma()
