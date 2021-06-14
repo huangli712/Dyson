@@ -445,6 +445,10 @@
 !!
 !! @sub dmft_try6
 !!
+!! try to calculate all the physical quantities related to momentum, such
+!! as lattice green's functions, and momentum-resolved spectral functions.
+!! the subroutine can be used in the postprocessing procedure.
+!!
   subroutine dmft_try6()
      implicit none
 
