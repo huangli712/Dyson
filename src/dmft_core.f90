@@ -495,17 +495,20 @@
      integer, parameter :: mcut = 16
 
 ! local variables
-! loop index for frequency mesh
-     integer :: m
+! loop index for impurity sites
+     integer :: t
 
 ! loop index for spins
      integer :: s
 
-! loop index for impurity sites
-     integer :: t
+! loop index for frequency mesh
+     integer :: m
 
 ! status flag
      integer :: istat
+
+! dummy array for the indices of frequency points
+     integer, allocatable :: ip(:)
 
 ! dummy array for the Matsubara self-energy functions
      complex(dp), allocatable :: Sm(:,:)
@@ -522,7 +525,7 @@
 ! reset sigoo
      sigoo = czero
 
-! loop over nsite and nspin
+! loop over quantum impurities, spins, and frequency points
 !
 ! we count the last `mcut` frequency points, then we try to calculate
 ! the averaged values. up to now, the double counting terms have not
