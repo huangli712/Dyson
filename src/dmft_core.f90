@@ -2084,6 +2084,24 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
+! collect data from all mpi processes
+# if defined (MPI)
+     !
+     call mp_barrier()
+     !
+     call mp_allreduce(gamma, gamma_mpi)
+     !
+     call mp_barrier()
+     !
+# else  /* MPI */
+
+     gamma_mpi = gamma
+
+# endif /* MPI */
+
+! get the final correction for density matrix
+     gamma = gamma_mpi
+
 ! deallocate memory
      deallocate(vm)
      deallocate(gamma_mpi)
