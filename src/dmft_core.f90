@@ -1974,6 +1974,9 @@
      use constants, only : dp, mystd
      use constants, only : czero
 
+     use mmpi, only : mp_barrier
+     use mmpi, only : mp_allreduce
+
      use control, only : nkpt, nspin
      use control, only : myid, master, nprocs
 
@@ -2017,7 +2020,7 @@
      complex(dp), allocatable :: vm(:)
 
 ! dummy array, used to perform mpi reduce operation for gamma
-     complex(dp), allocatable :: gamma_mpi(:,:,;,:)
+     complex(dp), allocatable :: gamma_mpi(:,:,:,:)
 
 ! allocate memory
      allocate(vm(qbnd), stat = istat)
