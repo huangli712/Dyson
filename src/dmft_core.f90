@@ -532,8 +532,6 @@
 
 ! build array for indices of frequency points
      call s_linspace_i(nmesh + 1 - mcut, nmesh, mcut, ip)
-     print *, ip
-     STOP
 
 ! loop over quantum impurities, spins, and frequency points
 !
@@ -545,7 +543,7 @@
              Sm = czero
              !
              do m=1,mcut
-                 Sm = Sm + sigma(:,:,nmesh + 1 - m,s,t)
+                 Sm = Sm + sigma(:,:,ip(m),s,t)
              enddo ! over m={1,mcut} loop
              !
              sigoo(:,:,s,t) = Sm / float(mcut)
