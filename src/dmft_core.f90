@@ -2070,6 +2070,8 @@
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
+! calculate the difference between dft + dmft density matrix `kocc` and
+! the dft density matrix `occupy`. the results are saved at `vm`.
              vm = czero
              vm(1:cbnd) = kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
              call s_diag_z(qbnd, vm, gamma(:,:,k,s))
