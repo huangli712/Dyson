@@ -2200,6 +2200,7 @@
      use context, only : i_wnd
      use context, only : qbnd
      use context, only : kwin
+     use context, only : weight
      use context, only : fmesh
 
      implicit none
@@ -2266,7 +2267,8 @@
 ! check axis
      call s_assert2(axis == 1, 'axis is wrong')
 
-! reset gloc
+! reset zocc and gloc
+     zocc = czero
      gloc = czero
 
 ! loop over spins and k-points to perform k-summation to determine the
@@ -2302,13 +2304,14 @@
 ! consider the contribution from asymptotic part
      do s=1,nspin
          do k=1,nkpt
+! determine the band window
 ! see remarks in cal_nelect()
              bs = kwin(k,s,1,i_wnd(1))
              be = kwin(k,s,2,i_wnd(1))
              cbnd = be - bs + 1
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
-                 zocc(b,s) = zocc(b,s) + fermi_dirac( real(caux) ) / real(nkpt)
+                 zocc(b,s) = zocc(b,s) + fermi_dirac( real(caux) ) * weight(k) / real(nkpt)
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
