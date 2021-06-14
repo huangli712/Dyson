@@ -520,6 +520,7 @@
      use context, only : i_wnd
      use context, only : qbnd
      use context, only : kwin
+     use context, only : kmesh
 
      implicit none
 
@@ -528,8 +529,23 @@
      complex(dp), intent(in) :: gamma(qbnd,qbnd,nkpt,nspin)
 
 ! local variables
-     integer :: k
+! loop index for spins
      integer :: s
+
+! loop index for k-points
+     integer :: k
+
+! loop index for impurity sites
+     integer :: t
+
+! loop index for bands in band window
+     integer :: q
+
+! number of dft bands for given k-point and spin
+     integer :: cbnd
+
+! band window: start index and end index for bands
+     integer :: bs, be
 
 ! open data file: dmft.gamma
      open(mytmp, file='dmft.gamma', form='formatted', status='unknown')
