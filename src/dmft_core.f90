@@ -990,7 +990,7 @@
 ! Sk should contain contributions from all impurity sites
              Sk = czero
              do t=1,nsite
-                 Xk = czero
+                 Xk = czero ! reset Xk
                  cdim = ndim(t)
                  call cal_sl_sk(cdim, cbnd, k, s, t, Xk)
                  Sk = Sk + Xk
@@ -1000,7 +1000,7 @@
              call cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
 
 ! downfold the lattice green's function to obtain local green's function,
-! then we have to save the final results
+! then we have to perform k-summation
              do t=1,nsite
                  Gl = czero
                  cdim = ndim(t)
