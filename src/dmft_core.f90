@@ -2342,7 +2342,7 @@
 !! try to calculate the dft + dmft density matrix for given fermi level
 !!
   subroutine cal_denmat(fermi, eigs, einf, kocc)
-     use constants, only : dp
+     use constants, only : dp, mystd
      use constants, only : one, two
      use constants, only : czi, czero
 
@@ -2350,6 +2350,7 @@
      use control, only : nkpt, nspin
      use control, only : nmesh
      use control, only : beta
+     use control, only : myid, master
 
      use context, only : i_wnd
      use context, only : qbnd
