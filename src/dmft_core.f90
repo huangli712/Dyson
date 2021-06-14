@@ -1196,6 +1196,7 @@
          write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate delta for', nsite, 'sites'
      endif ! back if ( myid == master ) block
 
+! loop over quantum impurities
      SITE_LOOP: do t=1,nsite
 
 ! determine dimensional parameter
@@ -1211,6 +1212,7 @@
              call s_print_error('cal_delta','can not allocate enough memory')
          endif ! back if ( istat /= 0 ) block
 
+! loop over spins and frequency meshes
          SPIN_LOOP: do s=1,nspin
              MESH_LOOP: do m=1,nmesh
 
