@@ -958,6 +958,7 @@
      !
 # endif /* MPI */
 
+! loop over spins and k-points
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
@@ -2028,6 +2029,11 @@
      if ( istat /= 0 ) then
          call s_print_error('correction','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+! reset gamma
+     vm = czero
+     gamma = czero
+     gamma_mpi = czero
 
 ! mpi barrier. waiting all processes reach here.
 # if defined (MPI)
