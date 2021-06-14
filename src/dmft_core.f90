@@ -2582,6 +2582,7 @@
      !
 # endif /* MPI */
 
+! loop over spins and k-points
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
