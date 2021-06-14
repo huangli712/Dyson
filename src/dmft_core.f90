@@ -2034,6 +2034,12 @@
 ! determine cbnd
              cbnd = be - bs + 1
 
+! provide some useful information
+             write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
+             write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
+             write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
+             write(mystd,'(2X,a,i2)') 'proc: ', myid
+
              vm = czero
              vm(1:cbnd) = kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
              call s_diag_z(qbnd, vm, gamma(:,:,k,s))
