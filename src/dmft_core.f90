@@ -530,6 +530,11 @@
 ! reset sigoo
      sigoo = czero
 
+! build array for indices of frequency points
+     call s_linspace_i(nmesh + 1 - mcut, nmesh, mcut, ip)
+     print *, ip
+     STOP
+
 ! loop over quantum impurities, spins, and frequency points
 !
 ! we count the last `mcut` frequency points, then we try to calculate
