@@ -550,6 +550,16 @@
 ! open data file: dmft.gamma
      open(mytmp, file='dmft.gamma', form='formatted', status='unknown')
 
+! write parameters
+     write(mytmp,'(a9,i4)') '# nkpt : ', nkpt
+     write(mytmp,'(a9,i4)') '# nspin: ', nspin
+     write(mytmp,'(a9,i4)') '# qbnd : ', qbnd
+
+! write separators
+     write(mytmp,*)
+     write(mytmp,*)
+
+! write body
      do s=1,nspin
          do k=1,nkpt
          enddo ! over k={1,nkpt} loop
