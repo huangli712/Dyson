@@ -2012,7 +2012,7 @@
      integer :: istat
 
 ! dummy vector, used to save the difference of density
-     complex(dp) :: vm(:)
+     complex(dp), allocatable :: vm(:)
 
 ! allocate memory
      allocate(vm(qbnd), stat = istat)
