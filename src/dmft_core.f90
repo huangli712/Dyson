@@ -1235,6 +1235,10 @@
                      caux = fmesh(m)
                  endif ! back if ( axis == 1 ) block
 
+! get local impurity levels. the local impurity levels are actually equal
+! to \sum e_{nk} - \mu. see cal_eimps() subroutine for more details.
+                 Em = eimps(1:cdim,1:cdim,s,t)
+
 ! calculate G^{-1}
                  Tm = green(1:cdim,1:cdim,m,s,t)
                  call s_inv_z(cdim, Tm)
@@ -1244,13 +1248,9 @@
 ! self-energy functions. see cal_sigma() subroutine for more details.
                  Sm = sigma(1:cdim,1:cdim,m,s,t)
 
-! get local impurity levels. the local impurity levels are actually equal
-! to \sum e_{nk} - \mu. see cal_eimps() subroutine for more details.
-                 Em = eimps(1:cdim,1:cdim,s,t)
-
-! assemble the hybridization function. actually, Sm + Tm is G^{-1}_0.
+! assemble the hybridization function. actually, Tm + Sm is G^{-1}_0.
 ! please see cal_weiss() subroutine for more details.
-                 delta(1:cdim,1:cdim,m,s,t) = caux * Im - Em - Sm - Tm
+                 delta(1:cdim,1:cdim,m,s,t) = caux * Im - Em - Tm - Sm
 
              enddo MESH_LOOP ! over m={1,nmesh} loop
          enddo SPIN_LOOP ! over s={1,nspin} loop
