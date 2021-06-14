@@ -590,7 +590,9 @@
 ! check working axis
      call s_assert2(axis == 1, 'axis is wrong')
 
-! substract the double counting terms
+! loop over quantum impurities, spins, and frequency points
+!
+! substract the double counting terms: new sigma = sigma - sigdc
      do t=1,nsite
          do s=1,nspin
              do m=1,nmesh
