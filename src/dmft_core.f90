@@ -1990,21 +1990,33 @@
      complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
 
 ! local variables
+! index for spins
+     integer :: s
+
 ! index for k-points
      integer :: k
 
-! index for spin
-     integer :: s
+! index for dft bands
+     integer :: b
 
 ! band window: start index and end index for bands
      integer :: bs, be
 
 ! number of dft bands for given k-point and spin
-     integer  :: cbnd
+     integer :: cbnd
 
-     complex(dp) :: vm(qbnd)
+! status flag
+     integer :: istat
 
-     integer :: b
+! dummy vector, used to save the difference of density
+     complex(dp) :: vm(:)
+
+! allocate memory
+     allocate(vm(qbnd), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('correction','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
              bs = kwin(k,s,1,i_wnd(1))
