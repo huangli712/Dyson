@@ -2138,6 +2138,7 @@
 ! band window: start index and end index for bands
      integer :: bs, be
 
+! print some useful information
      if ( myid == master ) then
          write(mystd,'(4X,a)') 'calculating desired charge density'
      endif ! back if ( myid == master ) block
