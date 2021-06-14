@@ -6,7 +6,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/12/2021 by li huang (last modified)
+!!!           06/14/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -325,21 +325,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.5.1 @ 2021.06.12D'
+     character(len=20), public, parameter :: V_FULL = 'v0.5.2 @ 2021.06.14D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.5.1'
+     character(len=06), public, parameter :: V_CURR = 'v0.5.2'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2021.06.12'
+     character(len=11), public, parameter :: V_DATE = '2021.06.14'
 
 !!
 !! @var V_STAT
