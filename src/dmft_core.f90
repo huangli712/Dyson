@@ -2436,12 +2436,11 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
-! calculate summation of the lattice green's function
+! calculate frequency-summation of the lattice green's function
      do s=1,nspin
          do k=1,nkpt
              do b=1,qbnd
                  kocc(b,k,s) = sum( glat(b,:,k,s) ) * ( two / beta )
-                 !!print *, b, k, s, kocc(b,k,s)
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
@@ -2449,6 +2448,7 @@
 ! consider the contribution from asymptotic part
      do s=1,nspin
          do k=1,nkpt
+! determine the band window
 ! see remarks in cal_nelect()
              bs = kwin(k,s,1,i_wnd(1))
              be = kwin(k,s,2,i_wnd(1))
@@ -2456,12 +2456,9 @@
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
                  kocc(b,k,s) = kocc(b,k,s) + fermi_dirac( real(caux) )
-                 !print *, b, k, s, kocc(b,k,s)
              enddo ! over b={1,cbnd} loop
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
-
-     !!STOP
 
 ! deallocate memory
      if ( allocated(glat) ) deallocate(glat)
