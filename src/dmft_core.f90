@@ -232,8 +232,26 @@
 !! dft + dmft calculations.
 !!
   subroutine dmft_try2()
+     use constants, only : mystd
+
      implicit none
 
+! try to search the fermi level
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
+     endif ! back if ( myid == master ) block
+     !
+     if ( lfermi .eqv. .true. ) then
+         call cal_fermi()
+     else
+         if ( myid == master ) then
+             write(mystd,'(4X,a)') 'SKIP'
+         endif ! back if ( myid == master ) block
+     endif ! back if ( lfermi .eqv. .true. ) block
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
 
      call cal_gamma()
 
