@@ -1315,6 +1315,7 @@
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
      call cal_eigsys(eigs, einf)
 
+! calculate new density matrix based on the dft + dmft eigenvalues
      call cal_denmat(fermi, eigs, einf, kocc)
 
      call correction(kocc, gamma)
