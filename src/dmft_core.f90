@@ -2415,6 +2415,11 @@
 ! reset glat
      glat = czero
 
+! print some useful information
+     if ( myid == master ) then
+         write(mystd,'(4X,a)') 'calculating dft + dmft density matrix'
+     endif ! back if ( myid == master ) block
+
 ! loop over spins and k-points to calculate the lattice green's function
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
