@@ -1269,6 +1269,8 @@
 !!
 !! @sub cal_gamma
 !!
+!! try to calculate correction for density matrix
+!!
   subroutine cal_gamma()
      use constants, only : dp
 
