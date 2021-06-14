@@ -173,23 +173,23 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! try to compute the hybridization function
-     if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Hybri'
-     endif ! back if ( myid == master ) block
-     !
-     call cal_delta()
-     !
-     if ( myid == master ) then
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
-
 ! try to compute the local weiss's function
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Weiss'
      endif ! back if ( myid == master ) block
      !
      call cal_weiss()
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+! try to compute the hybridization function
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Hybri'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_delta()
      !
      if ( myid == master ) then
          write(mystd,*)
@@ -211,11 +211,11 @@
          write(mystd,'(4X,a)') 'save green...'
          call dmft_dump_green(green)
          !
-         write(mystd,'(4X,a)') 'save delta...'
-         call dmft_dump_delta(delta)
-         !
          write(mystd,'(4X,a)') 'save weiss...'
          call dmft_dump_weiss(weiss)
+         !
+         write(mystd,'(4X,a)') 'save delta...'
+         call dmft_dump_delta(delta)
          !
          write(mystd,*)
      endif ! back if ( myid == master ) block
