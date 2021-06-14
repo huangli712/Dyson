@@ -1966,6 +1966,9 @@
 !!
 !! @sub correction
 !!
+!! try to evaluate the difference between the dft density matrix and the
+!! dft + dmft density matrix
+!!
   subroutine correction(kocc, gamma)
      use constants, only : dp
      use constants, only : czero
