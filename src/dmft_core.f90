@@ -2023,6 +2023,11 @@
      if ( istat /= 0 ) then
          call s_print_error('correction','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+     !
+     allocate(gamma_mpi(qbnd,qbnd,nkpt,nspin), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('correction','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! mpi barrier. waiting all processes reach here.
 # if defined (MPI)
