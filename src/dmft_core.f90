@@ -517,6 +517,11 @@
      call s_assert2(axis == 1, 'axis is wrong')
 
 ! allocate memory
+     allocate(ip(mcut), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_sigoo','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
      allocate(Sm(qdim,qdim), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_sigoo','can not allocate enough memory')
@@ -546,6 +551,7 @@
      sigoo = sigoo - sigdc
 
 ! deallocate memory
+     if ( allocated(ip) ) deallocate(ip)
      if ( allocated(Sm) ) deallocate(Sm)
 
      return
