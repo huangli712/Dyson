@@ -2035,6 +2035,12 @@
      gamma = czero
      gamma_mpi = czero
 
+! print some useful information
+     if ( myid == master ) then
+         write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate green for', nsite, 'sites'
+         write(mystd,'(4X,a,2X,i4,2X,a)') 'add contributions from', nkpt, 'kpoints'
+     endif ! back if ( myid == master ) block
+
 ! mpi barrier. waiting all processes reach here.
 # if defined (MPI)
      !
