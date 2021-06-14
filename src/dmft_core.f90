@@ -1094,6 +1094,8 @@
 ! please be aware that the double counting terms have been substracted
 ! from the self-energy function. see subroutine cal_sigma().
 !
+
+! loop over quantum impurities
      SITE_LOOP: do t=1,nsite
 ! get size of orbital space
          cdim = ndim(t)
@@ -1111,7 +1113,7 @@
          SPIN_LOOP: do s=1,nspin
              MESH_LOOP: do m=1,nmesh
 
-! back local green's function to Gl
+! copy local green's function to Gl
                  Gl = green(1:cdim,1:cdim,m,s,t)
 
 ! inverse local green's function. now Gl is G^{-1}
