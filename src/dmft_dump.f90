@@ -207,11 +207,11 @@
      complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
 
 ! local variables
-! loop index for k-points
-     integer :: k
-
 ! loop index for spins
      integer :: s
+
+! loop index for k-points
+     integer :: k
 
 ! loop index for impurity sites
      integer :: t
