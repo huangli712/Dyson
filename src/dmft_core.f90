@@ -2024,8 +2024,14 @@
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
 
-             bs = kwin(k,s,1,i_wnd(1))
-             be = kwin(k,s,2,i_wnd(1))
+! evaluate band window for the current k-point and spin
+! i_wnd(t) returns the corresponding band window for given impurity site t
+! see remarks in cal_nelect() for more details
+             t = 1 ! t is fixed to 1
+             bs = kwin(k,s,1,i_wnd(t))
+             be = kwin(k,s,2,i_wnd(t))
+
+! determine cbnd
              cbnd = be - bs + 1
 
              vm = czero
