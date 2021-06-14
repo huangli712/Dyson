@@ -781,13 +781,13 @@
                  call s_print_error('cal_eimps','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-! evaluate Em, which is just some dft eigenvalues
+! evaluate Em, which is the eigenvalues (substracted by the fermi level)
              Em = enk(bs:be,k,s) - fermi
 
 ! convert `Em` to diagonal matrix `Hm`
              call s_diag_z(cbnd, Em, Hm)
 
-! project effective hamiltonian to local basis
+! project effective hamiltonian from kohn-sham basis to local basis
              do t=1,nsite
                  Xe = czero
                  cdim = ndim(t)
