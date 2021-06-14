@@ -2161,7 +2161,7 @@
 ! reset nelect
      nelect = zero
 
-! perform summation
+! loop over spins and k-points to perform summation
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
              bs = kwin(k,s,1,i_wnd(1))
@@ -2240,7 +2240,7 @@
      integer  :: istat
 
 ! complex(dp) dummy variable
-     complex(dp) :: caux
+     complex(dp) :: caux, ctmp
 
 ! density matrix
      complex(dp), allocatable :: zocc(:,:)
@@ -2266,8 +2266,11 @@
 ! check axis
      call s_assert2(axis == 1, 'axis is wrong')
 
-! calculate local green's function
+! reset gloc
      gloc = czero
+
+! loop over spins and k-points to perform k-summation to determine the
+! local green's function
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
 
@@ -2281,8 +2284,8 @@
              do m=1,nmesh
                  caux = czi * fmesh(m) + fermi
                  do b=1,cbnd
-                     gloc(b,m,s) = gloc(b,m,s) + one / ( caux - eigs(b,m,k,s) )
-                     gloc(b,m,s) = gloc(b,m,s) - one / ( caux - einf(b,k,s) )
+                     ctmp = one / ( caux - eigs(b,m,k,s) ) - one / ( caux - einf(b,k,s) )
+                     gloc(b,m,s) = gloc(b,m,s) + ctmp * weight(k)
                  enddo ! over b={1,cbnd} loop
              enddo ! over m={1,nmesh} loop
 
