@@ -628,9 +628,10 @@
 !!
 !! @sub cal_fermi
 !!
-!! try to determine the fermi level
+!! try to determine the fermi level. and the lattice occupancy will be
+!! calculated at the same time.
 !!
-  subroutine cal_fermi()
+  subroutine cal_fermi(occup)
      use constants, only : dp, mystd
      use constants, only : czero
 
@@ -640,6 +641,10 @@
      use context, only : qbnd
 
      implicit none
+
+! external arguments
+! lattice occupancy
+     real(dp), intent(out) :: occup
 
 ! local variables
 ! desired charge density
@@ -666,7 +671,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! calculate the nominal charge density according to the dft eigenvalues
-     call cal_nelect(ndens)
+     call cal_nelect(ndens); occup = ndens
 
 ! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
      call cal_eigsys(eigs, einf)
