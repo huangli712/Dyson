@@ -40,7 +40,8 @@
      open(mytmp, file='dmft.fermi', form='formatted', status='unknown')
 
 ! write parameters
-     write(mytmp,'(a9,f16.8,a7,f16.8)') '# fermi: ', fermi, 'occup: ', occup
+     write(mytmp,'(a9,f16.8)') '# fermi: ', fermi
+     write(mytmp,'(a9,f16.8)') '# occup: ', occup
 
 ! close data file
      close(mytmp)
