@@ -308,6 +308,7 @@
 !! updated in this subroutine. it is just for testing purpose.
 !!
   subroutine dmft_try3()
+     use constants, only : dp, zero
      use constants, only : mystd
 
      use control, only : cname
@@ -317,6 +318,10 @@
 
      implicit none
 
+! local variables
+! lattice occupancy
+     real(dp) :: occup
+
 ! check lfermi at first
      call s_assert2(lfermi .eqv. .true., 'lfermi must be true')
 
@@ -325,7 +330,9 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
      endif ! back if ( myid == master ) block
      !
-     call cal_fermi()
+     occup = zero
+     !
+     call cal_fermi(occup)
      !
      if ( myid == master ) then
          write(mystd,*)
@@ -336,7 +343,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
          write(mystd,'(4X,a)') 'save fermi...'
-         call dmft_dump_fermi(fermi)
+         call dmft_dump_fermi(fermi, occup)
          !
          write(mystd,*)
      endif ! back if ( myid == master ) block
