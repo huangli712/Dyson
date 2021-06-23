@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/15/2021 by li huang (last modified)
+!!!           06/23/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -119,6 +119,7 @@
 !! one-shot dft + dmft calculations.
 !!
   subroutine dmft_try1()
+     use constants, only : dp, zero
      use constants, only : mystd
 
      use control, only : cname
@@ -132,13 +133,19 @@
 
      implicit none
 
+! local variables
+! lattice occupancy
+     real(dp) :: occup
+
 ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
      endif ! back if ( myid == master ) block
      !
+     occup = zero
+     !
      if ( lfermi .eqv. .true. ) then
-         call cal_fermi()
+         call cal_fermi(occup)
      else
          if ( myid == master ) then
              write(mystd,'(4X,a)') 'SKIP'
@@ -200,7 +207,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
          write(mystd,'(4X,a)') 'save fermi...'
-         call dmft_dump_fermi(fermi)
+         call dmft_dump_fermi(fermi, occup)
          !
          write(mystd,'(4X,a)') 'save eimps...'
          call dmft_dump_eimps(eimps)
@@ -232,6 +239,7 @@
 !! dft + dmft calculations.
 !!
   subroutine dmft_try2()
+     use constants, only : dp, zero
      use constants, only : mystd
 
      use control, only : cname
@@ -243,13 +251,19 @@
 
      implicit none
 
+! local variables
+! lattice occupancy
+     real(dp) :: occup
+
 ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
      endif ! back if ( myid == master ) block
      !
+     occup = zero
+     !
      if ( lfermi .eqv. .true. ) then
-         call cal_fermi()
+         call cal_fermi(occup)
      else
          if ( myid == master ) then
              write(mystd,'(4X,a)') 'SKIP'
@@ -276,7 +290,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
          write(mystd,'(4X,a)') 'save fermi...'
-         call dmft_dump_fermi(fermi)
+         call dmft_dump_fermi(fermi, occup)
          !
          write(mystd,'(4X,a)') 'save gamma...'
          call dmft_dump_gamma(gamma)
