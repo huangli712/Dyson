@@ -2119,7 +2119,7 @@
              call s_diag_z(cbnd, Em, Hm)
 
 ! evaluate correction to band energy
-             Hm = dot_product(gamma(:,:,k,s), Hm)
+             Hm = matmul(gamma(:,:,k,s), Hm)
              call s_trace_z(cbnd, Hm, tr)
              ecorr = ecorr + real(tr) * weight(k) 
 
