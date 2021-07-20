@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/23/2021 by li huang (last modified)
+!!!           07/13/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -1296,14 +1296,12 @@
 !!
 !! @sub cal_gamma
 !!
-!! try to calculate correction for density matrix
+!! try to calculate correlation-induced correction for density matrix
 !!
   subroutine cal_gamma()
      use constants, only : dp
 
      use control, only : nkpt, nspin
-     use control, only : nmesh
-     use control, only : fermi
 
      use context, only : qbnd
      use context, only : gamma
@@ -1314,43 +1312,22 @@
 ! status flag
      integer  :: istat
 
-! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
-     complex(dp), allocatable :: eigs(:,:,:,:)
-
-! dummy array, used to save the eigenvalues of H + \Sigma(oo)
-     complex(dp), allocatable :: einf(:,:,:)
-
-! density matrix
-     complex(dp), allocatable :: kocc(:,:,:)
+! dft + dmft density matrix
+     complex(dp), allocatable :: kocc(:,:,:,:)
 
 ! allocate memory
-     allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
+     allocate(kocc(qbnd,qbnd,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_gamma','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
-     !
-     allocate(einf(qbnd,nkpt,nspin),       stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('cal_gamma','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-     !
-     allocate(kocc(qbnd,nkpt,nspin),       stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('cal_gamma','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
-     call cal_eigsys(eigs, einf)
 
 ! calculate new density matrix based on the dft + dmft eigenvalues
-     call cal_denmat(fermi, eigs, einf, kocc)
+     call cal_denmat(kocc)
 
 ! calculate the difference between dft and dft + dmft density matrices
      call correction(kocc, gamma)
 
 ! deallocate memory
-     if ( allocated(eigs) ) deallocate(eigs)
-     if ( allocated(einf) ) deallocate(einf)
      if ( allocated(kocc) ) deallocate(kocc)
 
      return
@@ -2015,7 +1992,7 @@
 
 ! external arguments
 ! density matrix from dft + dmft calculations
-     complex(dp), intent(in)  :: kocc(qbnd,nkpt,nspin)
+     complex(dp), intent(in)  :: kocc(qbnd,qbnd,nkpt,nspin)
 
 ! correction for density matrix
      complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
@@ -2026,6 +2003,9 @@
 
 ! index for k-points
      integer :: k
+
+! index for orbitals
+     integer :: p, q
 
 ! index for impurity sites
      integer :: t
@@ -2039,25 +2019,16 @@
 ! status flag
      integer :: istat
 
-! dummy vector, used to save the difference of density
-     complex(dp), allocatable :: vm(:)
-
 ! dummy array, used to perform mpi reduce operation for gamma
      complex(dp), allocatable :: gamma_mpi(:,:,:,:)
 
 ! allocate memory
-     allocate(vm(qbnd), stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('correction','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-     !
      allocate(gamma_mpi(qbnd,qbnd,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('correction','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! reset gamma
-     vm = czero
      gamma = czero
      gamma_mpi = czero
 
@@ -2094,12 +2065,16 @@
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
 ! calculate the difference between dft + dmft density matrix `kocc` and
-! the dft density matrix `occupy`. the results are saved at `vm`.
-             vm = czero
-             vm(1:cbnd) = kocc(1:cbnd,k,s) - occupy(bs:be,k,s)
-
-! to fill the gamma array using the values in vm
-             call s_diag_z(qbnd, vm, gamma(:,:,k,s))
+! the dft density matrix `occupy`. the results are saved at `gamma`.
+             do p = 1,cbnd
+                 do q = 1,cbnd
+                     if ( p /= q ) then
+                         gamma(q,p,k,s) = kocc(q,p,k,s)
+                     else
+                         gamma(q,p,k,s) = kocc(q,p,k,s) - occupy(bs + q - 1,k,s) 
+                     endif
+                 enddo
+             enddo
 
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
@@ -2123,7 +2098,6 @@
      gamma = gamma_mpi
 
 ! deallocate memory
-     deallocate(vm)
      deallocate(gamma_mpi)
 
      return
@@ -2367,133 +2341,178 @@
 !!
 !! try to calculate the dft + dmft density matrix for given fermi level
 !!
-  subroutine cal_denmat(fermi, eigs, einf, kocc)
+  subroutine cal_denmat(kocc)
      use constants, only : dp, mystd
-     use constants, only : one, two
-     use constants, only : czi, czero
+     use constants, only : one, czero
 
-     use control, only : axis
+     use mmpi, only : mp_barrier
+     use mmpi, only : mp_allreduce
+
      use control, only : nkpt, nspin
+     use control, only : nsite
      use control, only : nmesh
      use control, only : beta
-     use control, only : myid, master
+     use control, only : myid, master, nprocs
 
      use context, only : i_wnd
      use context, only : qbnd
+     use context, only : ndim
      use context, only : kwin
      use context, only : fmesh
 
      implicit none
 
 ! external arguments
-! assumed fermi level
-     real(dp), intent(in)     :: fermi
-
-! eigenvalues for H(k) + \Sigma(i\omega_n)
-     complex(dp), intent(in)  :: eigs(qbnd,nmesh,nkpt,nspin)
-
-! eigenvalues for H(k) + \Sigma(\infty)
-     complex(dp), intent(in)  :: einf(qbnd,nkpt,nspin)
-
-! density matrix
-     complex(dp), intent(out) :: kocc(qbnd,nkpt,nspin)
-
+! dft + dmft density matrix
+     complex(dp), intent(out) :: kocc(qbnd,qbnd,nkpt,nspin)
+     
 ! local variables
-! loop index for spins
-     integer  :: s
+! loop index for spin
+     integer :: s
 
 ! loop index for k-points
-     integer  :: k
+     integer :: k
 
-! loop index for frequency points
-     integer  :: m
+! loop index for orbitals
+     integer :: p, q
 
-! loop index for bands
-     integer  :: b
-
-! band window: start index and end index for bands
-     integer  :: bs, be
+! loop index for impurity sites
+     integer :: t
 
 ! number of dft bands for given k-point and spin
-     integer  :: cbnd
+     integer :: cbnd
+
+! number of correlated orbitals for given impurity site
+     integer :: cdim
+
+! band window: start index and end index for bands
+     integer :: bs, be
 
 ! status flag
-     integer  :: istat
+     integer :: istat
 
-! complex(dp) dummy variable
-     complex(dp) :: caux
+! orbital density for given k and spin
+     complex(dp) :: density
 
-! lattice green's function
-     complex(dp), allocatable :: glat(:,:,:,:)
+! dummy array: for self-energy function (upfolded to Kohn-Sham basis)
+     complex(dp), allocatable :: Sk(:,:,:)
+     complex(dp), allocatable :: Xk(:,:,:)
 
-! external functions
-! used to calculate fermi-dirac function
-     real(dp), external :: fermi_dirac
+! dummy array: for lattice green's function
+     complex(dp), allocatable :: Gk(:,:,:)
+
+! dummy array: used to perform mpi reduce operation for kocc
+     complex(dp), allocatable :: kocc_mpi(:,:,:,:)
 
 ! allocate memory
-     allocate(glat(qbnd,nmesh,nkpt,nspin), stat = istat)
+     allocate(kocc_mpi(qbnd,qbnd,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_denmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! check axis
-     call s_assert2(axis == 1, 'axis is wrong')
+! reset cbnd and cdim. they will be updated later
+! cbnd should be k-dependent and cdim should be impurity-dependent.
+     cbnd = 0
+     cdim = 0
 
-! reset glat
-     glat = czero
+! reset kocc and kocc_mpi
+     kocc = czero
+     kocc_mpi = czero
 
 ! print some useful information
      if ( myid == master ) then
-         write(mystd,'(4X,a)') 'calculating dft + dmft density matrix'
+         write(mystd,'(4X,a)') 'calculate dft + dmft density matrix'
      endif ! back if ( myid == master ) block
 
-! loop over spins and k-points to calculate the lattice green's function
-     SPIN_LOOP: do s=1,nspin
-         KPNT_LOOP: do k=1,nkpt
+! mpi barrier. waiting all processes reach here.
+# if defined (MPI)
+     !
+     call mp_barrier()
+     !
+# endif /* MPI */
 
-! determine the band window
-! see remarks in cal_nelect()
-             bs = kwin(k,s,1,i_wnd(1))
-             be = kwin(k,s,2,i_wnd(1))
+! loop over spins and k-points
+     SPIN_LOOP: do s=1,nspin
+         KPNT_LOOP: do k=myid+1,nkpt,nprocs
+
+! evaluate band window for the current k-point and spin
+! i_wnd(t) returns the corresponding band window for given impurity site t
+! see remarks in cal_nelect() for more details
+             t = 1 ! t is fixed to 1
+             bs = kwin(k,s,1,i_wnd(t))
+             be = kwin(k,s,2,i_wnd(t))
+
+! determine cbnd
              cbnd = be - bs + 1
 
-! here, the asymptotic part is substracted
-             do m=1,nmesh
-                 caux = czi * fmesh(m) + fermi
-                 do b=1,cbnd
-                     glat(b,m,k,s) = one / ( caux - eigs(b,m,k,s) ) - one / ( caux - einf(b,k,s) )
-                 enddo ! over b={1,cbnd} loop
-             enddo ! over m={1,nmesh} loop
+! provide some useful information
+             write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
+             write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
+             write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
+             write(mystd,'(2X,a,i2)') 'proc: ', myid
+
+! allocate memories Sk, Xk, and Gk. their sizes are k-dependent
+             allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
+             allocate(Xk(cbnd,cbnd,nmesh), stat = istat)
+             allocate(Gk(cbnd,cbnd,nmesh), stat = istat)
+             !
+             if ( istat /= 0 ) then
+                 call s_print_error('cal_denmat','can not allocate enough memory')
+             endif ! back if ( istat /= 0 ) block
+
+! build self-energy function, and then upfold it into Kohn-Sham basis
+! Sk should contain contributions from all impurity sites
+             Sk = czero
+             do t=1,nsite
+                 Xk = czero ! reset Xk
+                 cdim = ndim(t)
+                 call cal_sl_sk(cdim, cbnd, k, s, t, Xk)
+                 Sk = Sk + Xk
+             enddo ! over t={1,nsite} loop
+
+! calculate lattice green's function
+             call cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
+
+! try to calculate the momentum- and spin-dependent density matrix
+             do p=1,cbnd
+                 do q=1,cbnd
+                     call s_fft_density(nmesh, fmesh, Gk(q,p,:), density, beta)
+                     if ( p == q ) then
+                         kocc(q,p,k,s) = one + density
+                     else
+                         kocc(q,p,k,s) = density
+                     endif
+                 enddo
+             enddo
+
+! deallocate memories
+             if ( allocated(Sk) ) deallocate(Sk)
+             if ( allocated(Xk) ) deallocate(Xk)
+             if ( allocated(Gk) ) deallocate(Gk)
 
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
-! calculate frequency-summation of the lattice green's function
-     do s=1,nspin
-         do k=1,nkpt
-             do b=1,qbnd
-                 kocc(b,k,s) = sum( glat(b,:,k,s) ) * ( two / beta )
-             enddo ! over b={1,cbnd} loop
-         enddo ! over k={1,nkpt} loop
-     enddo ! over s={1,nspin} loop
+! collect data from all mpi processes
+# if defined (MPI)
+     !
+     call mp_barrier()
+     !
+     call mp_allreduce(kocc, kocc_mpi)
+     !
+     call mp_barrier()
+     !
+# else  /* MPI */
 
-! consider the contribution from asymptotic part
-     do s=1,nspin
-         do k=1,nkpt
-! determine the band window
-! see remarks in cal_nelect()
-             bs = kwin(k,s,1,i_wnd(1))
-             be = kwin(k,s,2,i_wnd(1))
-             cbnd = be - bs + 1
-             do b=1,cbnd
-                 caux = einf(b,k,s) - fermi
-                 kocc(b,k,s) = kocc(b,k,s) + fermi_dirac( real(caux) )
-             enddo ! over b={1,cbnd} loop
-         enddo ! over k={1,nkpt} loop
-     enddo ! over s={1,nspin} loop
+     kocc_mpi = kocc
+
+# endif /* MPI */
+
+! renormalize density matrix
+     kocc = kocc_mpi
 
 ! deallocate memory
-     if ( allocated(glat) ) deallocate(glat)
+     if ( allocated(kocc_mpi) ) deallocate(kocc_mpi)
 
      return
   end subroutine cal_denmat
