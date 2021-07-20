@@ -207,7 +207,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
          write(mystd,'(4X,a)') 'save fermi...'
-         call dmft_dump_fermi(fermi, occup)
+         call dmft_dump_fermi(fermi, occup, zero)
          !
          write(mystd,'(4X,a)') 'save eimps...'
          call dmft_dump_eimps(eimps)
@@ -348,7 +348,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
          write(mystd,'(4X,a)') 'save fermi...'
-         call dmft_dump_fermi(fermi, occup)
+         call dmft_dump_fermi(fermi, occup, zero)
          !
          write(mystd,*)
      endif ! back if ( myid == master ) block
