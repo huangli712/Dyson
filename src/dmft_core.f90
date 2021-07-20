@@ -1986,7 +1986,7 @@
      use context, only : i_wnd
      use context, only : qbnd
      use context, only : kwin
-     use context, only : occupy
+     use context, only : enk, occupy
 
      implicit none
 
@@ -2025,6 +2025,10 @@
 ! dummy variable, used to perform mpi reduce operation for ecorr
      complex(dp), allocatable :: ecorr_mpi
 
+! dummy arrays, used to build effective hamiltonian
+     complex(dp), allocatable :: Em(:)
+     complex(dp), allocatable :: Hm(:,:)
+
 ! dummy array, used to perform mpi reduce operation for gamma
      complex(dp), allocatable :: gamma_mpi(:,:,:,:)
 
@@ -2037,6 +2041,10 @@
 ! reset gamma
      gamma = czero
      gamma_mpi = czero
+
+! reset ecorr
+     ecorr = czero
+     ecorr_mpi = czero
 
 ! print some useful information
      if ( myid == master ) then
@@ -2070,8 +2078,16 @@
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
+! allocate memory
+             allocate(Em(cbnd),      stat = istat)
+             allocate(Hm(cbnd,cbnd), stat = istat)
+             !
+             if ( istat /= 0 ) then
+                 call s_print_error('correction','can not allocate enough memory')
+             endif ! back if ( istat /= 0 ) block
+
 ! calculate the difference between dft + dmft density matrix `kocc` and
-! the dft density matrix `occupy`. the results are saved at `gamma`.
+! the dft density matrix `occupy`. the results are saved at `gamma.
              do p = 1,cbnd
                  do q = 1,cbnd
                      if ( p /= q ) then
@@ -2081,6 +2097,19 @@
                      endif
                  enddo
              enddo
+
+! Now gamma(:,:,k,s) is ready, we would like to use it to calculate its
+! contribution to band energy.
+
+! evaluate Em, which is the eigenvalues
+             Em = enk(bs:be,k,s)
+
+! convert `Em` to diagonal matrix `Hm`
+             call s_diag_z(cbnd, Em, Hm)
+
+! deallocate memory
+             if ( allocated(Em) ) deallocate(Em)
+             if ( allocated(Hm) ) deallocate(Hm)
 
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
