@@ -1298,7 +1298,7 @@
 !!
 !! try to calculate correlation-induced correction for density matrix
 !!
-  subroutine cal_gamma()
+  subroutine cal_gamma(ecorr)
      use constants, only : dp
 
      use control, only : nkpt, nspin
@@ -1307,6 +1307,10 @@
      use context, only : gamma
 
      implicit none
+
+! external arguments
+! correction to band energy
+     complex(dp), intent(out) :: ecorr
 
 ! local variables
 ! status flag
@@ -1325,7 +1329,7 @@
      call cal_denmat(kocc)
 
 ! calculate the difference between dft and dft + dmft density matrices
-     call correction(kocc, gamma)
+     call correction(kocc, gamma, ecorr)
 
 ! deallocate memory
      if ( allocated(kocc) ) deallocate(kocc)
