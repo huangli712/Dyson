@@ -255,6 +255,9 @@
 ! lattice occupancy
      real(dp) :: occup
 
+! correction to band energy
+     real(dp) :: ecorr
+
 ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
@@ -279,7 +282,9 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Gamma'
      endif ! back if ( myid == master ) block
      !
-     call cal_gamma()
+     ecorr = zero
+     !
+     call cal_gamma(ecorr)
      !
      if ( myid == master ) then
          write(mystd,*)
@@ -290,7 +295,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
          write(mystd,'(4X,a)') 'save fermi...'
-         call dmft_dump_fermi(fermi, occup)
+         call dmft_dump_fermi(fermi, occup, ecorr)
          !
          write(mystd,'(4X,a)') 'save gamma...'
          call dmft_dump_gamma(gamma)
@@ -1310,7 +1315,7 @@
 
 ! external arguments
 ! correction to band energy
-     complex(dp), intent(out) :: ecorr
+     real(dp), intent(out) :: ecorr
 
 ! local variables
 ! status flag
@@ -1979,7 +1984,7 @@
 !!
   subroutine correction(kocc, gamma, ecorr)
      use constants, only : dp, mystd
-     use constants, only : czero
+     use constants, only : zero, czero
 
      use mmpi, only : mp_barrier
      use mmpi, only : mp_allreduce
@@ -2003,7 +2008,7 @@
      complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
 
 ! correction for band energy
-     complex(dp), intent(out) :: ecorr
+     real(dp), intent(out)    :: ecorr
 
 ! local variables
 ! index for spins
@@ -2028,7 +2033,8 @@
      integer :: istat
 
 ! dummy variable, used to perform mpi reduce operation for ecorr
-     complex(dp), allocatable :: ecorr_mpi, tr
+     real(dp), allocatable    :: ecorr_mpi
+     complex(dp), allocatable :: tr
 
 ! dummy arrays, used to build effective hamiltonian
      complex(dp), allocatable :: Em(:)
@@ -2048,8 +2054,8 @@
      gamma_mpi = czero
 
 ! reset ecorr
-     ecorr = czero
-     ecorr_mpi = czero
+     ecorr = zero
+     ecorr_mpi = zero
 
 ! print some useful information
      if ( myid == master ) then
@@ -2115,7 +2121,7 @@
 ! evaluate correction to band energy
              Hm = dot_product(gamma(:,:,k,s), Hm)
              call s_trace_z(cbnd, Hm, tr)
-             ecorr = ecorr + tr * weight(k) 
+             ecorr = ecorr + real(tr) * weight(k) 
 
 ! deallocate memory
              if ( allocated(Em) ) deallocate(Em)
