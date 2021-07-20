@@ -1986,6 +1986,7 @@
      use context, only : i_wnd
      use context, only : qbnd
      use context, only : kwin
+     use context, only : weight
      use context, only : enk, occupy
 
      implicit none
@@ -2107,9 +2108,10 @@
 ! convert `Em` to diagonal matrix `Hm`
              call s_diag_z(cbnd, Em, Hm)
 
+! evaluate correction to band energy
              Hm = dot_product(gamma(:,:,k,s), Hm)
              call s_trace_z(cbnd, Hm, tr)
-             ecorr = ecorr + tr
+             ecorr = ecorr + tr * weight(k) 
 
 ! deallocate memory
              if ( allocated(Em) ) deallocate(Em)
@@ -2124,17 +2126,20 @@
      call mp_barrier()
      !
      call mp_allreduce(gamma, gamma_mpi)
+     call mp_allreduce(ecorr, ecorr_mpi)
      !
      call mp_barrier()
      !
 # else  /* MPI */
 
      gamma_mpi = gamma
+     ecorr_mpi = ecorr
 
 # endif /* MPI */
 
 ! get the final correction for density matrix
      gamma = gamma_mpi
+     ecorr = ecorr_mpi
 
 ! deallocate memory
      deallocate(gamma_mpi)
