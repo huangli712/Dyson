@@ -2034,7 +2034,7 @@
 
 ! dummy variable, used to perform mpi reduce operation for ecorr
      real(dp), allocatable    :: ecorr_mpi
-     complex(dp), allocatable :: tr
+     complex(dp) :: tr
 
 ! dummy arrays, used to build effective hamiltonian
      complex(dp), allocatable :: Em(:)
@@ -2120,6 +2120,7 @@
 
 ! evaluate correction to band energy
              Hm = matmul(gamma(:,:,k,s), Hm)
+             print *, Hm
              call s_trace_z(cbnd, Hm, tr)
              ecorr = ecorr + real(tr) * weight(k) 
 
