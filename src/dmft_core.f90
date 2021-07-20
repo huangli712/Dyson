@@ -1984,7 +1984,7 @@
 !!
   subroutine correction(kocc, gamma, ecorr)
      use constants, only : dp, mystd
-     use constants, only : zero, czero
+     use constants, only : zero, two, czero
 
      use mmpi, only : mp_barrier
      use mmpi, only : mp_allreduce
@@ -2120,7 +2120,6 @@
 
 ! evaluate correction to band energy
              Hm = matmul(gamma(:,:,k,s), Hm)
-             print *, Hm
              call s_trace_z(cbnd, Hm, tr)
              ecorr = ecorr + real(tr) * weight(k) 
 
@@ -2150,7 +2149,10 @@
 
 ! get the final correction for density matrix
      gamma = gamma_mpi
-     ecorr = ecorr_mpi
+     ecorr = ecorr_mpi / float(nkpt)
+     if ( nspin == 1 ) then
+         ecorr = ecorr * two
+     endif ! back if ( nspin == 1 ) block
 
 ! deallocate memory
      deallocate(gamma_mpi)
