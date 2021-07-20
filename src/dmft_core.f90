@@ -40,7 +40,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/13/2021 by li huang (last modified)
+!!!           07/20/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -1973,7 +1973,7 @@
 !! try to evaluate the difference between the dft density matrix and the
 !! dft + dmft density matrix
 !!
-  subroutine correction(kocc, gamma)
+  subroutine correction(kocc, gamma, ecorr)
      use constants, only : dp, mystd
      use constants, only : czero
 
@@ -1997,6 +1997,9 @@
 ! correction for density matrix
      complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
 
+! correction for band energy
+     complex(dp), intent(out) :: ecorr
+
 ! local variables
 ! index for spins
      integer :: s
@@ -2018,6 +2021,9 @@
 
 ! status flag
      integer :: istat
+
+! dummy variable, used to perform mpi reduce operation for ecorr
+     complex(dp), allocatable :: ecorr_mpi
 
 ! dummy array, used to perform mpi reduce operation for gamma
      complex(dp), allocatable :: gamma_mpi(:,:,:,:)
