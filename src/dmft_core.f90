@@ -2023,7 +2023,7 @@
      integer :: istat
 
 ! dummy variable, used to perform mpi reduce operation for ecorr
-     complex(dp), allocatable :: ecorr_mpi
+     complex(dp), allocatable :: ecorr_mpi, tr
 
 ! dummy arrays, used to build effective hamiltonian
      complex(dp), allocatable :: Em(:)
@@ -2106,6 +2106,10 @@
 
 ! convert `Em` to diagonal matrix `Hm`
              call s_diag_z(cbnd, Em, Hm)
+
+             Hm = dot_product(gamma(:,:,k,s), Hm)
+             call s_trace_z(cbnd, Hm, tr)
+             ecorr = ecorr + tr
 
 ! deallocate memory
              if ( allocated(Em) ) deallocate(Em)
