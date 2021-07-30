@@ -561,8 +561,8 @@
 !!
 !! @mod context
 !!
-!! containing memory management subroutines, which initialize all of the
-!! global variables and arrays
+!! containing memory management subroutines, which initialize or destroy
+!! all of the global variables and arrays.
 !!
   module context
      use constants, only : dp
