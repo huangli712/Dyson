@@ -1,47 +1,15 @@
 !!!-----------------------------------------------------------------------
 !!! project : jacaranda
-!!! program : dmft_driver
-!!!           dmft_try1
-!!!           dmft_try2
-!!!           dmft_try3
-!!!           dmft_try4
-!!!           dmft_try5
-!!!           dmft_try6
-!!!           dmft_try999
-!!!           cal_sigoo
-!!!           cal_sigma
-!!!           cal_fermi
-!!!           cal_eimps
-!!!           cal_eimpx
-!!!           cal_green
-!!!           cal_weiss
-!!!           cal_delta
-!!!           cal_gamma
-!!!           cal_sl_sk
-!!!           cal_sk_hk
-!!!           cal_hk_ek
-!!!           cal_sl_so
-!!!           cal_so_ho
-!!!           cal_ho_eo
-!!!           cal_sk_gk
-!!!           cal_gk_gl
-!!!           dichotomy
-!!!           correction
-!!!           cal_nelect
-!!!           cal_occupy
-!!!           cal_denmat
-!!!           cal_eigsys
-!!!           fermi_dirac
-!!!           map_chi_psi
-!!!           map_psi_chi
+!!! program : map_chi_psi
 !!!           one_chi_psi
+!!!           map_psi_chi
 !!!           one_psi_chi
 !!! source  : dmft_core.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 02/23/2021 by li huang (created)
-!!!           07/20/2021 by li huang (last modified)
-!!! purpose :
+!!! history : 07/29/2021 by li huang (created)
+!!!           07/30/2021 by li huang (last modified)
+!!! purpose : service subroutines for upfolding and downfolding.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
