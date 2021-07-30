@@ -21,7 +21,7 @@
 !!
 !! @sub map_chi_psi
 !!
-!! service subroutine. map a function from local basis to Kohn-Sham
+!! service subroutine. map a matrix function from local basis to Kohn-Sham
 !! basis. you can call this procedure `embedding` or `upfolding`.
 !!
   subroutine map_chi_psi(cdim, cbnd, nfrq, k, s, t, Mc, Mp)
@@ -104,7 +104,7 @@
 !! @sub one_chi_psi
 !!
 !! service subroutine. map a matrix from local basis to Kohn-Sham
-!! basis. you can call this procedure `embedding` or `upfold`
+!! basis. you can call this procedure `embedding` or `upfold`.
 !!
   subroutine one_chi_psi(cdim, cbnd, k, s, t, Mc, Mp)
      use constants, only : dp
@@ -115,37 +115,39 @@
 
      implicit none
 
-! external arguments
-! number of correlated orbitals for given impurity site
+!! external arguments
+     ! number of correlated orbitals for given impurity site
      integer, intent(in) :: cdim
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-! index for k-points
+     ! index for k-points
      integer, intent(in) :: k
 
-! index for spin
+     ! index for spin
      integer, intent(in) :: s
 
-! index for impurity sites
+     ! index for impurity sites
      integer, intent(in) :: t
 
-! input matrix defined at local orbital (\chi) basis
+     ! input matrix defined at local orbital (\chi) basis
      complex(dp), intent(in)  :: Mc(cdim,cdim)
 
-! output matrix defined at Kohn-Sham (\psi) basis
+     ! output matrix defined at Kohn-Sham (\psi) basis
      complex(dp), intent(out) :: Mp(cbnd,cbnd)
 
-! local variables
-! status flag
+!! local variables
+     ! status flag
      integer :: istat
 
-! overlap matrix between local orbitals and Kohn-Sham wave-functions
+     ! overlap matrix between local orbitals and Kohn-Sham wave-functions
      complex(dp), allocatable :: Cp(:,:)
      complex(dp), allocatable :: Pc(:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(Cp(cdim,cbnd), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('one_chi_psi','can not allocate enough memory')
@@ -156,16 +158,18 @@
          call s_print_error('one_chi_psi','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! copy data
+     ! copy data
      Cp = chipsi(1:cdim,1:cbnd,k,s,i_grp(t))
      Pc = psichi(1:cbnd,1:cdim,k,s,i_grp(t))
 
-! upfolding or embedding
+     ! upfolding or embedding
      Mp = matmul( matmul( Pc, Mc ), Cp )
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(Cp) ) deallocate(Cp)
      if ( allocated(Pc) ) deallocate(Pc)
+
+!! body]
 
      return
   end subroutine one_chi_psi
