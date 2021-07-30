@@ -30,25 +30,25 @@
 
      implicit none
 
-! external arguments
-! fermi level
+!! external arguments
+     ! fermi level
      real(dp), intent(in) :: fermi
 
-! lattice occupancy
+     ! lattice occupancy
      real(dp), intent(in) :: occup
 
-! correction to band energy
+     ! correction to band energy
      real(dp), intent(in) :: ecorr
 
-! open data file: dmft.fermi
+     ! open data file: dmft.fermi
      open(mytmp, file='dmft.fermi', form='formatted', status='unknown')
 
-! write parameters
+     ! write parameters
      write(mytmp,'(a9,f16.8)') '# fermi: ', fermi
      write(mytmp,'(a9,f16.8)') '# occup: ', occup
      write(mytmp,'(a9,f16.8)') '# ecorr: ', ecorr
 
-! close data file
+     ! close data file
      close(mytmp)
 
      return
