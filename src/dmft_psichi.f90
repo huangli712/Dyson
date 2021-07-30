@@ -103,7 +103,7 @@
 !!
 !! @sub one_chi_psi
 !!
-!! service subroutine. map a matrix from local basis to Kohn-Sham
+!! service subroutine. map a single matrix from local basis to Kohn-Sham
 !! basis. you can call this procedure `embedding` or `upfold`.
 !!
   subroutine one_chi_psi(cdim, cbnd, k, s, t, Mc, Mp)
@@ -263,8 +263,8 @@
 !!
 !! @sub one_psi_chi
 !!
-!! service subroutine. map a matrix from Kohn-Sham basis to local
-!! basis. you can call this procedure `projection` or `downfold`
+!! service subroutine. map a single matrix from Kohn-Sham basis to local
+!! basis. you can call this procedure `projection` or `downfold`.
 !!
   subroutine one_psi_chi(cbnd, cdim, k, s, t, Mp, Mc)
      use constants, only : dp
