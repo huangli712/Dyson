@@ -745,24 +745,24 @@
 !!
 !! @sub cat_alloc_lattice
 !!
-!! allocate memory for lattice-related variables
+!! allocate memory for lattice-related variables.
 !!
   subroutine cat_alloc_lattice()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(sorts(nsort),   stat = istat)
      allocate(atoms(natom),   stat = istat)
      allocate(sortn(nsort),   stat = istat)
      allocate(lvect(3,3),     stat = istat)
      allocate(coord(natom,3), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_lattice','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      sorts = 'X'
      atoms = 'X'
      sortn = 0
@@ -775,21 +775,21 @@
 !!
 !! @sub cat_alloc_kmesh
 !!
-!! allocate memory for kmesh-related variables
+!! allocate memory for kmesh-related variables.
 !!
   subroutine cat_alloc_kmesh()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(kmesh(nkpt,3), stat = istat)
      allocate(weight(nkpt),  stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_kmesh','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      kmesh  = zero
      weight = zero
 
@@ -799,20 +799,20 @@
 !!
 !! @sub cat_alloc_tetra
 !!
-!! allocate memory for tetra-related variables
+!! allocate memory for tetra-related variables.
 !!
   subroutine cat_alloc_tetra()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(tetra(ntet,5), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_tetra','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      tetra = 0
 
      return
