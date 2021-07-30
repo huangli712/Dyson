@@ -699,8 +699,8 @@
      l     = 0
      ndim  = 0
 
-! special treatment for `qdim`
-! qdim should be initialized in dmft_setup_param()
+     ! special treatment for `qdim`.
+     ! qdim should be initialized in dmft_setup_param().
      if ( qdim < 0 ) then
          call s_print_error('cat_alloc_group','qdim is less than 0')
      endif ! back if ( qdim < 0 ) block
@@ -711,23 +711,23 @@
 !!
 !! @sub cat_alloc_window
 !!
-!! allocate memory for window-related variables
+!! allocate memory for window-related variables.
 !!
   subroutine cat_alloc_window()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(bmin(nwnd), stat = istat)
      allocate(bmax(nwnd), stat = istat)
      allocate(nbnd(nwnd), stat = istat)
      allocate(kwin(nkpt,nspin,2,nwnd), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_window','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      bmin = 0
      bmax = 0
      nbnd = 0
