@@ -111,13 +111,13 @@
 !!
 !! @var lfermi
 !!
-!! control flag, determine whether the fermi level should be updated
+!! control flag, determine whether the fermi level should be updated.
 !!
 !! if lfermi == .true.
-!!     search the fermi level by using the bisection algorithm
+!!     search the fermi level by using the bisection algorithm.
 !!
 !! if lfermi == .false.
-!!     fix the fermi level. in other words, the dft fermi level is used
+!!     fix the fermi level. in other words, the dft fermi level is used.
 !!
      logical, public, save :: lfermi = .true.
 
@@ -129,7 +129,7 @@
 !! been implemented.
 !!
 !! if ltetra == .true.
-!!     use the analytical tetrahedron algorithm
+!!     use the analytical tetrahedron algorithm.
 !!
 !! if ltetra == .false.
 !!     use the direct algorithm
@@ -143,14 +143,14 @@
 !!
 !! @var beta
 !!
-!! inverse temperature, \beta = 1 / T
+!! inverse temperature, \beta = 1 / T.
 !!
      real(dp), public, save :: beta  = 8.00_dp
 
 !!
 !! @var mc
 !!
-!! convergence criterion for fermi level search
+!! convergence criterion for fermi level search.
 !!
      real(dp), public, save :: mc    = 0.0001_dp
 
@@ -161,28 +161,28 @@
 !!
 !! @var nsort
 !!
-!! number of atomic sorts in the model
+!! number of atomic sorts in the model.
 !!
      integer, public, save :: nsort  = 3
 
 !!
 !! @var natom
 !!
-!! number of atoms in the model
+!! number of atoms in the model.
 !!
      integer, public, save :: natom  = 5
 
 !!
 !! @var nband
 !!
-!! number of dft bands
+!! number of dft bands.
 !!
      integer, public, save :: nband  = 30
 
 !!
 !! @var nkpt
 !!
-!! number of k-mesh points
+!! number of k-mesh points.
 !!
      integer, public, save :: nkpt   = 729
 
@@ -191,7 +191,7 @@
 !!
 !! number of spin orientations. for non-magnetic or paramagnetic systems
 !! nspin = 1, while for magnetic systems, nspin = 2. here, spin-orbit
-!! coupling has not been supported
+!! coupling has not been supported.
 !!
      integer, public, save :: nspin  = 1
 
