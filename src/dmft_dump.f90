@@ -40,6 +40,8 @@
      ! correction to band energy
      real(dp), intent(in) :: ecorr
 
+!! [body
+
      ! open data file: dmft.fermi
      open(mytmp, file='dmft.fermi', form='formatted', status='unknown')
 
@@ -50,6 +52,8 @@
 
      ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine dmft_dump_fermi
@@ -72,53 +76,57 @@
 
      implicit none
 
-! external arguments
-! local impurity levels
+!! external arguments
+     ! local impurity levels
      complex(dp), intent(in) :: eimps(qdim,qdim,nspin,nsite)
 
-! local variables
-! loop index for impurity sites
+!! local variables
+     ! loop index for impurity sites
      integer :: t
 
-! loop index for spins
+     ! loop index for spins
      integer :: s
 
-! loop index for correlated orbitals
+     ! loop index for correlated orbitals
      integer :: p, q
 
-! open data file: dmft.eimps
+!! [body
+
+     ! open data file: dmft.eimps
      open(mytmp, file='dmft.eimps', form='formatted', status='unknown')
 
-! write parameters
+     ! write parameters
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
      write(mytmp,'(a9,i4)') '# nspin: ', nspin
      write(mytmp,'(a9,i4)') '# qdim : ', qdim
 
-! write separators
+     ! write separators
      write(mytmp,*)
      write(mytmp,*)
 
-! write body
+     ! write body
      do t=1,nsite
          do s=1,nspin
-
-! write data for given spin and site
+             !
+             ! write data for given spin and site
              write(mytmp,'(3(a,i4,2X))') '# site:', t, 'spin:', s, 'dims:', ndim(t)
              do q=1,ndim(t)
                  do p=1,ndim(t)
                      write(mytmp,'(2i4,2f16.8)') p, q, eimps(p,q,s,t)
                  enddo ! over p={1,ndim(t)} loop
              enddo ! over q={1,ndim(t)} loop
-
-! write separators
+             !
+             ! write separators
              write(mytmp,*)
              write(mytmp,*)
-
+             !
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine dmft_dump_eimps
