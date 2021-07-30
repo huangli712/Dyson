@@ -248,7 +248,7 @@
 !!
 !! @var scale
 !!
-!! an universal scaling factor for the lattice constants
+!! an universal scaling factor for the lattice constants.
 !!
      real(dp), public, save :: scale = 4.00_dp
 
@@ -264,7 +264,7 @@
 !! @var volt
 !!
 !! volume of a tetrahedron, which is used to renormalize the integration
-!! by using the analytical tetrahedron algorithm
+!! by using the analytical tetrahedron algorithm.
 !!
      real(dp), public, save :: volt  = 1.00_dp
 
@@ -275,42 +275,42 @@
 !!
 !! @var nprocs
 !!
-!! number of processors: default value 1
+!! number of processors: default value 1.
 !!
      integer, public, save :: nprocs = 1
 
 !!
 !! @var myid
 !!
-!! the id of current process: default value 0
+!! the id of current process: default value 0.
 !!
      integer, public, save :: myid   = 0
 
 !!
 !! @var master
 !!
-!! denote as the controller process: default value 0
+!! denote as the controller process: default value 0.
 !!
      integer, public, save :: master = 0
 
 !!
 !! @var cid
 !!
-!! the id of current process in cartesian topology (cid == myid)
+!! the id of current process in cartesian topology (cid == myid).
 !!
      integer, public, save :: cid    = 0
 
 !!
 !! @var cx
 !!
-!! the x coordinates of current process in cartesian topology
+!! the x coordinates of current process in cartesian topology.
 !!
      integer, public, save :: cx     = 0
 
 !!
 !! @var cy
 !!
-!! the y coordinates of current process in cartesian topology
+!! the y coordinates of current process in cartesian topology.
 !!
      integer, public, save :: cy     = 0
 
@@ -323,7 +323,7 @@
 !!
 !! @mod version
 !!
-!! define the version string
+!! define the semantic version string.
 !!
   module version
      implicit none
@@ -333,21 +333,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.6.0 @ 2021.07.20D'
+     character(len=20), public, parameter :: V_FULL = 'v0.7.0 @ 2021.07.30D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.6.0'
+     character(len=06), public, parameter :: V_CURR = 'v0.7.0'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2021.07.20'
+     character(len=11), public, parameter :: V_DATE = '2021.07.30'
 
 !!
 !! @var V_STAT
