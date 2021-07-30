@@ -86,7 +86,7 @@
 !!
 !! @mod dmft_group
 !!
-!! specify the traits of groups of projectors
+!! specify the traits of groups of projectors.
 !!
   module dmft_group
      implicit none
@@ -102,35 +102,35 @@
 !!
 !! @var shell
 !!
-!! specification of orbital shell
+!! specification of orbital shell.
 !!
      character(len=5), public, save, allocatable :: shell(:)
 
 !!
 !! @var corr
 !!
-!! tell us this group is correlated or not
+!! tell us this group is correlated or not.
 !!
      logical, public, save, allocatable :: corr(:)
 
 !!
 !! @var site
 !!
-!! the corresponding atomic site of this group
+!! the corresponding atomic site of this group.
 !!
      integer, public, save, allocatable :: site(:)
 
 !!
 !! @var l
 !!
-!! the corresponding angular momentum quantum number of this group
+!! the corresponding angular momentum quantum number of this group.
 !!
      integer, public, save, allocatable :: l(:)
 
 !!
 !! @var ndim
 !!
-!! number of projectors (orbitals) included in this group
+!! number of projectors (orbitals) included in this group.
 !!
      integer, public, save, allocatable :: ndim(:)
 
@@ -143,7 +143,7 @@
 !!
 !! @mod dmft_window
 !!
-!! specify the dft band windows for projectors
+!! specify the dft band windows for projectors.
 !!
   module dmft_window
      implicit none
@@ -159,28 +159,28 @@
 !!
 !! @var bmin
 !!
-!! lower boundaries for the band windows
+!! lower boundaries for the band windows.
 !!
      integer, public, save, allocatable :: bmin(:)
 
 !!
 !! @var bmax
 !!
-!! upper boundaries for the band windows
+!! upper boundaries for the band windows.
 !!
      integer, public, save, allocatable :: bmax(:)
 
 !!
 !! @var nbnd
 !!
-!! number of bands for the band windows
+!! number of bands for the band windows.
 !!
      integer, public, save, allocatable :: nbnd(:)
 
 !!
 !! @var kwin
 !!
-!! momentum- and spin-dependent band windows
+!! momentum- and spin-dependent band windows.
 !!
      integer, public, save, allocatable :: kwin(:,:,:,:)
 
@@ -194,7 +194,7 @@
 !! @mod dmft_lattice
 !!
 !! contain crystallography information (i.e. crystal structures) for the
-!! strongly correlated materials
+!! strongly correlated materials.
 !!
   module dmft_lattice
      use constants, only : dp
@@ -204,35 +204,35 @@
 !!
 !! @var sorts
 !!
-!! sorts of atoms (chemical symbol)
+!! sorts of atoms (chemical symbol).
 !!
      character(len=2), public, save, allocatable :: sorts(:)
 
 !!
 !! @var atoms
 !!
-!! list of atoms (chemical symbol)
+!! list of atoms (chemical symbol).
 !!
      character(len=2), public, save, allocatable :: atoms(:)
 
 !!
 !! @var sortn
 !!
-!! number of atoms for each sort
+!! number of atoms for each sort.
 !!
      integer,  public, save, allocatable :: sortn(:)
 
 !!
 !! @var lvect
 !!
-!! three lattice vectors
+!! three lattice vectors.
 !!
      real(dp), public, save, allocatable :: lvect(:,:)
 
 !!
 !! @var coord
 !!
-!! atomic positions
+!! atomic positions.
 !!
      real(dp), public, save, allocatable :: coord(:,:)
 
@@ -245,7 +245,7 @@
 !!
 !! @mod dmft_kmesh
 !!
-!! contain the k-mesh and the corresponding integration weights
+!! contain the k-mesh and the corresponding integration weights.
 !!
   module dmft_kmesh
      use constants, only : dp
@@ -255,7 +255,7 @@
 !!
 !! @var kmesh
 !!
-!! k-mesh in the brillouin zone
+!! k-mesh in the brillouin zone.
 !!
      real(dp), public, save, allocatable :: kmesh(:,:)
 
@@ -300,7 +300,7 @@
 !!
 !! @mod dmft_eigen
 !!
-!! contain the Kohn-Sham eigenvalues and related occupations
+!! contain the Kohn-Sham eigenvalues and related occupations.
 !!
   module dmft_eigen
      use constants, only : dp
@@ -310,14 +310,14 @@
 !!
 !! @var enk
 !!
-!! eigenvalues in the Kohn-Sham basis
+!! eigenvalues in the Kohn-Sham basis.
 !!
      real(dp), public, save, allocatable :: enk(:,:,:)
 
 !!
 !! @var occupy
 !!
-!! occupations in the Kohn-Sham basis
+!! occupations in the Kohn-Sham basis.
 !!
      real(dp), public, save, allocatable :: occupy(:,:,:)
 
@@ -330,7 +330,7 @@
 !!
 !! @mod dmft_projs
 !!
-!! contain the local orbital projectors
+!! contain the local orbital projectors.
 !!
   module dmft_projs
      use constants, only : dp
@@ -354,7 +354,7 @@
 !!
 !! overlap matrix between the Kohn-Sham basis and the local orbitals. its
 !! definition is \langle \psi_{b,k} | \chi^{I}_{\alpha,k} \rangle.
-!! actually, psichi can be obtained by chipsi through conjugate transpose.
+!! actually, psichi can be obtained by chipsi via conjugate transpose.
 !!
      complex(dp), public, save, allocatable :: psichi(:,:,:,:,:)
 
@@ -367,7 +367,7 @@
 !!
 !! @mod dmft_fmesh
 !!
-!! contain the linear frequency mesh
+!! contain the linear frequency mesh.
 !!
   module dmft_fmesh
      use constants, only : dp
@@ -390,7 +390,7 @@
 !!
 !! @mod dmft_eimps
 !!
-!! contain the local impurity levels
+!! contain the local impurity levels.
 !!
   module dmft_eimps
      use constants, only : dp
@@ -400,7 +400,7 @@
 !!
 !! @var eimps
 !!
-!! local impurity levels. eimps = \sum_k enk - mu
+!! local impurity levels. eimps = \sum_k enk - mu.
 !!
      complex(dp), public, save, allocatable :: eimps(:,:,:,:)
 
@@ -408,7 +408,7 @@
 !! @var eimpx
 !!
 !! local impurity levels shifted by double counting terms.
-!! in other words, eimpx = eimps - sigdc
+!! in other words, eimpx = eimps - sigdc.
 !!
      complex(dp), public, save, allocatable :: eimpx(:,:,:,:)
 
@@ -421,7 +421,7 @@
 !!
 !! @mod dmft_sigma
 !!
-!! contain the impurity self-energy functions
+!! contain the impurity self-energy functions.
 !!
   module dmft_sigma
      use constants, only : dp
@@ -451,8 +451,8 @@
 !! impurity self-energy functions. they are usually taken from the output
 !! of various quantum impurity solver. this code will read them from file
 !! sigma.bare. note that the double counting terms should be subtracted
-!! from them. note that sigma is frequency-dependent, but sigoo and sigdc
-!! are not.
+!! from them. in addition, sigma is frequency-dependent, but sigoo and
+!! sigdc are not.
 !!
      complex(dp), public, save, allocatable :: sigma(:,:,:,:,:)
 
