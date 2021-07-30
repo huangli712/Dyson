@@ -31,16 +31,11 @@
 !!!           cal_occupy
 !!!           cal_denmat
 !!!           cal_eigsys
-!!!           fermi_dirac
-!!!           map_chi_psi
-!!!           map_psi_chi
-!!!           one_chi_psi
-!!!           one_psi_chi
 !!! source  : dmft_core.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/20/2021 by li huang (last modified)
+!!!           07/30/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
