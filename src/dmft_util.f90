@@ -6,7 +6,7 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)
 !!!           07/30/2021 by li huang (last modified)
-!!! purpose :
+!!! purpose : define some useful utility functions and subroutines.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------

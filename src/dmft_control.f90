@@ -6,8 +6,8 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/20/2021 by li huang (last modified)
-!!! purpose :
+!!!           07/30/2021 by li huang (last modified)
+!!! purpose : define the global control variables.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -19,7 +19,7 @@
 !!
 !! @mod control
 !!
-!! define the control parameters and dimensional parameters
+!! define the control parameters and dimensional parameters.
 !!
   module control
      use constants, only : dp
@@ -33,14 +33,14 @@
 !!
 !! @var cname
 !!
-!! code name of the current dynamical mean-field theory engine
+!! code name of the current dynamical mean-field theory engine.
 !!
      character(len = 09), public, save :: cname = 'JACARANDA'
 
 !!
 !! @var model
 !!
-!! name of strongly correlated materials or models
+!! name of strongly correlated materials or models.
 !!
      character(len = 99), public, save :: model = 'SrVO3'
 
@@ -51,7 +51,7 @@
 !!
 !! @var task
 !!
-!! control flag, determine the running mode of the code
+!! control flag, determine the running mode of the code.
 !!
 !! if task == 1:
 !!     the code will do the following jobs:
@@ -69,16 +69,24 @@
 !!     (3) write the above calculated results.
 !!
 !! if task == 3:
-!!     search the fermi level only (depends on `lfermi`)
+!!     search the fermi level only (depends on `lfermi`).
 !!
 !! if task == 4:
-!!     calculate the impurity level only
+!!     calculate the impurity level only.
 !!
 !! if task == 5:
-!!     calculate all complex frequency dependent eigenvalues only
+!!     calculate all complex frequency dependent eigenvalues only.
+!!     we can use this feature to calculate the fermi surface.
 !!
 !! if task == 6:
-!!     calculate lattice green's functions
+!!     calculate lattice green's functions.
+!!     we can use this feature to calculate the spectral functions.
+!!
+!! if task == 7:
+!!     calculate density of states.
+!!
+!! if task == 8:
+!!     calculate physical properties.
 !!
      integer, public, save :: task   = 1
 
@@ -86,13 +94,13 @@
 !! @var axis
 !!
 !! control flag, determine the working axis for brillouin zone integration
-!! and fermi level search
+!! and fermi level search.
 !!
 !! if axis == 1:
-!!     imaginary axis
+!!     imaginary axis.
 !!
 !! if axis == 2:
-!!     real axis
+!!     real axis.
 !!
      integer, public, save :: axis   = 1
 
