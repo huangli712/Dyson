@@ -963,20 +963,20 @@
 !!
 !! @sub cat_alloc_weiss
 !!
-!! allocate memory for weiss-related variables
+!! allocate memory for weiss-related variables.
 !!
   subroutine cat_alloc_weiss()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(weiss(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_weiss','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      weiss = czero
 
      return
@@ -985,20 +985,20 @@
 !!
 !! @sub cat_alloc_delta
 !!
-!! allocate memory for delta-related variables
+!! allocate memory for delta-related variables.
 !!
   subroutine cat_alloc_delta()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(delta(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_delta','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      delta = czero
 
      return
