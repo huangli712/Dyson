@@ -199,7 +199,7 @@
 !! @var ntet
 !!
 !! number of tetrahedra. note that ntet = 1 means that the tetrahedron
-!! data are absent and ltetra must be .false.
+!! data are absent and `ltetra` must be .false.
 !!
      integer, public, save :: ntet   = 1
 
@@ -237,7 +237,7 @@
 !!
 !! @var nmesh
 !!
-!! number of frequency points
+!! number of frequency points.
 !!
      integer, public, save :: nmesh  = 8193
 
