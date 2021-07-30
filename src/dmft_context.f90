@@ -597,14 +597,14 @@
 !!>>> declare private variables                                        <<<
 !!========================================================================
 
-! status flag
+     ! status flag
      integer, private :: istat
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-! declaration of module procedures: allocate memory
+     ! declaration of module procedures: allocate memory
      public :: cat_alloc_map
      public :: cat_alloc_group
      public :: cat_alloc_window
@@ -621,7 +621,7 @@
      public :: cat_alloc_delta
      public :: cat_alloc_gamma
 
-! declaration of module procedures: deallocate memory
+     ! declaration of module procedures: deallocate memory
      public :: cat_free_map
      public :: cat_free_group
      public :: cat_free_window
