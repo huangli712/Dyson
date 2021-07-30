@@ -1,2 +1,2 @@
-  subroutine dmft_driver()
+  subroutine dmft_flow()
   end subroutine
