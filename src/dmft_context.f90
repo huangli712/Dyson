@@ -733,8 +733,8 @@
      nbnd = 0
      kwin = 0
 
-! special treatment for `qbnd`
-! qbnd should be initialized in dmft_setup_param()
+     ! special treatment for `qbnd`.
+     ! qbnd should be initialized in dmft_setup_param().
      if ( qbnd < 0 ) then
          call s_print_error('cat_alloc_window','qbnd is less than 0')
      endif ! back if ( qbnd < 0 ) block
