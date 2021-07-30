@@ -1007,20 +1007,20 @@
 !!
 !! @sub cat_alloc_gamma
 !!
-!! allocate memory for gamma-related variables
+!! allocate memory for gamma-related variables.
 !!
   subroutine cat_alloc_gamma()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(gamma(qbnd,qbnd,nkpt,nspin), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_gamma','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      gamma = czero
 
      return
