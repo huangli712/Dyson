@@ -275,37 +275,39 @@
 
      implicit none
 
-! external arguments
-! number of dft bands for given k-point and spin
+!! external arguments
+     ! number of dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given impurity site
      integer, intent(in) :: cdim
 
-! index for k-points
+     ! index for k-points
      integer, intent(in) :: k
 
-! index for spin
+     ! index for spin
      integer, intent(in) :: s
 
-! index for impurity sites
+     ! index for impurity sites
      integer, intent(in) :: t
 
-! input matrix defined at Kohn-Sham (\psi) basis
+     ! input matrix defined at Kohn-Sham (\psi) basis
      complex(dp), intent(in)  :: Mp(cbnd,cbnd)
 
-! output matrix defined at local orbital (\chi) basis
+     ! output matrix defined at local orbital (\chi) basis
      complex(dp), intent(out) :: Mc(cdim,cdim)
 
-! local variables
-! status flag
+!! local variables
+     ! status flag
      integer :: istat
 
-! overlap matrix between local orbitals and Kohn-Sham wave-functions
+     ! overlap matrix between local orbitals and Kohn-Sham wave-functions
      complex(dp), allocatable :: Cp(:,:)
      complex(dp), allocatable :: Pc(:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(Cp(cdim,cbnd), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('one_psi_chi','can not allocate enough memory')
@@ -316,16 +318,18 @@
          call s_print_error('one_psi_chi','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! copy data
+     ! copy data
      Cp = chipsi(1:cdim,1:cbnd,k,s,i_grp(t))
      Pc = psichi(1:cbnd,1:cdim,k,s,i_grp(t))
 
-! downfolding or projection
+     ! downfolding or projection
      Mc = matmul( matmul( Cp, Mp ), Pc )
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(Cp) ) deallocate(Cp)
      if ( allocated(Pc) ) deallocate(Pc)
+
+!! body]
 
      return
   end subroutine one_psi_chi
