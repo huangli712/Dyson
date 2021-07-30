@@ -465,7 +465,7 @@
 !!
 !! @mod dmft_green
 !!
-!! contain the local green's functions
+!! contain the local green's functions.
 !!
   module dmft_green
      use constants, only : dp
@@ -477,7 +477,7 @@
 !!
 !! local green's functions. note that within the dynamical mean-field
 !! theory, local green's functions should be equal to impurity green's
-!! functions within self-consistent iterations.
+!! functions during self-consistent iterations.
 !!
      complex(dp), public, save, allocatable :: green(:,:,:,:,:)
 
@@ -490,7 +490,7 @@
 !!
 !! @mod dmft_weiss
 !!
-!! contain local weiss's functions
+!! contain local weiss's functions.
 !!
   module dmft_weiss
      use constants, only : dp
@@ -500,7 +500,7 @@
 !!
 !! @var weiss
 !!
-!! local weiss's functions
+!! local weiss's functions.
 !!
      complex(dp), public, save, allocatable :: weiss(:,:,:,:,:)
 
@@ -513,7 +513,7 @@
 !!
 !! @mod dmft_weiss
 !!
-!! contain local hybridization functions
+!! contain local hybridization functions.
 !!
   module dmft_delta
      use constants, only : dp
@@ -537,7 +537,7 @@
 !!
 !! @mod dmft_gamma
 !!
-!! contain dft + dmft correction for density matrix
+!! contain dft + dmft correction for density matrix.
 !!
   module dmft_gamma
      use constants, only : dp
@@ -547,8 +547,8 @@
 !!
 !! @var gamma
 !!
-!! dft + dmft correction for density matrix, which is used to perform
-!! charge fully-consistent dft + dmft calculations.
+!! dft + dmft correction for density matrix, which is used to carry out
+!! fully charge self-consistent dft + dmft calculations.
 !!
      complex(dp), public, save, allocatable :: gamma(:,:,:,:)
 
