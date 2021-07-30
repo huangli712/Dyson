@@ -821,21 +821,21 @@
 !!
 !! @sub cat_alloc_eigen
 !!
-!! allocate memory for eigen-related variables
+!! allocate memory for eigen-related variables.
 !!
   subroutine cat_alloc_eigen()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(enk(nband,nkpt,nspin),    stat = istat)
      allocate(occupy(nband,nkpt,nspin), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_eigen','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      enk    = zero
      occupy = zero
 
@@ -845,21 +845,21 @@
 !!
 !! @sub cat_alloc_projs
 !!
-!! allocate memory for projs-related variables
+!! allocate memory for projs-related variables.
 !!
   subroutine cat_alloc_projs()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(chipsi(qdim,qbnd,nkpt,nspin,ngrp), stat = istat)
      allocate(psichi(qbnd,qdim,nkpt,nspin,ngrp), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_projs','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      chipsi = czero
      psichi = czero
 
@@ -869,20 +869,20 @@
 !!
 !! @sub cat_alloc_fmesh
 !!
-!! allocate memory for fmesh-related variables
+!! allocate memory for fmesh-related variables.
 !!
   subroutine cat_alloc_fmesh()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(fmesh(nmesh), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_fmesh','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      fmesh = zero
 
      return
@@ -891,21 +891,21 @@
 !!
 !! @sub cat_alloc_eimps
 !!
-!! allocate memory for eimps-related variables
+!! allocate memory for eimps-related variables.
 !!
   subroutine cat_alloc_eimps()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(eimps(qdim,qdim,nspin,nsite), stat = istat)
      allocate(eimpx(qdim,qdim,nspin,nsite), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_eimps','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      eimps = czero
      eimpx = czero
 
@@ -915,22 +915,22 @@
 !!
 !! @sub cat_alloc_sigma
 !!
-!! allocate memory for sigma-related variables
+!! allocate memory for sigma-related variables.
 !!
   subroutine cat_alloc_sigma()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(sigdc(qdim,qdim,nspin,nsite),       stat = istat)
      allocate(sigoo(qdim,qdim,nspin,nsite),       stat = istat)
      allocate(sigma(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_sigma','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      sigdc = czero
      sigoo = czero
      sigma = czero
@@ -946,15 +946,15 @@
   subroutine cat_alloc_green()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(green(qdim,qdim,nmesh,nspin,nsite), stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_green','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      green = czero
 
      return
