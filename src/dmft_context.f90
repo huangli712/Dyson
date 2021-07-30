@@ -652,6 +652,8 @@
   subroutine cat_alloc_map()
      implicit none
 
+!! [body
+
      ! allocate memory
      allocate(i_grp(nsite), stat = istat)
      allocate(i_wnd(nsite), stat = istat)
@@ -669,6 +671,8 @@
      g_imp = 0
      w_imp = 0
 
+!! body]
+
      return
   end subroutine cat_alloc_map
 
@@ -679,6 +683,8 @@
 !!
   subroutine cat_alloc_group()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(shell(ngrp), stat = istat)
@@ -705,6 +711,8 @@
          call s_print_error('cat_alloc_group','qdim is less than 0')
      endif ! back if ( qdim < 0 ) block
 
+!! body]
+
      return
   end subroutine cat_alloc_group
 
@@ -715,6 +723,8 @@
 !!
   subroutine cat_alloc_window()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(bmin(nwnd), stat = istat)
@@ -739,6 +749,8 @@
          call s_print_error('cat_alloc_window','qbnd is less than 0')
      endif ! back if ( qbnd < 0 ) block
 
+!! body]
+
      return
   end subroutine cat_alloc_window
 
@@ -749,6 +761,8 @@
 !!
   subroutine cat_alloc_lattice()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(sorts(nsort),   stat = istat)
@@ -769,6 +783,8 @@
      lvect = zero
      coord = zero
 
+!! body]
+
      return
   end subroutine cat_alloc_lattice
 
@@ -779,6 +795,8 @@
 !!
   subroutine cat_alloc_kmesh()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(kmesh(nkpt,3), stat = istat)
@@ -793,6 +811,8 @@
      kmesh  = zero
      weight = zero
 
+!! body]
+
      return
   end subroutine cat_alloc_kmesh
 
@@ -803,6 +823,8 @@
 !!
   subroutine cat_alloc_tetra()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(tetra(ntet,5), stat = istat)
@@ -815,6 +837,8 @@
      ! initialize them
      tetra = 0
 
+!! body]
+
      return
   end subroutine cat_alloc_tetra
 
@@ -825,6 +849,8 @@
 !!
   subroutine cat_alloc_eigen()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(enk(nband,nkpt,nspin),    stat = istat)
@@ -839,6 +865,8 @@
      enk    = zero
      occupy = zero
 
+!! body]
+
      return
   end subroutine cat_alloc_eigen
 
@@ -849,6 +877,8 @@
 !!
   subroutine cat_alloc_projs()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(chipsi(qdim,qbnd,nkpt,nspin,ngrp), stat = istat)
@@ -863,6 +893,8 @@
      chipsi = czero
      psichi = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_projs
 
@@ -873,6 +905,8 @@
 !!
   subroutine cat_alloc_fmesh()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(fmesh(nmesh), stat = istat)
@@ -885,6 +919,8 @@
      ! initialize them
      fmesh = zero
 
+!! body]
+
      return
   end subroutine cat_alloc_fmesh
 
@@ -895,6 +931,8 @@
 !!
   subroutine cat_alloc_eimps()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(eimps(qdim,qdim,nspin,nsite), stat = istat)
@@ -909,6 +947,8 @@
      eimps = czero
      eimpx = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_eimps
 
@@ -919,6 +959,8 @@
 !!
   subroutine cat_alloc_sigma()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(sigdc(qdim,qdim,nspin,nsite),       stat = istat)
@@ -935,6 +977,8 @@
      sigoo = czero
      sigma = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_sigma
 
@@ -945,6 +989,8 @@
 !!
   subroutine cat_alloc_green()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(green(qdim,qdim,nmesh,nspin,nsite), stat = istat)
@@ -957,6 +1003,8 @@
      ! initialize them
      green = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_green
 
@@ -967,6 +1015,8 @@
 !!
   subroutine cat_alloc_weiss()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(weiss(qdim,qdim,nmesh,nspin,nsite), stat = istat)
@@ -979,6 +1029,8 @@
      ! initialize them
      weiss = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_weiss
 
@@ -989,6 +1041,8 @@
 !!
   subroutine cat_alloc_delta()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(delta(qdim,qdim,nmesh,nspin,nsite), stat = istat)
@@ -1001,6 +1055,8 @@
      ! initialize them
      delta = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_delta
 
@@ -1011,6 +1067,8 @@
 !!
   subroutine cat_alloc_gamma()
      implicit none
+
+!! [body
 
      ! allocate memory
      allocate(gamma(qbnd,qbnd,nkpt,nspin), stat = istat)
@@ -1023,6 +1081,8 @@
      ! initialize them
      gamma = czero
 
+!! body]
+
      return
   end subroutine cat_alloc_gamma
 
@@ -1033,15 +1093,19 @@
 !!
 !! @sub cat_free_map
 !!
-!! deallocate memory for map-related variables
+!! deallocate memory for map-related variables.
 !!
   subroutine cat_free_map()
      implicit none
+
+!! [body
 
      if ( allocated(i_grp) ) deallocate(i_grp)
      if ( allocated(i_wnd) ) deallocate(i_wnd)
      if ( allocated(g_imp) ) deallocate(g_imp)
      if ( allocated(w_imp) ) deallocate(w_imp)
+
+!! body]
 
      return
   end subroutine cat_free_map
@@ -1049,10 +1113,12 @@
 !!
 !! @sub cat_free_group
 !!
-!! deallocate memory for group-related variables
+!! deallocate memory for group-related variables.
 !!
   subroutine cat_free_group()
      implicit none
+
+!! [body
 
      if ( allocated(shell) ) deallocate(shell)
      if ( allocated(corr)  ) deallocate(corr )
@@ -1060,21 +1126,27 @@
      if ( allocated(l)     ) deallocate(l    )
      if ( allocated(ndim)  ) deallocate(ndim )
 
+!! body]
+
      return
   end subroutine cat_free_group
 
 !!
 !! @sub cat_free_window
 !!
-!! deallocate memory for window-related variables
+!! deallocate memory for window-related variables.
 !!
   subroutine cat_free_window()
      implicit none
+
+!! [body
 
      if ( allocated(bmin) ) deallocate(bmin)
      if ( allocated(bmax) ) deallocate(bmax)
      if ( allocated(nbnd) ) deallocate(nbnd)
      if ( allocated(kwin) ) deallocate(kwin)
+
+!! body]
 
      return
   end subroutine cat_free_window
@@ -1082,10 +1154,12 @@
 !!
 !! @sub cat_free_lattice
 !!
-!! deallocate memory for lattice-related variables
+!! deallocate memory for lattice-related variables.
 !!
   subroutine cat_free_lattice()
      implicit none
+
+!! [body
 
      if ( allocated(sorts) ) deallocate(sorts)
      if ( allocated(atoms) ) deallocate(atoms)
@@ -1093,19 +1167,25 @@
      if ( allocated(lvect) ) deallocate(lvect)
      if ( allocated(coord) ) deallocate(coord)
 
+!! body]
+
      return
   end subroutine cat_free_lattice
 
 !!
 !! @sub cat_free_kmesh
 !!
-!! deallocate memory for kmesh-related variables
+!! deallocate memory for kmesh-related variables.
 !!
   subroutine cat_free_kmesh()
      implicit none
 
+!! [body
+
      if ( allocated(kmesh)  ) deallocate(kmesh )
      if ( allocated(weight) ) deallocate(weight)
+
+!! body]
 
      return
   end subroutine cat_free_kmesh
@@ -1113,12 +1193,16 @@
 !!
 !! @sub cat_free_tetra
 !!
-!! deallocate memory for tetra-related variables
+!! deallocate memory for tetra-related variables.
 !!
   subroutine cat_free_tetra()
      implicit none
 
+!! [body
+
      if ( allocated(tetra) ) deallocate(tetra)
+
+!! body]
 
      return
   end subroutine cat_free_tetra
@@ -1126,13 +1210,17 @@
 !!
 !! @sub cat_free_eigen
 !!
-!! deallocate memory for eigen-related variables
+!! deallocate memory for eigen-related variables.
 !!
   subroutine cat_free_eigen()
      implicit none
 
+!! [body
+
      if ( allocated(enk)    ) deallocate(enk   )
      if ( allocated(occupy) ) deallocate(occupy)
+
+!! body]
 
      return
   end subroutine cat_free_eigen
@@ -1140,13 +1228,17 @@
 !!
 !! @sub cat_free_projs
 !!
-!! deallocate memory for projs-related variables
+!! deallocate memory for projs-related variables.
 !!
   subroutine cat_free_projs()
      implicit none
 
+!! [body
+
      if ( allocated(chipsi) ) deallocate(chipsi)
      if ( allocated(psichi) ) deallocate(psichi)
+
+!! body]
 
      return
   end subroutine cat_free_projs
@@ -1154,12 +1246,16 @@
 !!
 !! @sub cat_free_fmesh
 !!
-!! deallocate memory for fmesh-related variables
+!! deallocate memory for fmesh-related variables.
 !!
   subroutine cat_free_fmesh()
      implicit none
 
+!! [body
+
      if ( allocated(fmesh) ) deallocate(fmesh)
+
+!! body]
 
      return
   end subroutine cat_free_fmesh
@@ -1167,13 +1263,17 @@
 !!
 !! @sub cat_free_eimps
 !!
-!! deallocate memory for eimps-related variables
+!! deallocate memory for eimps-related variables.
 !!
   subroutine cat_free_eimps()
      implicit none
 
+!! [body
+
      if ( allocated(eimps) ) deallocate(eimps)
      if ( allocated(eimpx) ) deallocate(eimpx)
+
+!! body]
 
      return
   end subroutine cat_free_eimps
@@ -1181,14 +1281,18 @@
 !!
 !! @sub cat_free_sigma
 !!
-!! deallocate memory for sigma-related variables
+!! deallocate memory for sigma-related variables.
 !!
   subroutine cat_free_sigma()
      implicit none
 
+!! [body
+
      if ( allocated(sigdc) ) deallocate(sigdc)
      if ( allocated(sigoo) ) deallocate(sigoo)
      if ( allocated(sigma) ) deallocate(sigma)
+
+!! body]
 
      return
   end subroutine cat_free_sigma
@@ -1196,12 +1300,16 @@
 !!
 !! @sub cat_free_green
 !!
-!! deallocate memory for green-related variables
+!! deallocate memory for green-related variables.
 !!
   subroutine cat_free_green()
      implicit none
 
+!! [body
+
      if ( allocated(green) ) deallocate(green)
+
+!! body]
 
      return
   end subroutine cat_free_green
@@ -1209,12 +1317,16 @@
 !!
 !! @sub cat_free_weiss
 !!
-!! deallocate memory for weiss-related variables
+!! deallocate memory for weiss-related variables.
 !!
   subroutine cat_free_weiss()
      implicit none
 
+!! [body
+
      if ( allocated(weiss) ) deallocate(weiss)
+
+!! body]
 
      return
   end subroutine cat_free_weiss
@@ -1222,12 +1334,16 @@
 !!
 !! @sub cat_free_delta
 !!
-!! deallocate memory for delta-related variables
+!! deallocate memory for delta-related variables.
 !!
   subroutine cat_free_delta()
      implicit none
 
+!! [body
+
      if ( allocated(delta) ) deallocate(delta)
+
+!! body]
 
      return
   end subroutine cat_free_delta
@@ -1235,12 +1351,16 @@
 !!
 !! @sub cat_free_gamma
 !!
-!! deallocate memory for gamma-related variables
+!! deallocate memory for gamma-related variables.
 !!
   subroutine cat_free_gamma()
      implicit none
 
+!! [body
+
      if ( allocated(gamma) ) deallocate(gamma)
+
+!! body]
 
      return
   end subroutine cat_free_gamma
