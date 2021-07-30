@@ -33,43 +33,45 @@
 
      implicit none
 
-! external arguments
-! number of correlated orbitals for given impurity site
+!! external arguments
+     ! number of correlated orbitals for given impurity site
      integer, intent(in) :: cdim
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-! number of frequency points
+     ! number of frequency points
      integer, intent(in) :: nfrq
 
-! index for k-points
+     ! index for k-points
      integer, intent(in) :: k
 
-! index for spin
+     ! index for spin
      integer, intent(in) :: s
 
-! index for impurity sites
+     ! index for impurity sites
      integer, intent(in) :: t
 
-! input array defined at local orbital (\chi) basis
+     ! input array defined at local orbital (\chi) basis
      complex(dp), intent(in)  :: Mc(cdim,cdim,nfrq)
 
-! output array defined at Kohn-Sham (\psi) basis
+     ! output array defined at Kohn-Sham (\psi) basis
      complex(dp), intent(out) :: Mp(cbnd,cbnd,nfrq)
 
-! local variables
-! loop index for frequency mesh
+!! local variables
+     ! loop index for frequency mesh
      integer :: f
 
-! status flag
+     ! status flag
      integer :: istat
 
-! overlap matrix between local orbitals and Kohn-Sham wave-functions
+     ! overlap matrix between local orbitals and Kohn-Sham wave-functions
      complex(dp), allocatable :: Cp(:,:)
      complex(dp), allocatable :: Pc(:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(Cp(cdim,cbnd), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('map_chi_psi','can not allocate enough memory')
@@ -80,18 +82,20 @@
          call s_print_error('map_chi_psi','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! copy data
+     ! copy data
      Cp = chipsi(1:cdim,1:cbnd,k,s,i_grp(t))
      Pc = psichi(1:cbnd,1:cdim,k,s,i_grp(t))
 
-! upfolding or embedding
+     ! upfolding or embedding
      do f=1,nfrq
          Mp(:,:,f) = matmul( matmul( Pc, Mc(:,:,f) ), Cp )
      enddo ! over f={1,nfrq} loop
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(Cp) ) deallocate(Cp)
      if ( allocated(Pc) ) deallocate(Pc)
+
+!! body]
 
      return
   end subroutine map_chi_psi
