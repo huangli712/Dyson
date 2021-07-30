@@ -196,8 +196,10 @@
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine dmft_dump_eimpx
