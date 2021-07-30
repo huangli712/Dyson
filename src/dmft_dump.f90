@@ -12,8 +12,8 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/20/2021 by li huang (last modified)
-!!! purpose :
+!!!           07/31/2021 by li huang (last modified)
+!!! purpose : provide some subroutines to write down the calculated data.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
