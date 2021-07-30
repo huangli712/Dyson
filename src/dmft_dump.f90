@@ -386,7 +386,7 @@
 !!
 !! @sub dmft_dump_weiss
 !!
-!! write out local weiss's function in matsubara frequency space
+!! write out local weiss's function in matsubara frequency space.
 !!
   subroutine dmft_dump_weiss(weiss)
      use constants, only : dp
@@ -401,41 +401,43 @@
 
      implicit none
 
-! external arguments
-! local weiss's function
+!! external arguments
+     ! local weiss's function
      complex(dp), intent(in) :: weiss(qdim,qdim,nmesh,nspin,nsite)
 
-! local variables
-! loop index for impurity sites
+!! local variables
+     ! loop index for impurity sites
      integer :: t
 
-! loop index for spins
+     ! loop index for spins
      integer :: s
 
-! loop index for frequency grid
+     ! loop index for frequency grid
      integer :: m
 
-! loop index for correlated orbitals
+     ! loop index for correlated orbitals
      integer :: p, q
 
-! open data file: dmft.weiss
+!! [body
+
+     ! open data file: dmft.weiss
      open(mytmp, file='dmft.weiss', form='formatted', status='unknown')
 
-! write parameters
+     ! write parameters
      write(mytmp,'(a9,i4)') '# nsite: ', nsite
      write(mytmp,'(a9,i4)') '# nspin: ', nspin
      write(mytmp,'(a9,i4)') '# nmesh: ', nmesh
      write(mytmp,'(a9,i4)') '# qdim : ', qdim
 
-! write separators
+     ! write separators
      write(mytmp,*)
      write(mytmp,*)
 
-! write body
+     ! write body
      do t=1,nsite
          do s=1,nspin
-
-! write data for given spin and site
+             !
+             ! write data for given spin and site
              write(mytmp,'(3(a,i4,2X))') '# site:', t, 'spin:', s, 'dims:', ndim(t)
              do m=1,nmesh
                  write(mytmp,'(a2,i6,f16.8)') 'w:', m, fmesh(m)
@@ -445,16 +447,18 @@
                      enddo ! over p={1,ndim(t)} loop
                  enddo ! over q={1,ndim(t)} loop
              enddo ! over m={1,nmesh} loop
-
-! write separators
+             !
+             ! write separators
              write(mytmp,*)
              write(mytmp,*)
-
+             !
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
 
-! close data file
+     ! close data file
      close(mytmp)
+
+!! body]
 
      return
   end subroutine dmft_dump_weiss
