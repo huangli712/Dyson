@@ -20,8 +20,9 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/11/2021 by li huang (last modified)
-!!! purpose :
+!!!           07/30/2021 by li huang (last modified)
+!!! purpose : try to define the global modules and arrays, and implement
+!!!           memory managment.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -34,7 +35,7 @@
 !! @mod dmft_map
 !!
 !! define connections / mappings between the quantum impurity problems and
-!! the groups of projectors (and band windows)
+!! the groups of projectors (and band windows).
 !!
   module dmft_map
      implicit none
@@ -42,34 +43,37 @@
 !!
 !! @var i_grp
 !!
-!! from a given quantum impurity problem, return the corresponding group
-!! of projectors, impurity -> group
+!! given a given quantum impurity problem, return the corresponding group
+!! of projectors, impurity -> group.
 !!
      integer, public, save, allocatable :: i_grp(:)
 
 !!
 !! @var i_wnd
 !!
-!! from a given quantum impurity problem, return the corresponding dft
-!! band window, impurity -> window
+!! given a given quantum impurity problem, return the corresponding dft
+!! band window, impurity -> window.
 !!
      integer, public, save, allocatable :: i_wnd(:)
 
 !!
 !! @var g_imp
 !!
-!! from a given group of projectors, return the corresponding quantum
-!! impurity problem, group -> impurity. 0 value means that this group
-!! of projectors is for non-correlated orbitals.
+!! given a given group of projectors, return the corresponding quantum
+!! impurity problem, group -> impurity.
+!!
+!! 0 value means that this group of projectors is just for non-correlated
+!! orbitals.
 !!
      integer, public, save, allocatable :: g_imp(:)
 
 !!
 !! @var w_imp
 !!
-!! from a given dft band window, return the corresponding quantum impurity
-!! problem, window -> impurity. 0 value means that this dft band window
-!! is for non-correlated orbitals.
+!! given a given dft band window, return the corresponding quantum impurity
+!! problem, window -> impurity.
+!!
+!! 0 value means that this dft band window is for non-correlated orbitals.
 !!
      integer, public, save, allocatable :: w_imp(:)
 
