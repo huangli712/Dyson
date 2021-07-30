@@ -647,23 +647,23 @@
 !!
 !! @sub cat_alloc_map
 !!
-!! allocate memory for map-related variables
+!! allocate memory for map-related variables.
 !!
   subroutine cat_alloc_map()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(i_grp(nsite), stat = istat)
      allocate(i_wnd(nsite), stat = istat)
      allocate(g_imp(ngrp),  stat = istat)
      allocate(w_imp(nwnd),  stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_map','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      i_grp = 0
      i_wnd = 0
      g_imp = 0
@@ -675,24 +675,24 @@
 !!
 !! @sub cat_alloc_group
 !!
-!! allocate memory for group-related variables
+!! allocate memory for group-related variables.
 !!
   subroutine cat_alloc_group()
      implicit none
 
-! allocate memory
+     ! allocate memory
      allocate(shell(ngrp), stat = istat)
      allocate(corr(ngrp),  stat = istat)
      allocate(site(ngrp),  stat = istat)
      allocate(l(ngrp),     stat = istat)
      allocate(ndim(ngrp),  stat = istat)
 
-! check the status
+     ! check the status
      if ( istat /= 0 ) then
          call s_print_error('cat_alloc_group','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialize them
+     ! initialize them
      shell = 's'
      corr  = .false.
      site  = 0
