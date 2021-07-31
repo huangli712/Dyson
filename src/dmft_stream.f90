@@ -121,6 +121,8 @@
 
 # endif  /* MPI */
 
+!! body]
+
      return
   end subroutine dmft_setup_tasks
 
@@ -153,18 +155,20 @@
 
      implicit none
 
-! local variables
-! used to check whether the input file (params.ir) exists
+!! local variables
+     ! used to check whether the input file (params.ir) exists
      logical :: exists
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! setup default parameters
-!-------------------------------------------------------------------------
+!! [body
+
+     ! setup default parameters
+     !--------------------------------------------------------------------
      model  = 'SrVO3'   ! name of system
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      nsort  = 3         ! number of atomic sorts
      natom  = 5         ! number of atoms
      nband  = 30        ! number of bands
