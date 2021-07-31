@@ -122,7 +122,7 @@
 !!
 !! @sub dmft_print_summary
 !!
-!! print the running parameters, only for reference
+!! print the running parameters, only for reference.
 !!
   subroutine dmft_print_summary()
      use constants, only : mystd
@@ -131,6 +131,8 @@
      use context, only : qdim, qbnd
 
      implicit none
+
+!! [body
 
      write(mystd,'(2X,a)') '>>> configuration parameters from dmft.in and params.ir'
      write(mystd,'(2X,a)') '[configuration parameters] -> general'
@@ -172,13 +174,15 @@
 
      write(mystd,*)
 
+!! body]
+
      return
   end subroutine dmft_print_summary
 
 !!
 !! @sub dmft_print_system
 !!
-!! print the system information, only for reference
+!! print the system information, only for reference.
 !!
   subroutine dmft_print_system()
      use constants, only : mystd
@@ -196,26 +200,31 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: s
      integer :: p
 
-! print lattice structure
+!! [body
+
+     ! print lattice structure
      write(mystd,'(2X,a)') '>>> system information from lattice.ir'
      write(mystd,'(2X,a)') '[system information] -> lattice    -> sorts'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
+     !
      do s=1,nsort
          write(mystd,'(4X,a6,i3,2X,a8,a3,i3)') 'sort :', s, 'symbol :', sorts(s), sortn(s)
      enddo ! over s={1,nsort} loop
-
+     !
      write(mystd,'(2X,a)') '>>> system information from lattice.ir'
      write(mystd,'(2X,a)') '[system information] -> lattice    -> atoms'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
+     !
      do s=1,natom
          write(mystd,'(4X,a6,i3,2X,a8,a3,1X,3f9.6)') 'atom :', s, 'symbol :', atoms(s), coord(s,:)
      enddo ! over s={1,natom} loop
+     !
      write(mystd,*)
 
 ! print quantum impurities
