@@ -924,45 +924,47 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
 
-! dummy integer variables
+     ! dummy integer variables
      integer  :: itmp
 
-! used to check whether the input file (tetra.ir) exists
+     ! used to check whether the input file (tetra.ir) exists
      logical  :: exists
 
-! dummy real variables
+     ! dummy real variables
      real(dp) :: rtmp
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in tetrahedron information if available
-!-------------------------------------------------------------------------
+!! [body
+
+     ! read in tetrahedron information if available
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'tetra.ir', exist = exists)
 
-! file tetra.ir must be present
+         ! file tetra.ir must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_tetra','file tetra.ir is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file tetra.ir for reading
+         ! open file tetra.ir for reading
          open(mytmp, file='tetra.ir', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*) ! empty line
 
-! check ntet and volt
+         ! check ntet and volt
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == ntet, 'ntet is wrong')
          !
@@ -971,30 +973,32 @@
          !
          read(mytmp,*) ! empty line
 
-! read tetrahedron data
+         ! read tetrahedron data
          do i=1,ntet
              read(mytmp,*) tetra(i,5), tetra(i,1:4)
          enddo ! over i={1,ntet} loop
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( tetra, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine dmft_input_tetra
