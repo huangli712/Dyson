@@ -1,15 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : jacaranda
-!!! program : cal_sigoo
-!!!           cal_sigma
-!!!           cal_fermi
-!!!           cal_eimps
-!!!           cal_eimpx
-!!!           cal_green
-!!!           cal_weiss
-!!!           cal_delta
-!!!           cal_gamma
-!!!           cal_sl_sk
+!!! program : cal_sl_sk
 !!!           cal_sk_hk
 !!!           cal_hk_ek
 !!!           cal_sl_so
@@ -27,7 +18,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/30/2021 by li huang (last modified)
+!!!           07/31/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
