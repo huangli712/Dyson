@@ -19,7 +19,8 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
 !!!           08/01/2021 by li huang (last modified)
-!!! purpose :
+!!! purpose : provide the core service subroutines for the work flow of
+!!!           the dft + dmft calculations.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -45,52 +46,58 @@
 
      implicit none
 
-! external arguments
-! number of correlated orbitals for given impurity site
+!! external arguments
+     ! number of correlated orbitals for given impurity site
      integer, intent(in) :: cdim
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-! index for k-points
+     ! index for k-points
      integer, intent(in) :: k
 
-! index for spin
+     ! index for spin
      integer, intent(in) :: s
 
-! index for impurity sites
+     ! index for impurity sites
      integer, intent(in) :: t
 
-! self-energy function in Kohn-Sham basis
+     ! self-energy function in Kohn-Sham basis
      complex(dp), intent(out) :: Sk(cbnd,cbnd,nmesh)
 
-! local variables
-! loop index for frequency mesh
+!! local variables
+     ! loop index for frequency mesh
      integer :: m
 
-! status flag
+     ! status flag
      integer :: istat
 
-! dummy array: for local self-energy function
+     ! dummy array: for local self-energy function
      complex(dp), allocatable :: Sl(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(Sl(cdim,cdim,nmesh), stat = istat)
+     !
      if ( istat /= 0 ) then
          call s_print_error('cal_sl_sk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! we use Sl to store parts of sigma. note that actually sigdc has been
-! substracted from sigma beforehand, see cal_sigma() for more details.
+     ! we use Sl to store parts of sigma.
+     ! note that actually sigdc has been substracted from sigma before
+     ! hand. please see cal_sigma() for more details.
      do m=1,nmesh
          Sl(:,:,m) = sigma(1:cdim,1:cdim,m,s,t)
      enddo ! over m={1,nmesh} loop
 
-! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
+     ! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
      call map_chi_psi(cdim, cbnd, nmesh, k, s, t, Sl, Sk)
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(Sl) ) deallocate(Sl)
+
+!! body]
 
      return
   end subroutine cal_sl_sk
