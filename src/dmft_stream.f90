@@ -479,48 +479,48 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! dummy integer variables
+     ! dummy integer variables
      integer :: itmp
 
-! used to check whether the input file (groups.ir) exists
+     ! used to check whether the input file (groups.ir) exists
      logical :: exists
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in groups of projectors. apparently, this code can not run without
-! the file `groups.ir`.
-!-------------------------------------------------------------------------
+     ! read in groups of projectors. apparently, this code can not run
+     ! without the file `groups.ir`.
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'groups.ir', exist = exists)
 
-! file groups.ir must be present
+         ! file groups.ir must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_group','file groups.ir is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file groups.ir for reading
+         ! open file groups.ir for reading
          open(mytmp, file='groups.ir', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*)
 
-! check ngrp
+         ! check ngrp
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == ngrp, 'ngrp is wrong')
          read(mytmp,*)
 
-! read data
+         ! read data
          do i=1,ngrp
              read(mytmp,*)
              read(mytmp,*) chr1, chr2, site(i)
@@ -531,33 +531,35 @@
              read(mytmp,*)
          enddo ! over i={1,ngrp} loop
 
-! evaluate and check qdim
+         ! evaluate and check qdim
          itmp = maxval(ndim)
          call s_assert2(itmp == qdim, 'ndim or qdim is wrong')
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( shell, master )
      call mp_bcast( corr , master )
      call mp_bcast( site , master )
      call mp_bcast( l    , master )
      call mp_bcast( ndim , master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine dmft_input_group
