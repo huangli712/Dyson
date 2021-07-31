@@ -78,7 +78,7 @@
      endif ! back if ( istat /= 0 ) block
 
      ! check working axis.
-     ! now only the matsubara frequency axis is supported.
+     ! now only the Matsubara frequency axis is supported.
      call s_assert2(axis == 1, 'axis is wrong')
 
      ! reset sigoo
@@ -87,7 +87,7 @@
      ! build integer array for indices of frequency points
      call s_linspace_i(nmesh + 1 - mcut, nmesh, mcut, ip)
 
-     ! loop over quantum impurities, spins, and frequency points
+     ! loop over quantum impurities, spins, and frequency points.
      !
      ! we count the last `mcut` frequency points, then we try to
      ! calculate the averaged values. up to now, the double counting
@@ -134,22 +134,25 @@
 
      implicit none
 
-! local variables
-! loop index for frequency mesh
+!! local variables
+     ! loop index for frequency mesh
      integer :: m
 
-! loop index for spins
+     ! loop index for spins
      integer :: s
 
-! loop index for impurity sites
+     ! loop index for impurity sites
      integer :: t
 
-! check working axis
+!! [body
+
+     ! check working axis.
+     ! now only the Matsubara frequency axis is supported.
      call s_assert2(axis == 1, 'axis is wrong')
 
-! loop over quantum impurities, spins, and frequency points
-!
-! substract the double counting terms: new sigma = sigma - sigdc
+     ! loop over quantum impurities, spins, and frequency points.
+     !
+     ! substract the double counting terms: new sigma = sigma - sigdc.
      do t=1,nsite
          do s=1,nspin
              do m=1,nmesh
@@ -157,6 +160,8 @@
              enddo ! over m={1,nmesh} loop
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
+
+!! body]
 
      return
   end subroutine cal_sigma
