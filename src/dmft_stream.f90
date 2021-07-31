@@ -1240,6 +1240,8 @@
 
 # endif  /* MPI */
 
+!! body]
+
      return
   end subroutine dmft_input_projs
 
@@ -1251,7 +1253,7 @@
 !! @sub dmft_input_sigdc
 !!
 !! read in double counting terms for the local self-energy functions (see
-!! module dmft_sigma)
+!! module dmft_sigma).
 !!
   subroutine dmft_input_sigdc()
      use constants, only : dp, mytmp
@@ -1270,57 +1272,59 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: s
      integer  :: m
      integer  :: n
 
-! dummy integer variables
+     ! dummy integer variables
      integer  :: itmp
 
-! used to check whether the input file (sigma.dc) exists
+     ! used to check whether the input file (sigma.dc) exists
      logical  :: exists
 
-! dummy real variables
+     ! dummy real variables
      real(dp) :: re, im
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in double counting terms. the code can not run without the
-! file `sigma.dc`.
-!-------------------------------------------------------------------------
+!! [body
+
+     ! read in double counting terms.
+     ! the code can not run without the file `sigma.dc`.
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'sigma.dc', exist = exists)
 
-! file sigma.dc must be present
+         ! file sigma.dc must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_sigdc','file sigma.dc is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file sigma.dc for reading
+         ! open file sigma.dc for reading
          open(mytmp, file='sigma.dc', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*) ! empty line
 
-! check nsite
+         ! check nsite
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nsite, 'nsite is wrong')
 
-! check nspin
+         ! check nspin
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nspin, 'nspin is wrong')
 
-! check ndim
+         ! check ndim
          do i=1,nsite
              read(mytmp,*) chr1, chr2, itmp
              call s_assert2(itmp == ndim(i_grp(i)), 'ndim is wrong')
@@ -1328,7 +1332,7 @@
          enddo ! over i={1,nsite} loop
          read(mytmp,*) ! empty line
 
-! parse the data
+         ! parse the data
          do i=1,nsite
              do s=1,nspin
                  read(mytmp,*) ! empty line
@@ -1342,25 +1346,27 @@
              enddo ! over s={1,nspin} loop
          enddo ! over i={1,nsite} loop
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( sigdc, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine dmft_input_sigdc
