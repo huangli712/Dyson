@@ -1,3 +1,24 @@
+!!!-----------------------------------------------------------------------
+!!! project : jacaranda
+!!! program : cal_sigoo
+!!!           cal_sigma
+!!!           cal_fermi
+!!!           cal_eimps
+!!!           cal_eimpx
+!!!           cal_green
+!!!           cal_weiss
+!!!           cal_delta
+!!!           cal_gamma
+!!! source  : dmft_flow.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 07/29/2021 by li huang (created)
+!!!           07/31/2021 by li huang (last modified)
+!!! purpose :
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
+
 !!========================================================================
 !!>>> driver subroutines: layer 3                                      <<<
 !!========================================================================

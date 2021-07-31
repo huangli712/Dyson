@@ -1,14 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : jacaranda
-!!! program : dmft_driver
-!!!           dmft_try1
-!!!           dmft_try2
-!!!           dmft_try3
-!!!           dmft_try4
-!!!           dmft_try5
-!!!           dmft_try6
-!!!           dmft_try999
-!!!           cal_sigoo
+!!! program : cal_sigoo
 !!!           cal_sigma
 !!!           cal_fermi
 !!!           cal_eimps

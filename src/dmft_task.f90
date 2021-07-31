@@ -1,3 +1,23 @@
+!!!-----------------------------------------------------------------------
+!!! project : jacaranda
+!!! program : dmft_driver
+!!!           dmft_try1
+!!!           dmft_try2
+!!!           dmft_try3
+!!!           dmft_try4
+!!!           dmft_try5
+!!!           dmft_try6
+!!!           dmft_try999
+!!! source  : dmft_task.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 07/29/2021 by li huang (created)
+!!!           07/31/2021 by li huang (last modified)
+!!! purpose :
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
+
 !!========================================================================
 !!>>> driver subroutines: layer 1                                      <<<
 !!========================================================================
