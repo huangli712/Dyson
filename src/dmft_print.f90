@@ -227,10 +227,11 @@
      !
      write(mystd,*)
 
-! print quantum impurities
+     ! print quantum impurities
      write(mystd,'(2X,a)') '>>> system information from sigma.bare'
      write(mystd,'(2X,a)') '[system information] -> impurities -> sigma'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
+     !
      do s=1,nsite
          do p=1,nspin
              write(mystd,'(4X,a10,i3,2X,a6,i3)') 'impurity :', s, 'spin :', p
@@ -241,10 +242,11 @@
              enddo ! over i={1,ndim(i_grp(s))} loop
          enddo ! over p={1,nspin} loop
      enddo ! over s={1,nsite} loop
-
+     !
      write(mystd,'(2X,a)') '>>> system information from sigma.dc'
      write(mystd,'(2X,a)') '[system information] -> impurities -> sigdc'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
+     !
      do s=1,nsite
          do p=1,nspin
              write(mystd,'(4X,a10,i3,2X,a6,i3)') 'impurity :', s, 'spin :', p
@@ -255,20 +257,23 @@
              enddo ! over i={1,ndim(i_grp(s))} loop
          enddo ! over p={1,nspin} loop
      enddo ! over s={1,nsite} loop
-
+     !
      write(mystd,'(2X,a)') '>>> system information from maps.ir'
      write(mystd,'(2X,a)') '[system information] -> impurities -> mappings'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
+     !
      do s=1,nsite
          write(mystd,'(4X,a10,i3,2X,a8,i3)') 'impurity :', s, 'group  :', i_grp(s)
          write(mystd,'(4X,a10,i3,2X,a8,i3)') 'impurity :', s, 'window :', i_wnd(s)
      enddo ! over s={1,nsite} loop
+     !
      write(mystd,*)
 
-! print local orbital projectors
+     ! print local orbital projectors
      write(mystd,'(2X,a)') '>>> system information from groups.ir'
      write(mystd,'(2X,a)') '[system information] -> projectors -> groups'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
+     !
      do s=1,ngrp
          write(mystd,'(4X,a8,i3)') 'group  :', s
          write(mystd,'(4X,a9,2X,a)') '> shell :', shell(s)
@@ -277,28 +282,32 @@
          write(mystd,'(4X,a9,i3)') '>     l :', l(s)
          write(mystd,'(4X,a9,i3)') '>  ndim :', ndim(s)
      enddo ! over s={1,ngrp} loop
-
+     !
      write(mystd,'(2X,a)') '>>> system information from windows.ir'
      write(mystd,'(2X,a)') '[system information] -> projectors -> windows'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
+     !
      do s=1,nwnd
          write(mystd,'(4X,a8,i3)') 'window :', s
          write(mystd,'(4X,a9,i3)') '>  bmin :', bmin(s)
          write(mystd,'(4X,a9,i3)') '>  bmax :', bmax(s)
          write(mystd,'(4X,a9,i3)') '>  nbnd :', nbnd(s)
      enddo ! over s={1,nwnd} loop
-
+     !
      write(mystd,'(2X,a)') '>>> system information from maps.ir'
      write(mystd,'(2X,a)') '[system information] -> projectors -> mappings'
      write(mystd,'(2X,a)') '-----------------------------------------------------'
      do s=1,ngrp
          write(mystd,'(4X,a8,i3,2X,a10,i3)') 'group  :', s, 'impurity :', g_imp(s)
      enddo ! over s={1,ngrp} loop
+     !
      do s=1,nwnd
          write(mystd,'(4X,a8,i3,2X,a10,i3)') 'window :', s, 'impurity :', w_imp(s)
      enddo ! over s={1,nwnd} loop
-
+     !
      write(mystd,*)
+
+!! body]
 
      return
   end subroutine dmft_print_system
