@@ -493,6 +493,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
+!! [body
+
      ! read in groups of projectors.
      ! apparently, this code can not run without the file `groups.ir`.
      !--------------------------------------------------------------------
@@ -806,7 +808,7 @@
 !!
 !! @sub dmft_input_kmesh
 !!
-!! read in k-mesh and the integration weights (see module dmft_kmesh)
+!! read in k-mesh and integration weights (see module dmft_kmesh).
 !!
   subroutine dmft_input_kmesh()
      use constants, only : mytmp
@@ -821,43 +823,45 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! dummy integer variables
+     ! dummy integer variables
      integer :: itmp
 
-! used to check whether the input file (kmesh.ir) exists
+     ! used to check whether the input file (kmesh.ir) exists
      logical :: exists
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in brillouin zone information. the code can not run without
-! the file `kmesh.ir`.
-!-------------------------------------------------------------------------
+!! [body
+
+     ! read in brillouin zone information.
+     ! the code can not run without the file `kmesh.ir`.
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'kmesh.ir', exist = exists)
 
-! file kmesh.ir must be present
+         ! file kmesh.ir must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_kmesh','file kmesh.ir is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file kmesh.ir for reading
+         ! open file kmesh.ir for reading
          open(mytmp, file='kmesh.ir', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*) ! empty line
 
-! check nkpt and ndir
+         ! check nkpt and ndir
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nkpt, 'nkpt is wrong')
          !
@@ -866,35 +870,37 @@
          !
          read(mytmp,*) ! empty line
 
-! read k-points and the corresponding weights
+         ! read k-points and the corresponding weights
          do i=1,nkpt
              read(mytmp,*) kmesh(i,:), weight(i)
          enddo ! over i={1,nkpt} loop
 
-! until now, `weight' has not been renormalized. their summations should
-! be equal to nkpt.
+         ! until now, `weight' has not been renormalized.
+         ! their summations should be equal to nkpt.
          call s_assert2(sum(weight) == float(nkpt), 'weight is wrong')
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( kmesh, master )
      call mp_bcast(weight, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine dmft_input_kmesh
