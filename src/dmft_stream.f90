@@ -1374,8 +1374,8 @@
 !!
 !! @sub dmft_input_sigma
 !!
-!! read in bare self-energy functions from various quantum impurity solvers.
-!! (see module dmft_sigma)
+!! read in bare self-energy functions from various quantum impurity
+!! solvers (see module dmft_sigma).
 !!
   subroutine dmft_input_sigma()
      use constants, only : dp, mytmp
@@ -1397,71 +1397,73 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
      integer  :: s
      integer  :: m
 
-! dummy integer variables
+     ! dummy integer variables
      integer  :: itmp
 
-! used to check whether the input file (sigma.bare) exists
+     ! used to check whether the input file (sigma.bare) exists
      logical  :: exists
 
-! dummy real variables
+     ! dummy real variables
      real(dp) :: rtmp
      real(dp) :: re, im
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in local self-energy functions. this code can not run without
-! the file `sigma.bare`.
-!-------------------------------------------------------------------------
+!! [body
+
+     ! read in local self-energy functions.
+     ! this code can not run without the file `sigma.bare`.
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'sigma.bare', exist = exists)
 
-! file sigma.bare must be present
+         ! file sigma.bare must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_sigma','file sigma.bare is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file sigma.bare for reading
+         ! open file sigma.bare for reading
          open(mytmp, file='sigma.bare', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*) ! empty line
 
-! check axis
+         ! check axis
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == axis, 'axis is wrong')
 
-! check beta
+         ! check beta
          read(mytmp,*) chr1, chr2, rtmp
          call s_assert2(rtmp == beta, 'beta is wrong')
 
-! check nsite
+         ! check nsite
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nsite, 'nsite is wrong')
 
-! check nmesh
+         ! check nmesh
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nmesh, 'nmesh is wrong')
 
-! check nspin
+         ! check nspin
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nspin, 'nspin is wrong')
 
-! check ndim
+         ! check ndim
          do i=1,nsite
              read(mytmp,*) chr1, chr2, itmp
              call s_assert2(itmp == ndim(i_grp(i)), 'ndim is wrong')
@@ -1469,7 +1471,7 @@
          enddo ! over i={1,nsite} loop
          read(mytmp,*) ! empty line
 
-! parse the data
+         ! parse the data
          do i=1,nsite
              do s=1,nspin
                  read(mytmp,*) ! empty line
@@ -1488,26 +1490,28 @@
              enddo ! over s={1,nspin} loop
          enddo ! over i={1,nsite} loop
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( fmesh, master )
      call mp_bcast( sigma, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine dmft_input_sigma
