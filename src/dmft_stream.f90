@@ -433,25 +433,27 @@
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( i_grp, master )
      call mp_bcast( i_wnd, master )
      call mp_bcast( g_imp, master )
      call mp_bcast( w_imp, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
 
-! additional check for the data
-! note: all of the impurity problems should share the same band window!
+     ! additional check for the data
+     ! all of the impurity problems should share the same band window!
      call s_assert2(nsite <= ngrp, 'nsite must be smaller or equal to ngrp')
      !
      call s_assert2(nwnd == ngrp, 'nwnd must be equal to ngrp')
+
+!! body]
 
      return
   end subroutine dmft_input_map
