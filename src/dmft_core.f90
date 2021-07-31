@@ -704,7 +704,7 @@
 !! @sub correction
 !!
 !! try to evaluate the difference between the dft density matrix and the
-!! dft + dmft density matrix
+!! dft + dmft density matrix.
 !!
   subroutine correction(kocc, gamma, ecorr)
      use constants, only : dp, mystd
@@ -724,56 +724,59 @@
 
      implicit none
 
-! external arguments
-! density matrix from dft + dmft calculations
+!! external arguments
+     ! density matrix from dft + dmft calculations
      complex(dp), intent(in)  :: kocc(qbnd,qbnd,nkpt,nspin)
 
-! correction for density matrix
+     ! correction for density matrix
      complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
 
-! correction for band energy
+     ! correction for band energy
      real(dp), intent(out)    :: ecorr
 
-! local variables
-! index for spins
+!! local variables
+     ! index for spins
      integer :: s
 
-! index for k-points
+     ! index for k-points
      integer :: k
 
-! index for orbitals
+     ! index for orbitals
      integer :: p, q
 
-! index for impurity sites
+     ! index for impurity sites
      integer :: t
 
-! band window: start index and end index for bands
+     ! band window: start index and end index for bands
      integer :: bs, be
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer :: cbnd
 
-! status flag
+     ! status flag
      integer :: istat
 
-! dummy variable, used to perform mpi reduce operation for ecorr
-     real(dp), allocatable    :: ecorr_mpi
+     ! dummy variable, used to perform mpi reduce operation for ecorr
+     real(dp)    :: ecorr_mpi
      complex(dp) :: tr
 
-! dummy arrays, used to build effective hamiltonian
+     ! dummy arrays, used to build effective hamiltonian
      complex(dp), allocatable :: Em(:)
      complex(dp), allocatable :: Hm(:,:)
 
-! dummy array, used to perform mpi reduce operation for gamma
+     ! dummy array, used to perform mpi reduce operation for gamma
      complex(dp), allocatable :: gamma_mpi(:,:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(gamma_mpi(qbnd,qbnd,nkpt,nspin), stat = istat)
+     !
      if ( istat /= 0 ) then
          call s_print_error('correction','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! reset gamma
+     ! reset gamma
      gamma = czero
      gamma_mpi = czero
 
