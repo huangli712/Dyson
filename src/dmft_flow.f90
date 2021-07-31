@@ -451,7 +451,7 @@
 !!
 !! @sub cal_green
 !!
-!! try to calculate local green's function for all the impurity sites
+!! try to calculate local green's function for all the impurity sites.
 !!
   subroutine cal_green()
      use constants, only : dp, mystd
@@ -474,42 +474,44 @@
 
      implicit none
 
-! local variables
-! loop index for spin
+!! local variables
+     ! loop index for spin
      integer :: s
 
-! loop index for k-points
+     ! loop index for k-points
      integer :: k
 
-! loop index for impurity sites
+     ! loop index for impurity sites
      integer :: t
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer :: cbnd
 
-! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given impurity site
      integer :: cdim
 
-! band window: start index and end index for bands
+     ! band window: start index and end index for bands
      integer :: bs, be
 
-! status flag
+     ! status flag
      integer :: istat
 
-! dummy array: for self-energy function (upfolded to Kohn-Sham basis)
+     ! dummy array: for self-energy function (upfolded to Kohn-Sham basis)
      complex(dp), allocatable :: Sk(:,:,:)
      complex(dp), allocatable :: Xk(:,:,:)
 
-! dummy array: for lattice green's function
+     ! dummy array: for lattice green's function
      complex(dp), allocatable :: Gk(:,:,:)
 
-! dummy array: for local green's function
+     ! dummy array: for local green's function
      complex(dp), allocatable :: Gl(:,:,:)
 
-! dummy array: used to perform mpi reduce operation for green
+     ! dummy array: used to perform mpi reduce operation for green
      complex(dp), allocatable :: green_mpi(:,:,:,:,:)
 
-! allocate memory for Gl
+!! [body
+
+     ! allocate memory for Gl and green_mpi
      allocate(Gl(qdim,qdim,nmesh), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_green','can not allocate enough memory')
@@ -520,16 +522,16 @@
          call s_print_error('cal_green','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! reset cbnd and cdim. they will be updated later
-! cbnd should be k-dependent and cdim should be impurity-dependent.
+     ! reset cbnd and cdim. they will be updated later.
+     ! cbnd should be k-dependent and cdim should be impurity-dependent.
      cbnd = 0
      cdim = 0
 
-! reset green
+     ! reset green
      green = czero
      green_mpi = czero
 
-! print some useful information
+     ! print some useful information
      if ( myid == master ) then
          write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate green for', nsite, 'sites'
          write(mystd,'(4X,a,2X,i4,2X,a)') 'add contributions from', nkpt, 'kpoints'
@@ -542,13 +544,14 @@
      !
 # endif /* MPI */
 
-! loop over spins and k-points
+     ! loop over spins and k-points
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
-! evaluate band window for the current k-point and spin
-! i_wnd(t) returns the corresponding band window for given impurity site t
-! see remarks in cal_nelect() for more details
+             ! evaluate band window for the current k-point and spin.
+             !
+             ! i_wnd(t) returns the corresponding band window for given
+             ! impurity site t. see remarks in cal_nelect() for more details.
              t = 1 ! t is fixed to 1
              bs = kwin(k,s,1,i_wnd(t))
              be = kwin(k,s,2,i_wnd(t))
