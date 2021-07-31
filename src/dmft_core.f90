@@ -833,10 +833,10 @@
                      if ( p /= q ) then
                          gamma(q,p,k,s) = kocc(q,p,k,s)
                      else
-                         gamma(q,p,k,s) = kocc(q,p,k,s) - occupy(bs + q - 1,k,s) 
+                         gamma(q,p,k,s) = kocc(q,p,k,s) - occupy(bs + q - 1,k,s)
                      endif
-                 enddo
-             enddo
+                 enddo ! over q={1,cbnd} loop
+             enddo ! over p={1,cbnd} loop
 
              ! Now gamma(:,:,k,s) is ready, we would like to use it to
              ! calculate its contribution to band energy.
@@ -850,7 +850,7 @@
              ! evaluate correction to band energy
              Hm = matmul(gamma(:,:,k,s), Hm)
              call s_trace_z(cbnd, Hm, tr)
-             ecorr = ecorr + real(tr) * weight(k) 
+             ecorr = ecorr + real(tr) * weight(k)
 
              ! deallocate memory
              if ( allocated(Em) ) deallocate(Em)
@@ -1166,7 +1166,7 @@
 !! external arguments
      ! dft + dmft density matrix
      complex(dp), intent(out) :: kocc(qbnd,qbnd,nkpt,nspin)
-     
+
 !! local variables
      ! loop index for spin
      integer :: s
