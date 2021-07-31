@@ -895,8 +895,8 @@
 !! @sub cal_nelect
 !!
 !! try to calculate the number of valence electrons by dft occupations
-!! and weights. actually, what we obtain is the occupation numbers in
-!! the selected band window.
+!! and weights. actually, what we obtain is the nominal occupation
+!! numbers in the selected band window.
 !!
   subroutine cal_nelect(nelect)
      use constants, only : dp, mystd
@@ -912,21 +912,23 @@
 
      implicit none
 
-! external arguments
-! number of relevant electrons
+!! external arguments
+     ! number of relevant electrons
      real(dp), intent(out) :: nelect
 
-! local variables
-! index for k-points
+!! local variables
+     ! index for k-points
      integer :: k
 
-! index for spin
+     ! index for spin
      integer :: s
 
-! band window: start index and end index for bands
+     ! band window: start index and end index for bands
      integer :: bs, be
 
-! print some useful information
+!! [body
+
+     ! print some useful information
      if ( myid == master ) then
          write(mystd,'(4X,a)') 'calculating desired charge density'
      endif ! back if ( myid == master ) block
@@ -946,10 +948,10 @@
 ! window according to our assumption.
 !
 
-! reset nelect
+     ! reset nelect
      nelect = zero
 
-! loop over spins and k-points to perform summation
+     ! loop over spins and k-points to perform summation
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
              bs = kwin(k,s,1,i_wnd(1))
@@ -958,13 +960,15 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
-! don't forget to normalize `nelect`
+     ! don't forget to normalize `nelect`
      nelect = nelect / float(nkpt)
 
-! consider the spins
+     ! consider the spins
      if ( nspin == 1 ) then
          nelect = nelect * two
      endif ! back if ( nspin == 1 ) block
+
+!! body]
 
      return
   end subroutine cal_nelect
