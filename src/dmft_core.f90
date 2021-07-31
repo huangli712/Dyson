@@ -997,55 +997,57 @@
 
      implicit none
 
-! external arguments
-! assumed fermi level
+!! external arguments
+     ! assumed fermi level
      real(dp), intent(in)  :: fermi
 
-! occupation number
+     ! occupation number
      real(dp), intent(out) :: val
 
-! eigenvalues for H(k) + \Sigma(i\omega_n)
+     ! eigenvalues for H(k) + \Sigma(i\omega_n)
      complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
 
-! eigenvalues for H(k) + \Sigma(\infty)
+     ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
 
-! local variables
-! loop index for bands
+!! local variables
+     ! loop index for bands
      integer  :: b
 
-! loop index for k-points
+     ! loop index for k-points
      integer  :: k
 
-! loop index for spins
+     ! loop index for spins
      integer  :: s
 
-! loop index for frequency mesh
+     ! loop index for frequency mesh
      integer  :: m
 
-! band window: start index and end index for bands
+     ! band window: start index and end index for bands
      integer  :: bs, be
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer  :: cbnd
 
-! status flag
+     ! status flag
      integer  :: istat
 
-! complex(dp) dummy variable
+     ! complex(dp) dummy variable
      complex(dp) :: caux, ctmp
 
-! density matrix
+     ! density matrix
      complex(dp), allocatable :: zocc(:,:)
 
-! local green's function
+     ! local green's function
      complex(dp), allocatable :: gloc(:,:,:)
 
-! external functions
-! used to calculate fermi-dirac function
+!! external functions
+     ! used to calculate fermi-dirac function
      real(dp), external :: fermi_dirac
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(zocc(qbnd,nspin),       stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_occupy','can not allocate enough memory')
