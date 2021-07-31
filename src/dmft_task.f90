@@ -421,17 +421,19 @@
 
      implicit none
 
-! local variables
-! status flag
+!! local variables
+     ! status flag
      integer  :: istat
 
-! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
+     ! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
      complex(dp), allocatable :: eigs(:,:,:,:)
 
-! dummy array, used to save the eigenvalues of H + \Sigma(ioo)
+     ! dummy array, used to save the eigenvalues of H + \Sigma(ioo)
      complex(dp), allocatable :: einf(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('dmft_try5','can not allocate enough memory')
@@ -442,7 +444,7 @@
          call s_print_error('dmft_try5','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! try to diagonalize the effective hamiltonian
+     ! try to diagonalize the effective hamiltonian
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Eigen'
      endif ! back if ( myid == master ) block
@@ -453,7 +455,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! write the calculated results, only the master node can do it
+     ! write the calculated results, only the master node can do it.
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
@@ -463,9 +465,11 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(eigs) ) deallocate(eigs)
      if ( allocated(einf) ) deallocate(einf)
+
+!! body]
 
      return
   end subroutine dmft_try5
