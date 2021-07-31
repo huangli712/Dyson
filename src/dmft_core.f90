@@ -1238,23 +1238,25 @@
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
-! evaluate band window for the current k-point and spin
-! i_wnd(t) returns the corresponding band window for given impurity site t
-! see remarks in cal_nelect() for more details
+             ! evaluate band window for the current k-point and spin.
+             !
+             ! i_wnd(t) returns the corresponding band window for given
+             ! impurity site t. see remarks in cal_nelect() for more details.
              t = 1 ! t is fixed to 1
              bs = kwin(k,s,1,i_wnd(t))
              be = kwin(k,s,2,i_wnd(t))
 
-! determine cbnd
+             ! determine cbnd
              cbnd = be - bs + 1
 
-! provide some useful information
+             ! provide some useful information
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
              write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
-! allocate memories Sk, Xk, and Gk. their sizes are k-dependent
+             ! allocate memories Sk, Xk, and Gk.
+             ! their sizes are k-dependent.
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Xk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Gk(cbnd,cbnd,nmesh), stat = istat)
@@ -1263,8 +1265,9 @@
                  call s_print_error('cal_denmat','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-! build self-energy function, and then upfold it into Kohn-Sham basis
-! Sk should contain contributions from all impurity sites
+             ! build self-energy function, and then upfold it into
+             ! Kohn-Sham basis. Sk should contain contributions from
+             ! all impurity sites
              Sk = czero
              do t=1,nsite
                  Xk = czero ! reset Xk
@@ -1273,10 +1276,11 @@
                  Sk = Sk + Xk
              enddo ! over t={1,nsite} loop
 
-! calculate lattice green's function
+             ! calculate lattice green's function
              call cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
 
-! try to calculate the momentum- and spin-dependent density matrix
+             ! try to calculate momentum-dependent and spin-dependent
+             ! density matrix.
              do p=1,cbnd
                  do q=1,cbnd
                      call s_fft_density(nmesh, fmesh, Gk(q,p,:), density, beta)
@@ -1285,10 +1289,10 @@
                      else
                          kocc(q,p,k,s) = density
                      endif
-                 enddo
-             enddo
+                 enddo ! over q={1,cbnd} loop
+             enddo ! over p={1,cbnd} loop
 
-! deallocate memories
+             ! deallocate memories
              if ( allocated(Sk) ) deallocate(Sk)
              if ( allocated(Xk) ) deallocate(Xk)
              if ( allocated(Gk) ) deallocate(Gk)
@@ -1311,11 +1315,13 @@
 
 # endif /* MPI */
 
-! renormalize density matrix
+     ! renormalize density matrix
      kocc = kocc_mpi
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(kocc_mpi) ) deallocate(kocc_mpi)
+
+!! body]
 
      return
   end subroutine cal_denmat
