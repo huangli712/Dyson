@@ -18,7 +18,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/31/2021 by li huang (last modified)
+!!!           08/01/2021 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
