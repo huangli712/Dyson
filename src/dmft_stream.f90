@@ -685,7 +685,7 @@
 !!
 !! @sub dmft_input_lattice
 !!
-!! read in key crystallography information (see module dmft_lattice)
+!! read in key crystallography information (see module dmft_lattice).
 !!
   subroutine dmft_input_lattice()
      use constants, only : mytmp
@@ -700,42 +700,44 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
 
-! dummy integer variables
+     ! dummy integer variables
      integer :: itmp
 
-! used to check whether the input file (lattice.ir) exists
+     ! used to check whether the input file (lattice.ir) exists
      logical :: exists
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in crystallography information. this code can not run without
-! the file `lattice.ir`.
-!-------------------------------------------------------------------------
+!! [body
+
+     ! read in crystallography information.
+     ! this code can not run without the file `lattice.ir`.
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'lattice.ir', exist = exists)
 
-! file lattice.ir must be present
+         ! file lattice.ir must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_lattice','file lattice.ir is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file lattice.ir for reading
+         ! open file lattice.ir for reading
          open(mytmp, file='lattice.ir', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
 
-! check nsort and natom
+         ! check nsort and natom
          read(mytmp,*) ! empty line
          read(mytmp,*) ! skip _case
          read(mytmp,*) ! skip scale
@@ -748,53 +750,55 @@
          !
          read(mytmp,*) ! empty line
 
-! read sorts
+         ! read sorts
          read(mytmp,*) ! header
          read(mytmp,*) sorts
          read(mytmp,*) sortn
          read(mytmp,*) ! empty line
 
-! read atoms
+         ! read atoms
          read(mytmp,*) ! header
          read(mytmp,*) atoms
          read(mytmp,*) ! empty line
 
-! read lvect
+         ! read lvect
          read(mytmp,*) ! header
          do i=1,3
              read(mytmp,*) lvect(i,1:3)
          enddo ! over i={1,3} loop
          read(mytmp,*) ! empty line
 
-! read coord
+         ! read coord
          read(mytmp,*) ! header
          do i=1,natom
              read(mytmp,*) coord(i,1:3)
          enddo ! over i={1,natom} loop
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( sorts, master )
      call mp_bcast( atoms, master )
      call mp_bcast( sortn, master )
      call mp_bcast( lvect, master )
      call mp_bcast( coord, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine dmft_input_lattice
