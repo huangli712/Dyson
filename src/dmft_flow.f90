@@ -745,7 +745,7 @@
 !!
 !! @sub cal_delta
 !!
-!! try to calculate hybridization function for all impurity sites
+!! try to calculate hybridization function for all impurity sites.
 !!
   subroutine cal_delta()
      use constants, only : dp, mystd
@@ -766,53 +766,55 @@
 
      implicit none
 
-! local variables
-! index for impurity sites
+!! local variables
+     ! index for impurity sites
      integer :: t
 
-! loop index for spin
+     ! loop index for spin
      integer :: s
 
-! loop index for frequency mesh
+     ! loop index for frequency mesh
      integer :: m
 
-! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given impurity site
      integer :: cdim
 
-! status flag
+     ! status flag
      integer :: istat
 
-! dummy variables
+     ! dummy variables
      complex(dp) :: caux
 
-! dummy arrays
-! for identity matrix
+     ! dummy arrays
+     ! for identity matrix
      complex(dp), allocatable :: Im(:,:)
 
-! for local impurity levels matrix
+     ! for local impurity levels matrix
      complex(dp), allocatable :: Em(:,:)
 
-! for green's function matrix
+     ! for green's function matrix
      complex(dp), allocatable :: Tm(:,:)
 
-! for self-energy function matrix
+     ! for self-energy function matrix
      complex(dp), allocatable :: Sm(:,:)
 
-! reset delta
+!! [body
+
+     ! reset delta
      delta = czero
 
-! print some useful information
+     ! print some useful information
      if ( myid == master ) then
          write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate delta for', nsite, 'sites'
      endif ! back if ( myid == master ) block
 
-! loop over quantum impurities
+     ! loop over quantum impurities
      SITE_LOOP: do t=1,nsite
 
-! determine dimensional parameter
+         ! determine dimensional parameter
          cdim = ndim(t)
 
-! allocate memory
+         ! allocate memory
          allocate(Im(cdim,cdim), stat = istat)
          allocate(Em(cdim,cdim), stat = istat)
          allocate(Tm(cdim,cdim), stat = istat)
@@ -822,16 +824,17 @@
              call s_print_error('cal_delta','can not allocate enough memory')
          endif ! back if ( istat /= 0 ) block
 
-! loop over spins and frequency meshes
+         ! loop over spins and frequency meshes
          SPIN_LOOP: do s=1,nspin
              MESH_LOOP: do m=1,nmesh
 
-! build identity matrix
+                 ! build identity matrix
                  call s_identity_z(cdim, Im)
 
-! get frequency point. note that the fermi level (chemical potential) is
-! already included in the impurity levels `eimps`. so here we just ignore
-! the fermi level.
+                 ! get frequency point.
+                 ! note that the fermi level (chemical potential) is
+                 ! already included in the impurity levels `eimps`.
+                 ! so here we just ignore the fermi level.
                  if ( axis == 1 ) then
                      caux = czi * fmesh(m)
                  else
