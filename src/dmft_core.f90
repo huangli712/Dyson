@@ -808,16 +808,16 @@
              bs = kwin(k,s,1,i_wnd(t))
              be = kwin(k,s,2,i_wnd(t))
 
-! determine cbnd
+             ! determine cbnd
              cbnd = be - bs + 1
 
-! provide some useful information
+             ! provide some useful information
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
              write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
-! allocate memory
+             ! allocate memory
              allocate(Em(cbnd),      stat = istat)
              allocate(Hm(cbnd,cbnd), stat = istat)
              !
@@ -825,8 +825,9 @@
                  call s_print_error('correction','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-! calculate the difference between dft + dmft density matrix `kocc` and
-! the dft density matrix `occupy`. the results are saved at `gamma.
+             ! calculate the difference between dft + dmft density matrix
+             ! `kocc` and the dft density matrix `occupy`. the results are
+             ! saved at `gamma.
              do p = 1,cbnd
                  do q = 1,cbnd
                      if ( p /= q ) then
@@ -837,21 +838,21 @@
                  enddo
              enddo
 
-! Now gamma(:,:,k,s) is ready, we would like to use it to calculate its
-! contribution to band energy.
+             ! Now gamma(:,:,k,s) is ready, we would like to use it to
+             ! calculate its contribution to band energy.
 
-! evaluate Em, which is the eigenvalues
+             ! evaluate Em, which is the eigenvalues.
              Em = enk(bs:be,k,s)
 
-! convert `Em` to diagonal matrix `Hm`
+             ! convert `Em` to diagonal matrix `Hm`
              call s_diag_z(cbnd, Em, Hm)
 
-! evaluate correction to band energy
+             ! evaluate correction to band energy
              Hm = matmul(gamma(:,:,k,s), Hm)
              call s_trace_z(cbnd, Hm, tr)
              ecorr = ecorr + real(tr) * weight(k) 
 
-! deallocate memory
+             ! deallocate memory
              if ( allocated(Em) ) deallocate(Em)
              if ( allocated(Hm) ) deallocate(Hm)
 
@@ -875,15 +876,17 @@
 
 # endif /* MPI */
 
-! get the final correction for density matrix
+     ! get the final correction for density matrix
      gamma = gamma_mpi
      ecorr = ecorr_mpi / float(nkpt)
      if ( nspin == 1 ) then
          ecorr = ecorr * two
      endif ! back if ( nspin == 1 ) block
 
-! deallocate memory
+     ! deallocate memory
      deallocate(gamma_mpi)
+
+!! body]
 
      return
   end subroutine correction
