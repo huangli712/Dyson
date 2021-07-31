@@ -357,40 +357,44 @@
 
      implicit none
 
-! local variables
-! dummy integer variables
+!! local variables
+     ! dummy integer variables
      integer :: itmp
 
-! used to check whether the input file (maps.ir) exists
+     ! used to check whether the input file (maps.ir) exists
      logical :: exists
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in mappings or connections between quantum impurity problems and
-! groups of projectors. this code can not run without the file `maps.ir`
-!-------------------------------------------------------------------------
+!! [body
+
+     ! read in mappings or connections between quantum impurity problems
+     ! and groups of projectors.
+     !
+     ! this code can not run without the file `maps.ir`
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'maps.ir', exist = exists)
 
-! file maps.ir must be present
+         ! file maps.ir must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_map','file maps.ir is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file maps.ir for reading
+         ! open file maps.ir for reading
          open(mytmp, file='maps.ir', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*)
 
-! check nsite, ngrp, and nwnd
+         ! check nsite, ngrp, and nwnd
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nsite, 'nsite is wrong')
          !
@@ -400,31 +404,31 @@
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nwnd, 'nwnd is wrong')
 
-! read data: i_grp
+         ! read data: i_grp
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*) i_grp
 
-! read data: i_wnd
+         ! read data: i_wnd
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*) i_wnd
 
-! read data: g_imp
+         ! read data: g_imp
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*) g_imp
 
-! read data: w_imp
+         ! read data: w_imp
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*) w_imp
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
