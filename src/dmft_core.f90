@@ -302,34 +302,36 @@
 
      implicit none
 
-! external arguments
-! number of dft bands for given k-point and spin
+!! external arguments
+     ! number of dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-! band window: start index and end index for bands
+     ! band window: start index and end index for bands
      integer, intent(in) :: bs, be
 
-! index for k-points
+     ! index for k-points
      integer, intent(in) :: k
 
-! index for spin
+     ! index for spin
      integer, intent(in) :: s
 
-! self-energy function at Kohn-Sham basis, \omega = \infty
+     ! self-energy function at Kohn-Sham basis, \omega = \infty
      complex(dp), intent(in)  :: So(cbnd,cbnd)
 
-! lattice green's function at given k-point and spin
+     ! lattice green's function at given k-point and spin
      complex(dp), intent(out) :: Ho(cbnd,cbnd)
 
-! local variables
-! status flag
+!! local variables
+     ! status flag
      integer :: istat
 
-! dummy arrays, used to build effective hamiltonian
+     ! dummy arrays, used to build effective hamiltonian
      complex(dp), allocatable :: Em(:)
      complex(dp), allocatable :: Hm(:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(Em(cbnd),      stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_so_ho','can not allocate enough memory')
@@ -340,18 +342,20 @@
          call s_print_error('cal_so_ho','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! evaluate Em, which is just some dft eigenvalues
+     ! evaluate Em, which is just some dft eigenvalues
      Em = enk(bs:be,k,s)
 
-! convert `Em` to diagonal matrix `Hm`
+     ! convert `Em` to diagonal matrix `Hm`
      call s_diag_z(cbnd, Em, Hm)
 
-! combine `Hm` and `So` to build the effective hamiltonian
+     ! combine `Hm` and `So` to build the effective hamiltonian
      Ho = Hm + So
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(Em) ) deallocate(Em)
      if ( allocated(Hm) ) deallocate(Hm)
+
+!! body]
 
      return
   end subroutine cal_so_ho
