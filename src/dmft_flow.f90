@@ -556,16 +556,17 @@
              bs = kwin(k,s,1,i_wnd(t))
              be = kwin(k,s,2,i_wnd(t))
 
-! determine cbnd
+             ! determine cbnd
              cbnd = be - bs + 1
 
-! provide some useful information
+             ! provide some useful information
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
              write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
-! allocate memories Sk, Xk, and Gk. their sizes are k-dependent
+             ! allocate memories Sk, Xk, and Gk.
+             ! their sizes are k-dependent.
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Xk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Gk(cbnd,cbnd,nmesh), stat = istat)
@@ -574,8 +575,9 @@
                  call s_print_error('cal_green','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-! build self-energy function, and then upfold it into Kohn-Sham basis
-! Sk should contain contributions from all impurity sites
+             ! build self-energy function, and then upfold it into
+             ! Kohn-Sham basis. Sk should contain contributions from
+             ! all impurity sites.
              Sk = czero
              do t=1,nsite
                  Xk = czero ! reset Xk
@@ -584,11 +586,11 @@
                  Sk = Sk + Xk
              enddo ! over t={1,nsite} loop
 
-! calculate lattice green's function
+             ! calculate lattice green's function
              call cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
 
-! downfold the lattice green's function to obtain local green's function,
-! then we have to perform k-summation
+             ! downfold the lattice green's function to obtain local
+             ! green's function, then we have to perform k-summation.
              do t=1,nsite
                  Gl = czero
                  cdim = ndim(t)
@@ -596,7 +598,7 @@
                  green(:,:,:,s,t) = green(:,:,:,s,t) + Gl * weight(k)
              enddo ! over t={1,nsite} loop
 
-! deallocate memories
+             ! deallocate memories
              if ( allocated(Sk) ) deallocate(Sk)
              if ( allocated(Xk) ) deallocate(Xk)
              if ( allocated(Gk) ) deallocate(Gk)
@@ -619,12 +621,14 @@
 
 # endif /* MPI */
 
-! renormalize local green's function
+     ! renormalize local green's function
      green = green_mpi / float(nkpt)
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(Gl) ) deallocate(Gl)
      if ( allocated(green_mpi) ) deallocate(green_mpi)
+
+!! body]
 
      return
   end subroutine cal_green
