@@ -101,8 +101,8 @@
 !!
 !! to calculate the local green's function, generate key inputs for the
 !! quantum impurity solvers. the fermi level may be updated, depending
-!! on the configuration parameter. this subroutine is suitable for the
-!! one-shot dft + dmft calculations.
+!! on the configuration parameter `lfermi`. this subroutine is suitable
+!! for the one-shot dft + dmft calculations.
 !!
   subroutine dmft_try1()
      use constants, only : dp, zero
@@ -119,11 +119,13 @@
 
      implicit none
 
-! local variables
-! lattice occupancy
+!! local variables
+     ! lattice occupancy
      real(dp) :: occup
 
-! try to search the fermi level
+!! [body
+
+     ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
      endif ! back if ( myid == master ) block
@@ -142,7 +144,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! try to compute the local impurity levels
+     ! try to compute the local impurity levels
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Level'
      endif ! back if ( myid == master ) block
@@ -155,7 +157,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! try to compute the local green's function
+     ! try to compute the local green's function
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Green'
      endif ! back if ( myid == master ) block
@@ -166,7 +168,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! try to compute the local weiss's function
+     ! try to compute the local weiss's function
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Weiss'
      endif ! back if ( myid == master ) block
@@ -177,7 +179,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! try to compute the hybridization function
+     ! try to compute the hybridization function
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Hybri'
      endif ! back if ( myid == master ) block
@@ -188,7 +190,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! write the calculated results, only the master node can do it
+     ! write the calculated results, only the master node can do it.
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
@@ -212,6 +214,8 @@
          !
          write(mystd,*)
      endif ! back if ( myid == master ) block
+
+!! body]
 
      return
   end subroutine dmft_try1
