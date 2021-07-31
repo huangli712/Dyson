@@ -241,14 +241,16 @@
 
      implicit none
 
-! local variables
-! lattice occupancy
+!! local variables
+     ! lattice occupancy
      real(dp) :: occup
 
-! correction to band energy
+     ! correction to band energy
      real(dp) :: ecorr
 
-! try to search the fermi level
+!! [body
+
+     ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
      endif ! back if ( myid == master ) block
@@ -267,7 +269,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! try to compute the density correction
+     ! try to compute the density correction
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Gamma'
      endif ! back if ( myid == master ) block
@@ -280,7 +282,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! write the calculated results, only the master node can do it
+     ! write the calculated results, only the master node can do it
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
@@ -292,6 +294,8 @@
          !
          write(mystd,*)
      endif ! back if ( myid == master ) block
+
+!! body]
 
      return
   end subroutine dmft_try2
