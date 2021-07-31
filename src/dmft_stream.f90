@@ -1523,14 +1523,16 @@
 !!
 !! @sub dmft_alloc_array
 !!
-!! allocate memory for global variables and then initialize them
+!! allocate memory for global variables and then initialize them.
 !!
   subroutine dmft_alloc_array()
      use context ! ALL
 
      implicit none
 
-! allocate memory for context module
+!! [body
+
+     ! allocate memory for context module
      call cat_alloc_map()
      call cat_alloc_group()
      call cat_alloc_window()
@@ -1550,20 +1552,24 @@
 
      call cat_alloc_gamma()
 
+!! body]
+
      return
   end subroutine dmft_alloc_array
 
 !!
 !! @sub dmft_final_array
 !!
-!! garbage collection for this code, please refer to dmft_alloc_array
+!! garbage collection for this code, please refer to dmft_alloc_array.
 !!
   subroutine dmft_final_array()
      use context ! ALL
 
      implicit none
 
-! deallocate memory for context module
+!! [body
+
+     ! deallocate memory for context module
      call cat_free_map()
      call cat_free_group()
      call cat_free_window()
@@ -1582,6 +1588,8 @@
      call cat_free_delta()
 
      call cat_free_gamma()
+
+!! body]
 
      return
   end subroutine dmft_final_array
