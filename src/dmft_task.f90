@@ -484,14 +484,48 @@
   subroutine dmft_try6()
      implicit none
 
+!! [body
+
+!! body]
+
      return
   end subroutine dmft_try6
+
+!!
+!! @sub dmft_try7
+!!
+  subroutine dmft_try7()
+     implicit none
+
+!! [body
+
+!! body]
+
+     return
+  end subroutine dmft_try7
+
+!!
+!! @sub dmft_try8
+!!
+  subroutine dmft_try8()
+     implicit none
+
+!! [body
+
+!! body]
+
+     return
+  end subroutine dmft_try8
 
 !!
 !! @sub dmft_try999
 !!
   subroutine dmft_try999()
      implicit none
+
+!! [body
+
+!! body]
 
      return
   end subroutine dmft_try999
