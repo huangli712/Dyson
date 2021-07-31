@@ -8,8 +8,8 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           06/10/2021 by li huang (last modified)
-!!! purpose :
+!!!           07/31/2021 by li huang (last modified)
+!!! purpose : print the configuration and runtime information.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -17,7 +17,7 @@
 !!
 !! @sub dmft_print_header
 !!
-!! print the startup information for the dyson/jacaranda code
+!! print the startup information for the dyson/jacaranda code.
 !!
   subroutine dmft_print_header()
      use constants, only : mystd
@@ -33,11 +33,13 @@
 
      implicit none
 
-! local variables
-! string for current date and time
+!! local variables
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
-! obtain current date and time
+!! [body
+
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
 # if defined (MPI)
@@ -52,13 +54,13 @@
 
      write(mystd,'(2X,a)') 'A Modern Dynamical Metal-Field Theory Self-Consistent Equation Solver'
      write(mystd,*)
-
+     !
      write(mystd,'(2X,a)') 'Version: '//V_FULL//' (built at '//__TIME__//' '//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: '//V_AUTH//' ('//V_INST//')'
      write(mystd,'(2X,a)') 'Support: '//V_MAIL
      write(mystd,'(2X,a)') 'License: '//V_GPL3
      write(mystd,*)
-
+     !
      write(mystd,'(2X,a)') 'start running at '//date_time_string
 
 # if defined (MPI)
@@ -73,13 +75,15 @@
 
      write(mystd,*)
 
+!! body]
+
      return
   end subroutine dmft_print_header
 
 !!
 !! @sub: dmft_print_footer
 !!
-!! print the ending information for the dyson/jacaranda code
+!! print the ending information for the dyson/jacaranda code.
 !!
   subroutine dmft_print_footer()
      use constants, only : dp
@@ -89,24 +93,28 @@
 
      implicit none
 
-! local variables
-! string for current date and time
+!! local variables
+     ! string for current date and time
      character (len = 20) :: date_time_string
 
-! used to record the time usage information
+     ! used to record the time usage information
      real(dp) :: tot_time
 
-! obtain time usage information
+!! [body
+
+     ! obtain time usage information
      call cpu_time(tot_time)
 
-! obtain current date and time
+     ! obtain current date and time
      call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a,f10.2,a)') cname//' >>> total time spent:', tot_time, 's'
      write(mystd,*)
-
+     !
      write(mystd,'(2X,a)') cname//' >>> I am tired and want to go to bed. Bye!'
      write(mystd,'(2X,a)') cname//' >>> happy ending at '//date_time_string
+
+!! body]
 
      return
   end subroutine dmft_print_footer
