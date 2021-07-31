@@ -493,8 +493,8 @@
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-     ! read in groups of projectors. apparently, this code can not run
-     ! without the file `groups.ir`.
+     ! read in groups of projectors.
+     ! apparently, this code can not run without the file `groups.ir`.
      !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -586,50 +586,52 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: i
      integer :: s
      integer :: k
 
-! dummy integer variables
+     ! dummy integer variables
      integer :: itmp
 
-! used to check whether the input file (windows.ir) exists
+     ! used to check whether the input file (windows.ir) exists
      logical :: exists
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in band windows of projectors. apparently, this code can not run
-! without the file `windows.ir`.
-!-------------------------------------------------------------------------
+!! [body
+
+     ! read in band windows of projectors.
+     ! apparently, this code can not run without the file `windows.ir`.
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'windows.ir', exist = exists)
 
-! file windows.ir must be present
+         ! file windows.ir must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_window','file windows.ir is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file windows.ir for reading
+         ! open file windows.ir for reading
          open(mytmp, file='windows.ir', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*)
 
-! check nwnd
+         ! check nwnd
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nwnd, 'nwnd is wrong')
          read(mytmp,*)
 
-! read data
+         ! read data
          do i=1,nwnd
              read(mytmp,*)
              read(mytmp,*) chr1, chr2, bmin(i)
@@ -644,11 +646,11 @@
              read(mytmp,*)
          enddo ! over i={1,nwnd} loop
 
-! evaluate and check qbnd
+         ! evaluate and check qbnd
          itmp = maxval(nbnd)
          call s_assert2(itmp == qbnd, 'nbnd or qbnd is wrong')
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
