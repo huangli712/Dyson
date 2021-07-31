@@ -282,7 +282,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-     ! write the calculated results, only the master node can do it
+     ! write the calculated results, only the master node can do it.
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
@@ -317,14 +317,16 @@
 
      implicit none
 
-! local variables
-! lattice occupancy
+!! local variables
+     ! lattice occupancy
      real(dp) :: occup
 
-! check lfermi at first
+!! [body
+
+     ! check lfermi at first
      call s_assert2(lfermi .eqv. .true., 'lfermi must be true')
 
-! try to search the fermi level
+     ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
      endif ! back if ( myid == master ) block
@@ -337,7 +339,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! write the calculated results, only the master node can do it
+     ! write the calculated results, only the master node can do it.
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
@@ -346,6 +348,8 @@
          !
          write(mystd,*)
      endif ! back if ( myid == master ) block
+
+!! body]
 
      return
   end subroutine dmft_try3
@@ -366,7 +370,9 @@
 
      implicit none
 
-! try to calculate the local impurity levels
+!! [body
+
+     ! try to calculate the local impurity levels
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Level'
      endif ! back if ( myid == master ) block
@@ -379,7 +385,7 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-! write the calculated results, only the master node can do it
+     ! write the calculated results, only the master node can do it.
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Write'
          !
@@ -391,6 +397,8 @@
          !
          write(mystd,*)
      endif ! back if ( myid == master ) block
+
+!! body]
 
      return
   end subroutine dmft_try4
