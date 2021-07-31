@@ -169,8 +169,8 @@
 !!
 !! @sub cal_fermi
 !!
-!! try to determine the fermi level. and the lattice occupancy will be
-!! calculated at the same time.
+!! try to determine the fermi level. in addition, the lattice occupancy
+!! will be calculated at the same time.
 !!
   subroutine cal_fermi(occup)
      use constants, only : dp, mystd
@@ -183,24 +183,26 @@
 
      implicit none
 
-! external arguments
-! lattice occupancy
+!! external arguments
+     ! lattice occupancy
      real(dp), intent(out) :: occup
 
-! local variables
-! desired charge density
+!! local variables
+     ! desired charge density
      real(dp) :: ndens
 
-! status flag
+     ! status flag
      integer  :: istat
 
-! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
+     ! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
      complex(dp), allocatable :: eigs(:,:,:,:)
 
-! dummy array, used to save the eigenvalues of H + \Sigma(oo)
+     ! dummy array, used to save the eigenvalues of H + \Sigma(oo)
      complex(dp), allocatable :: einf(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_fermi','can not allocate enough memory')
@@ -211,19 +213,23 @@
          call s_print_error('cal_fermi','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! calculate the nominal charge density according to the dft eigenvalues
+     ! calculate the nominal charge density according to the raw
+     ! dft eigenvalues.
      call cal_nelect(ndens); occup = ndens
 
-! construct H + \Sigma, diagonalize it to obtain the dft + dmft eigenvalues
+     ! construct H + \Sigma, then diagonalize it to obtain the
+     ! dft + dmft eigenvalues.
      call cal_eigsys(eigs, einf)
 
-! search the fermi level using bisection algorithm
-! the global variable `fermi` will be updated within `dichotomy()`
+     ! search the fermi level using bisection algorithm.
+     ! the global variable `fermi` will be updated within `dichotomy()`.
      call dichotomy(ndens, eigs, einf)
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(eigs) ) deallocate(eigs)
      if ( allocated(einf) ) deallocate(einf)
+
+!! body]
 
      return
   end subroutine cal_fermi
