@@ -229,7 +229,7 @@
 !!
 !! try to upfold the asymptotic values of self-energy functions at high
 !! frequency (i.e `sigoo`) from local basis to Kohn-Sham basis. note that
-!! the double-counting terms have been substracted from sigoo beforehand.
+!! the double-counting terms have been substracted from sigoo before hand.
 !! please see cal_sigoo() for more details.
 !!
   subroutine cal_sl_so(cdim, cbnd, k, s, t, So)
@@ -240,46 +240,50 @@
 
      implicit none
 
-! external arguments
-! number of correlated orbitals for given impurity site
+!! external arguments
+     ! number of correlated orbitals for given impurity site
      integer, intent(in) :: cdim
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-! index for k-points
+     ! index for k-points
      integer, intent(in) :: k
 
-! index for spin
+     ! index for spin
      integer, intent(in) :: s
 
-! index for impurity sites
+     ! index for impurity sites
      integer, intent(in) :: t
 
-! self-energy function at \omega = \infty in Kohn-Sham basis
+     ! self-energy function at \omega = \infty in Kohn-Sham basis
      complex(dp), intent(out) :: So(cbnd,cbnd)
 
-! local variables
-! status flag
+!! local variables
+     ! status flag
      integer :: istat
 
-! dummy array: for asymptotic self-energy function
+     ! dummy array: for asymptotic self-energy function
      complex(dp), allocatable :: Sl(:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(Sl(cdim,cdim), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_sl_so','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! here we use Sl to save parts of sigoo
+     ! here we use Sl to save parts of sigoo
      Sl = sigoo(1:cdim,1:cdim,s,t)
 
-! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
+     ! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
      call one_chi_psi(cdim, cbnd, k, s, t, Sl, So)
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(Sl) ) deallocate(Sl)
+
+!! body]
 
      return
   end subroutine cal_sl_so
