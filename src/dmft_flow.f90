@@ -698,7 +698,7 @@
          ! get size of orbital space
          cdim = ndim(t)
 
-! allocate memory
+         ! allocate memory
          allocate(Gl(cdim,cdim), stat = istat)
          !
          if ( istat /= 0 ) then
@@ -707,32 +707,37 @@
          !
          Gl = czero
 
-! loop over spins and frequency mesh
+         ! loop over spins and frequency mesh
          SPIN_LOOP: do s=1,nspin
              MESH_LOOP: do m=1,nmesh
 
-! copy local green's function to Gl
+                 ! copy local green's function to Gl
                  Gl = green(1:cdim,1:cdim,m,s,t)
 
-! inverse local green's function. now Gl is G^{-1}
+                 ! inverse local green's function.
+                 ! now Gl is G^{-1}.
                  call s_inv_z(cdim, Gl)
 
-! plus the self-energy function. now Gl is G^{-1} + \Sigma
+                 ! plus the self-energy function.
+                 ! now Gl is G^{-1} + \Sigma.
                  Gl = Gl + sigma(1:cdim,1:cdim,m,s,t)
 
-! inverse it again to obtain bath weiss's function. now Gl is G_0
+                 ! inverse it again to obtain bath weiss's function.
+                 ! now Gl is G_0.
                  call s_inv_z(cdim, Gl)
 
-! save the final resuls to weiss
+                 ! save the final resuls to weiss
                  weiss(1:cdim,1:cdim,m,s,t) = Gl
 
              enddo MESH_LOOP ! over m={1,nmesh} loop
          enddo SPIN_LOOP ! over s={1,nspin} loop
 
-! deallocate memory
+         ! deallocate memory
          if ( allocated(Gl) ) deallocate(Gl)
 
      enddo SITE_LOOP ! over t={1,nsite} loop
+
+!! body]
 
      return
   end subroutine cal_weiss
