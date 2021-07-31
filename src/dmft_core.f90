@@ -623,7 +623,7 @@
      !
      sign = abs( occ1 - desired ) / ( occ1 - desired )
 
-! first, determin the left and right boundaries
+     ! first, determin the left and right boundaries
      loop = 1
      !
      if ( myid == master ) then
@@ -649,14 +649,14 @@
          endif ! back if ( myid == master ) block
      enddo ! over do while loop
 
-! exchange the left and right boundaries
+     ! exchange the left and right boundaries
      if ( mu1 > mu2 ) then
          mu3 = mu1; mu1 = mu2; mu2 = mu3
          occ3 = occ1; occ1 = occ2; occ2 = occ3
      endif ! back if ( mu1 > mu2 ) block
 
-! now the fermi level should lie in the regine [mu1, mu2]
-! refine the boundary to locate the fermi level
+     ! now the fermi level should lie in the regine [mu1, mu2].
+     ! we should refine the boundary to locate the fermi level.
      if ( abs(occ1 - desired) < abs(occ2 - desired) ) then
          mu3 = mu1
          occ3 = occ1
