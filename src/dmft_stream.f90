@@ -19,8 +19,8 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/07/2021 by li huang (last modified)
-!!! purpose :
+!!!           07/31/2021 by li huang (last modified)
+!!! purpose : setup the configuration parameters and read the input data.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -34,7 +34,7 @@
 !!
 !! setup control parameters for the dynamical mean-field theory engine.
 !! note that these parameters are extracted from the `dmft.in` file.
-!! this code can run even without `dmft.in` file
+!! this code can run even without `dmft.in` file.
 !!
   subroutine dmft_setup_tasks()
      use constants, only : dp
@@ -55,38 +55,40 @@
 
      implicit none
 
-! local variables
-! used to check whether the input file (dmft.in) exists
+!! local variables
+     ! used to check whether the input file (dmft.in) exists
      logical :: exists
 
-! setup default parameters
-!-------------------------------------------------------------------------
+!! [body
+
+     ! setup default parameters
+     !--------------------------------------------------------------------
      task   = 1         ! computational task
      axis   = 1         ! type of frequency mesh
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      beta   = 8.00_dp   ! inverse temperature
      mc     = 0.0001_dp ! convergence criterion for fermi level search
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      lfermi = .true.    ! fermi level search
      ltetra = .true.    ! analytical tetrahedron algorithm
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! read in input file if possible, only master node can do it
+     ! read in input file if possible, only master node can do it
      if ( myid == master ) then
          exists = .false.
 
-! inquire file status: dmft.in
+         ! inquire file status: dmft.in
          inquire (file = 'dmft.in', exist = exists)
 
-! read in parameters, default setting should be overrided
+         ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-! create the file parser
+             ! create the file parser
              call p_create()
 
-! parse the config file
+             ! parse the config file
              call p_parse('dmft.in')
 
-! extract parameters
+             ! extract parameters
              call p_get('task'  , task  )
              call p_get('axis'  , axis  )
 
@@ -96,13 +98,13 @@
              call p_get('lfermi', lfermi)
              call p_get('ltetra', ltetra)
 
-! destroy the parser
+             ! destroy the parser
              call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
 ! since config parameters may be updated in master node, it is crucial
-! to broadcast config parameters from root to all children processes
+! to broadcast config parameters from root to all children processes.
 # if defined (MPI)
 
      call mp_bcast( task  , master )
