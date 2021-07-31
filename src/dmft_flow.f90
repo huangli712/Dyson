@@ -883,7 +883,7 @@
 !!
 !! @sub cal_gamma
 !!
-!! try to calculate correlation-induced correction for density matrix
+!! try to calculate correlation-induced correction for density matrix.
 !!
   subroutine cal_gamma(ecorr)
      use constants, only : dp
@@ -895,31 +895,38 @@
 
      implicit none
 
-! external arguments
-! correction to band energy
+!! external arguments
+     ! correction to band energy
      real(dp), intent(out) :: ecorr
 
-! local variables
-! status flag
+!! local variables
+     ! status flag
      integer  :: istat
 
-! dft + dmft density matrix
+     ! dft + dmft density matrix
      complex(dp), allocatable :: kocc(:,:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(kocc(qbnd,qbnd,nkpt,nspin), stat = istat)
+     !
      if ( istat /= 0 ) then
          call s_print_error('cal_gamma','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! calculate new density matrix based on the dft + dmft eigenvalues
+     ! calculate new density matrix based
+     ! on the dft + dmft eigenvalues.
      call cal_denmat(kocc)
 
-! calculate the difference between dft and dft + dmft density matrices
+     ! calculate the difference between dft
+     ! and dft + dmft density matrices.
      call correction(kocc, gamma, ecorr)
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(kocc) ) deallocate(kocc)
+
+!! body]
 
      return
   end subroutine cal_gamma
