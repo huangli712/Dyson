@@ -1058,25 +1058,25 @@
          call s_print_error('cal_occupy','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! check axis
+     ! check axis
      call s_assert2(axis == 1, 'axis is wrong')
 
-! reset zocc and gloc
+     ! reset zocc and gloc
      zocc = czero
      gloc = czero
 
-! loop over spins and k-points to perform k-summation to determine the
-! local green's function
+     ! loop over spins and k-points to perform k-summation to determine
+     ! the local green's function
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
 
-! determine the band window
-! see remarks in cal_nelect()
+             ! determine the band window
+             ! see remarks in cal_nelect()
              bs = kwin(k,s,1,i_wnd(1))
              be = kwin(k,s,2,i_wnd(1))
              cbnd = be - bs + 1
 
-! here, the asymptotic part is substracted
+             ! here, the asymptotic part is substracted
              do m=1,nmesh
                  caux = czi * fmesh(m) + fermi
                  do b=1,cbnd
@@ -1088,44 +1088,51 @@
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
-! calculate summation of the local green's function
+     ! calculate summation of the local green's function
      do s=1,nspin
          do b=1,qbnd
              zocc(b,s) = sum( gloc(b,:,s) ) / real(nkpt) * ( two / beta )
          enddo ! over b={1,cbnd} loop
      enddo ! over s={1,nspin} loop
 
-! consider the contribution from asymptotic part
+     ! consider the contribution from asymptotic part
      do s=1,nspin
          do k=1,nkpt
-! determine the band window
-! see remarks in cal_nelect()
+
+             ! determine the band window
+             ! see remarks in cal_nelect()
              bs = kwin(k,s,1,i_wnd(1))
              be = kwin(k,s,2,i_wnd(1))
              cbnd = be - bs + 1
+
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
                  zocc(b,s) = zocc(b,s) + fermi_dirac( real(caux) ) * weight(k) / real(nkpt)
              enddo ! over b={1,cbnd} loop
+
          enddo ! over k={1,nkpt} loop
      enddo ! over s={1,nspin} loop
 
-! actually, we should consider the correction due to finite frequency
-! point here. later we will implement it.
-!
-! TO_BE_DONE
+     !
+     ! actually, we should consider the correction due to finite
+     ! frequency point here. later we will implement it.
+     !
+     ! TO_BE_DONE
+     !
 
-! sum up the density matrix
+     ! sum up the density matrix
      val = real( sum(zocc) )
 
-! consider the spins
+     ! consider the spins
      if ( nspin == 1 ) then
          val = val * two
      endif ! back if ( nspin == 1 ) block
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(zocc) ) deallocate(zocc)
      if ( allocated(gloc) ) deallocate(gloc)
+
+!! body]
 
      return
   end subroutine cal_occupy
@@ -1133,7 +1140,7 @@
 !!
 !! @sub cal_denmat
 !!
-!! try to calculate the dft + dmft density matrix for given fermi level
+!! try to calculate the dft + dmft density matrix for given fermi level.
 !!
   subroutine cal_denmat(kocc)
      use constants, only : dp, mystd
@@ -1156,64 +1163,66 @@
 
      implicit none
 
-! external arguments
-! dft + dmft density matrix
+!! external arguments
+     ! dft + dmft density matrix
      complex(dp), intent(out) :: kocc(qbnd,qbnd,nkpt,nspin)
      
-! local variables
-! loop index for spin
+!! local variables
+     ! loop index for spin
      integer :: s
 
-! loop index for k-points
+     ! loop index for k-points
      integer :: k
 
-! loop index for orbitals
+     ! loop index for orbitals
      integer :: p, q
 
-! loop index for impurity sites
+     ! loop index for impurity sites
      integer :: t
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer :: cbnd
 
-! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given impurity site
      integer :: cdim
 
-! band window: start index and end index for bands
+     ! band window: start index and end index for bands
      integer :: bs, be
 
-! status flag
+     ! status flag
      integer :: istat
 
-! orbital density for given k and spin
+     ! orbital density for given k and spin
      complex(dp) :: density
 
-! dummy array: for self-energy function (upfolded to Kohn-Sham basis)
+     ! dummy array: for self-energy function (upfolded to Kohn-Sham basis)
      complex(dp), allocatable :: Sk(:,:,:)
      complex(dp), allocatable :: Xk(:,:,:)
 
-! dummy array: for lattice green's function
+     ! dummy array: for lattice green's function
      complex(dp), allocatable :: Gk(:,:,:)
 
-! dummy array: used to perform mpi reduce operation for kocc
+     ! dummy array: used to perform mpi reduce operation for kocc
      complex(dp), allocatable :: kocc_mpi(:,:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(kocc_mpi(qbnd,qbnd,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_denmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! reset cbnd and cdim. they will be updated later
-! cbnd should be k-dependent and cdim should be impurity-dependent.
+     ! reset cbnd and cdim. they will be updated later.
+     ! cbnd should be k-dependent and cdim should be impurity-dependent.
      cbnd = 0
      cdim = 0
 
-! reset kocc and kocc_mpi
+     ! reset kocc and kocc_mpi
      kocc = czero
      kocc_mpi = czero
 
-! print some useful information
+     ! print some useful information
      if ( myid == master ) then
          write(mystd,'(4X,a)') 'calculate dft + dmft density matrix'
      endif ! back if ( myid == master ) block
@@ -1225,7 +1234,7 @@
      !
 # endif /* MPI */
 
-! loop over spins and k-points
+     ! loop over spins and k-points
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
