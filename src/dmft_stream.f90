@@ -1006,7 +1006,7 @@
 !!
 !! @sub dmft_input_eigen
 !!
-!! read in band eigenvalues and band occupations (see module dmft_eigen)
+!! read in band eigenvalues and band occupations (see module dmft_eigen).
 !!
   subroutine dmft_input_eigen()
      use constants, only : mytmp
@@ -1021,45 +1021,47 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer :: b
      integer :: k
      integer :: s
 
-! dummy integer variables
+     ! dummy integer variables
      integer :: itmp
 
-! used to check whether the input file (eigen.ir) exists
+     ! used to check whether the input file (eigen.ir) exists
      logical :: exists
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in Kohn-Sham band structure information. this code can not run
-! without the file `eigen.ir`.
-!-------------------------------------------------------------------------
+!! [body
+
+     ! read in Kohn-Sham band structure information.
+     ! this code can not run without the file `eigen.ir`.
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'eigen.ir', exist = exists)
 
-! file eigen.ir must be present
+         ! file eigen.ir must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_eigen','file eigen.ir is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file eigen.ir for reading
+         ! open file eigen.ir for reading
          open(mytmp, file='eigen.ir', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
          read(mytmp,*) ! empty line
 
-! check nband, nkpt, and nspin
+         ! check nband, nkpt, and nspin
          read(mytmp,*) chr1, chr2, itmp
          call s_assert2(itmp == nband, 'nband is wrong')
          !
@@ -1071,7 +1073,7 @@
          !
          read(mytmp,*) ! empty line
 
-! read eigenvalues and occupations data
+         ! read eigenvalues and occupations data
          do s=1,nspin
              do k=1,nkpt
                  do b=1,nband
@@ -1080,26 +1082,28 @@
              enddo ! over k={1,nkpt} loop
          enddo ! over s={1,nspin} loop
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( enk  , master )
      call mp_bcast(occupy, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine dmft_input_eigen
@@ -1108,7 +1112,7 @@
 !! @sub dmft_input_projs
 !!
 !! read in overlap matrix between Kohn-Sham wavefunctions and local
-!! orbitals, i.e., the local orbital projectors (see module dmft_projs)
+!! orbitals, i.e., the local orbital projectors (see module dmft_projs).
 !!
   subroutine dmft_input_projs()
      use constants, only : dp, mytmp
@@ -1125,78 +1129,82 @@
 
      implicit none
 
-! local variables
-! loop index
+!! local variables
+     ! loop index
      integer  :: g
      integer  :: b
      integer  :: k
      integer  :: s
      integer  :: d
 
-! dummy integer variables
+     ! dummy integer variables
      integer  :: itmp
 
-! used to check whether the input file (projs.ir) exists
+     ! used to check whether the input file (projs.ir) exists
      logical  :: exists
 
-! dummy real variables
+     ! dummy real variables
      real(dp) :: re, im
 
-! dummy character variables
+     ! dummy character variables
      character(len = 5) :: chr1
      character(len = 2) :: chr2
 
-! read in local orbital projectors. this code can not run without the
-! file `projs.ir`.
-!-------------------------------------------------------------------------
+!! [body
+
+     ! read in local orbital projectors.
+     ! this code can not run without the file `projs.ir`.
+     !--------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
-! inquire about file's existence
+         ! inquire about file's existence
          inquire (file = 'projs.ir', exist = exists)
 
-! file projs.ir must be present
+         ! file projs.ir must be present
          if ( exists .eqv. .false. ) then
              call s_print_error('dmft_input_projs','file projs.ir is absent')
          endif ! back if ( exists .eqv. .false. ) block
 
-! open file projs.ir for reading
+         ! open file projs.ir for reading
          open(mytmp, file='projs.ir', form='formatted', status='unknown')
 
-! skip header
+         ! skip header
          read(mytmp,*)
          read(mytmp,*)
 
-! go through each group of projectors and read in the data
+         ! go through each group of projectors and read in the data
          do g=1,ngrp
 
-! check group
+             ! check group
              read(mytmp,*) ! empty line
              read(mytmp,*) chr1, chr2, itmp
              call s_assert2(itmp == g, 'group is wrong')
 
-! check nproj
+             ! check nproj
              read(mytmp,*) chr1, chr2, itmp
              call s_assert2(itmp == ndim(g), 'nproj is wrong')
 
-! check nband
-! here, `nband` is not the number of bands in the dft calculations. it is
-! just the number of bands that contained in the band window for building
-! the local orbital projection. for different groups of projectors, the
-! corresponding `nband` might be different.
+             ! check nband
+             !
+             ! here, `nband` is not the number of bands used in the dft
+             ! calculations. it is just the number of bands that contained
+             ! in the band window for constructing the local orbital
+             ! projection. for different groups of projectors, the related
+             ! `nband` could be and might be different.
              read(mytmp,*) chr1, chr2, itmp
              call s_assert2(itmp == nbnd(g), 'nband is wrong')
 
-! check nkpt
+             ! check nkpt
              read(mytmp,*) chr1, chr2, itmp
              call s_assert2(itmp == nkpt, 'nkpt is wrong')
 
-! check nspin
+             ! check nspin
              read(mytmp,*) chr1, chr2, itmp
              call s_assert2(itmp == nspin, 'nspin is wrong')
              read(mytmp,*) ! empty line
 
-! parse the data
+             ! parse the data
              do s=1,nspin
                  do k=1,nkpt
                      do b=1,nbnd(g)
@@ -1211,23 +1219,23 @@
 
          enddo ! over g={1,ngrp} loop
 
-! close file handler
+         ! close file handler
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast(chipsi, master )
      call mp_bcast(psichi, master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
