@@ -14,14 +14,10 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)
 !!!           07/31/2021 by li huang (last modified)
-!!! purpose :
+!!! purpose : implement the main work flow of dft + dmft calculation.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
-
-!!========================================================================
-!!>>> driver subroutines: layer 3                                      <<<
-!!========================================================================
 
 !!
 !! @sub cal_sigoo
@@ -44,34 +40,33 @@
 
      implicit none
 
-! local parameters
-! how many frequency points are included to calculate the asymptotic
-! values of Matsubara self-energy function
+!! local parameters
+     ! how many frequency points are included to calculate the asymptotic
+     ! values of Matsubara self-energy function.
      integer, parameter :: mcut = 16
 
-! local variables
-! loop index for impurity sites
+!! local variables
+     ! loop index for impurity sites
      integer :: t
 
-! loop index for spins
+     ! loop index for spins
      integer :: s
 
-! loop index for frequency mesh
+     ! loop index for frequency mesh
      integer :: m
 
-! status flag
+     ! status flag
      integer :: istat
 
-! dummy array for the indices of frequency points
+     ! dummy array for the indices of frequency points
      integer, allocatable :: ip(:)
 
-! dummy array for the Matsubara self-energy functions
+     ! dummy array for the Matsubara self-energy functions
      complex(dp), allocatable :: Sm(:,:)
 
-! check working axis
-     call s_assert2(axis == 1, 'axis is wrong')
+!! [body
 
-! allocate memory
+     ! allocate memory
      allocate(ip(mcut), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_sigoo','can not allocate enough memory')
@@ -82,17 +77,22 @@
          call s_print_error('cal_sigoo','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! reset sigoo
+     ! check working axis.
+     ! now only the matsubara frequency axis is supported.
+     call s_assert2(axis == 1, 'axis is wrong')
+
+     ! reset sigoo
      sigoo = czero
 
-! build array for indices of frequency points
+     ! build integer array for indices of frequency points
      call s_linspace_i(nmesh + 1 - mcut, nmesh, mcut, ip)
 
-! loop over quantum impurities, spins, and frequency points
-!
-! we count the last `mcut` frequency points, then we try to calculate
-! the averaged values. up to now, the double counting terms have not
-! been substracted from sigma. in other words, sigma is still bare.
+     ! loop over quantum impurities, spins, and frequency points
+     !
+     ! we count the last `mcut` frequency points, then we try to
+     ! calculate the averaged values. up to now, the double counting
+     ! terms have not been substracted from sigma. in other words,
+     ! sigma is still bare.
      do t=1,nsite
          do s=1,nspin
              Sm = czero
@@ -105,12 +105,14 @@
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
 
-! we substract the double counting terms from sigoo
+     ! we substract the double counting terms from sigoo
      sigoo = sigoo - sigdc
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(ip) ) deallocate(ip)
      if ( allocated(Sm) ) deallocate(Sm)
+
+!! body]
 
      return
   end subroutine cal_sigoo
