@@ -195,23 +195,27 @@
 
      implicit none
 
-! external arguments
-! number of dft bands for given k-point and spin
+!! external arguments
+     ! number of dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-! effective hamiltonian: H(k) + \Sigma(i\omega_n)
+     ! effective hamiltonian: H(k) + \Sigma(i\omega_n)
      complex(dp), intent(in)  :: Hk(cbnd,cbnd,nmesh)
 
-! resulting eigenvalues
+     ! resulting eigenvalues
      complex(dp), intent(out) :: Ek(cbnd,nmesh)
 
-! local variables
-! loop index for frequency mesh
+!! local variables
+     ! loop index for frequency mesh
      integer :: m
+
+!! [body
 
      FREQ_LOOP: do m=1,nmesh
          call s_eigvals_zg(cbnd, cbnd, Hk(:,:,m), Ek(:,m))
      enddo FREQ_LOOP ! over m={1,nmesh} loop
+
+!! body]
 
      return
   end subroutine cal_hk_ek
