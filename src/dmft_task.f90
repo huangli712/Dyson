@@ -7,13 +7,15 @@
 !!!           dmft_try4
 !!!           dmft_try5
 !!!           dmft_try6
+!!!           dmft_try7
+!!!           dmft_try8
 !!!           dmft_try999
 !!! source  : dmft_task.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)
 !!!           07/31/2021 by li huang (last modified)
-!!! purpose :
+!!! purpose : driver subroutines.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -25,28 +27,32 @@
 !!
 !! @sub dmft_driver
 !!
-!! core subroutine, dispatch all the computational tasks
+!! core subroutine, dispatch all the computational tasks.
 !!
   subroutine dmft_driver()
      use control, only : task
 
      implicit none
 
-! we have to preprocess the self-energy functions at first
-! calculate: sigma -> sigoo -> sigoo - sigdc
+!! [body
+
+     ! we have to preprocess the self-energy functions at first.
+     ! data flow: sigma -> sigoo -> sigoo - sigdc
      call cal_sigoo()
 
-! calculate: sigma -> sigma - sigdc (sigma is updated)
+     ! data flow: sigma -> sigma - sigdc (sigma is updated)
      call cal_sigma()
 
-! main scheduler
-! task = 1, calculate hybridization function, for one-shot calculation
-! task = 2, calculate density correction, for self-consistent calculation
-! task = 3, calculate fermi level
-! task = 4, calculate impurity levels
-! task = 5, calculate complex dft + dmft eigenvalues
-! task = 6, calculate lattice green's functions
-! task = 999, only for test
+     ! main scheduler
+     ! task = 1, calculate hybridization function, for one-shot calculation.
+     ! task = 2, calculate density correction, for self-consistent calculation.
+     ! task = 3, calculate fermi level.
+     ! task = 4, calculate impurity levels.
+     ! task = 5, calculate complex dft + dmft eigenvalues.
+     ! task = 6, calculate lattice green's functions.
+     ! task = 7, calculate density of states.
+     ! task = 8, calculate physical properties.
+     ! task = 999, only for test.
      DISPATCHER: select case ( task )
          !
          case (1)
@@ -74,6 +80,8 @@
              call s_print_error('dmft_driver','this feature is not supported')
          !
      end select DISPATCHER
+
+!! body]
 
      return
   end subroutine dmft_driver
