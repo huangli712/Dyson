@@ -1351,62 +1351,64 @@
 
      implicit none
 
-! external arguments
-! eigenvalues for H(k) + \Sigma(i\omega_n)
+!! external arguments
+     ! eigenvalues for H(k) + \Sigma(i\omega_n)
      complex(dp), intent(out) :: eigs(qbnd,nmesh,nkpt,nspin)
 
-! eigenvalues for H(k) + \Sigma(\infty)
+     ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), intent(out) :: einf(qbnd,nkpt,nspin)
 
-! local variables
-! loop index for spins
+!! local variables
+     ! loop index for spins
      integer :: s
 
-! loop index for k-points
+     ! loop index for k-points
      integer :: k
 
-! loop index for impurity sites
+     ! loop index for impurity sites
      integer :: t
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer :: cbnd
 
-! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given impurity site
      integer :: cdim
 
-! band window: start index and end index for bands
+     ! band window: start index and end index for bands
      integer :: bs, be
 
-! status flag
+     ! status flag
      integer :: istat
 
-! self-energy functions, \Sigma(i\omega_n)
+     ! self-energy functions, \Sigma(i\omega_n)
      complex(dp), allocatable :: Sk(:,:,:)
      complex(dp), allocatable :: Xk(:,:,:)
 
-! H(k) + \Sigma(i\omega_n)
+     ! H(k) + \Sigma(i\omega_n)
      complex(dp), allocatable :: Hk(:,:,:)
 
-! eigenvalues for H(k) + \Sigma(i\omega_n)
+     ! eigenvalues for H(k) + \Sigma(i\omega_n)
      complex(dp), allocatable :: Ek(:,:)
 
-! self-energy functions, \Sigma(\infty)
+     ! self-energy functions, \Sigma(\infty)
      complex(dp), allocatable :: So(:,:)
      complex(dp), allocatable :: Xo(:,:)
 
-! H(k) + \Sigma(\infty)
+     ! H(k) + \Sigma(\infty)
      complex(dp), allocatable :: Ho(:,:)
 
-! eigenvalues for H(k) + \Sigma(\infty)
+     ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), allocatable :: Eo(:)
 
-! dummy array, used to perform mpi reduce operation for eigs
+     ! dummy array, used to perform mpi reduce operation for eigs
      complex(dp), allocatable :: eigs_mpi(:,:,:,:)
 
-! dummy array, used to perform mpi reduce operation for einf
+     ! dummy array, used to perform mpi reduce operation for einf
      complex(dp), allocatable :: einf_mpi(:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(eigs_mpi(qbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_eigsys','can not allocate enough memory')
@@ -1417,14 +1419,14 @@
          call s_print_error('cal_eigsys','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! initialization
+     ! initialization
      eigs = czero
      einf = czero
 
      eigs_mpi = czero
      einf_mpi = czero
 
-! print some useful information
+     ! print some useful information
      if ( myid == master ) then
          write(mystd,'(4X,a)') 'calculating dft + dmft eigenvalues'
      endif ! back if ( myid == master ) block
@@ -1436,28 +1438,28 @@
      !
 # endif /* MPI */
 
-! loop over spins and k-points
+     ! loop over spins and k-points
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
-! evaluate band window for the current k-point and spin
-! i_wnd(t) returns the corresponding band window for given impurity site t
-!
-! see remarks in cal_nelect() subroutine
+             ! evaluate band window for the current k-point and spin.
+             !
+             ! i_wnd(t) returns the corresponding band window for given
+             ! impurity site t. see remarks in cal_nelect() subroutine.
              t = 1 ! t is fixed to 1
              bs = kwin(k,s,1,i_wnd(t))
              be = kwin(k,s,2,i_wnd(t))
 
-! determine cbnd
+             ! determine cbnd
              cbnd = be - bs + 1
 
-! provide some useful information
+             ! provide some useful information
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
              write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
-! allocate memory
+             ! allocate memory
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Xk(cbnd,cbnd,nmesh), stat = istat)
              allocate(Hk(cbnd,cbnd,nmesh), stat = istat)
@@ -1476,7 +1478,7 @@
                  call s_print_error('cal_eigsys','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-! construct H(k) + \Sigma(i\omega_n) and diagonalize it
+             ! construct H(k) + \Sigma(i\omega_n) and diagonalize it
              Sk = czero
              !
              do t=1,nsite ! add contributions from all impurity sites
@@ -1492,7 +1494,7 @@
              !
              eigs(1:cbnd,:,k,s) = Ek
 
-! construct H(k) + \Sigma(\infty) and diagonalize it
+             ! construct H(k) + \Sigma(\infty) and diagonalize it
              So = czero
              !
              do t=1,nsite ! add contributions from all impurity sites
@@ -1508,7 +1510,7 @@
              !
              einf(1:cbnd,k,s) = Eo
 
-! deallocate memory
+             ! deallocate memory
              if ( allocated(So) ) deallocate(So)
              if ( allocated(Xo) ) deallocate(Xo)
              if ( allocated(Ho) ) deallocate(Ho)
@@ -1539,13 +1541,15 @@
 
 # endif /* MPI */
 
-! save the final results
+     ! save the final results
      eigs = eigs_mpi
      einf = einf_mpi
 
-! deallocate memory
+     ! deallocate memory
      deallocate(eigs_mpi)
      deallocate(einf_mpi)
+
+!! body]
 
      return
   end subroutine cal_eigsys
