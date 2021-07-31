@@ -636,7 +636,7 @@
 !!
 !! @sub cal_weiss
 !!
-!! try to calculate local weiss's function for all impurity sites
+!! try to calculate local weiss's function for all impurity sites.
 !!
   subroutine cal_weiss()
      use constants, only : dp, mystd
@@ -653,36 +653,40 @@
 
      implicit none
 
-! local variables
-! loop index for impurity sites
+!! local variables
+     ! loop index for impurity sites
      integer :: t
 
-! loop index for spins
+     ! loop index for spins
      integer :: s
 
-! loop index for frequency mesh
+     ! loop index for frequency mesh
      integer :: m
 
-! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given impurity site
      integer :: cdim
 
-! status flag
+     ! status flag
      integer :: istat
 
-! dummy array: for local green's function
+     ! dummy array: for local green's function
      complex(dp), allocatable :: Gl(:,:)
 
-! reset weiss
+     ! reset weiss
      weiss = czero
 
-! print some useful information
+     ! print some useful information
      if ( myid == master ) then
          write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate weiss for', nsite, 'sites'
      endif ! back if ( myid == master ) block
 
 !
+! remarks:
+!
 ! try to calculate bath weiss's function using the following equation:
+!
 !     G^{-1}_{0} = G^{-1} + \Sigma
+!
 ! please be aware that the double counting terms have been substracted
 ! from the self-energy function. see subroutine cal_sigma().
 !
