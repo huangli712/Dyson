@@ -175,28 +175,28 @@
      nkpt   = 729       ! number of k-points
      nspin  = 1         ! number of spins
      ntet   = 4374      ! number of tetrahedra
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      ngrp   = 1         ! number of groups for projectors
      qdim   = 3         ! maximum number of projectors in groups
      nwnd   = 1         ! number of windows for projectors
      qbnd   = 5         ! maximum number of bands in windows
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      nsite  = 1         ! number of impurity sites
      nmesh  = 8193      ! number of frequency points
-!-------------------------------------------------------------------------
+     !--------------------------------------------------------------------
      scale  = 4.00_dp   ! scale factor for lattice constants
      fermi  = 0.00_dp   ! default fermi level
      volt   = 1.00_dp   ! volume of a tetrahedron
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! read in input file if possible, only master node can do it
+     ! read in input file if possible, only master node can do it
      if ( myid == master ) then
          exists = .false.
 
-! inquire file status: params.ir
+         ! inquire file status: params.ir
          inquire (file = 'params.ir', exist = exists)
 
-! read in parameters, default setting should be overrided
+         ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
 
              open(mytmp, file='params.ir', form='formatted', status='unknown')
@@ -245,48 +245,50 @@
      endif ! back if ( myid == master ) block
 
 ! since config parameters may be updated in master node, it is crucial
-! to broadcast config parameters from root to all children processes
+! to broadcast config parameters from root to all children processes.
 # if defined (MPI)
 
-! for lattice block
+     ! for lattice block
      call mp_bcast( model , master )
      call mp_bcast( scale , master )
      call mp_bcast( nsort , master )
      call mp_bcast( natom , master )
      call mp_barrier()
 
-! for eigen block
+     ! for eigen block
      call mp_bcast( nband , master )
      call mp_bcast( nkpt  , master )
      call mp_bcast( nspin , master )
      call mp_bcast( fermi , master )
      call mp_barrier()
 
-! for tetra block
+     ! for tetra block
      call mp_bcast( ntet  , master )
      call mp_bcast( volt  , master )
      call mp_barrier()
 
-! for group block
+     ! for group block
      call mp_bcast( ngrp  , master )
      call mp_bcast( qdim  , master )
      call mp_barrier()
 
-! for window block
+     ! for window block
      call mp_bcast( nwnd  , master )
      call mp_bcast( qbnd  , master )
      call mp_barrier()
 
-! for sigma block
+     ! for sigma block
      call mp_bcast( nsite , master )
      call mp_bcast( nmesh , master )
      call mp_barrier()
 
 # endif  /* MPI */
 
-! reset fermi to zero, because it was calibrated by the adaptor.
-! see ZenCore -> plo.jl -> plo_fermi() function for more details.
+     ! reset fermi to zero, because it was calibrated by the adaptor.
+     ! see ZenCore/src/plo.jl/plo_fermi() function for more details.
      fermi = zero
+
+!! body]
 
      return
   end subroutine dmft_setup_param
