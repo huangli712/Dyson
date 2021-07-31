@@ -780,11 +780,11 @@
      gamma = czero
      gamma_mpi = czero
 
-! reset ecorr
+     ! reset ecorr
      ecorr = zero
      ecorr_mpi = zero
 
-! print some useful information
+     ! print some useful information
      if ( myid == master ) then
          write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate correction for density matrix'
      endif ! back if ( myid == master ) block
@@ -796,13 +796,14 @@
      !
 # endif /* MPI */
 
-! loop over spins and k-points
+     ! loop over spins and k-points
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
-! evaluate band window for the current k-point and spin
-! i_wnd(t) returns the corresponding band window for given impurity site t
-! see remarks in cal_nelect() for more details
+             ! evaluate band window for the current k-point and spin.
+             !
+             ! i_wnd(t) returns the corresponding band window for given
+             ! impurity site t. see remarks in cal_nelect() for more details.
              t = 1 ! t is fixed to 1
              bs = kwin(k,s,1,i_wnd(t))
              be = kwin(k,s,2,i_wnd(t))
