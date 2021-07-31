@@ -473,31 +473,33 @@
      ! you can insert your codes here.
      Fm = fermi - enk(bs:be,k,s)
 
-! loop over frequency points
+     ! loop over frequency points
      FREQ_LOOP: do m=1,nmesh
 
-! consider imaginary axis or real axis
+         ! consider imaginary axis or real axis
          if ( axis == 1 ) then
              Em = czi * fmesh(m) + Fm
          else
              Em = fmesh(m) + Fm
          endif ! back if ( axis == 1 ) block
 
-! convert Em (vector) to Hm (diagonal matrix)
+         ! convert Em (vector) to Hm (diagonal matrix)
          call s_diag_z(cbnd, Em, Hm)
 
-! substract self-energy function from the hamiltonian
+         ! substract self-energy function from the hamiltonian
          Gk(:,:,m) = Hm - Sk(:,:,m)
 
-! calculate lattice green's function by direct inversion
+         ! calculate lattice green's function by direct inversion
          call s_inv_z(cbnd, Gk(:,:,m))
 
      enddo FREQ_LOOP ! over m={1,nmesh} loop
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(Fm) ) deallocate(Fm)
      if ( allocated(Em) ) deallocate(Em)
      if ( allocated(Hm) ) deallocate(Hm)
+
+!! body]
 
      return
   end subroutine cal_sk_gk
