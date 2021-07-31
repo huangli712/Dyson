@@ -372,17 +372,21 @@
 
      implicit none
 
-! external arguments
-! number of dft bands for given k-point and spin
+!! external arguments
+     ! number of dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-! effective hamiltonian: H(k) + \Sigma(\infty)
+     ! effective hamiltonian: H(k) + \Sigma(\infty)
      complex(dp), intent(in)  :: Ho(cbnd,cbnd)
 
-! resulting eigenvalues
+     ! resulting eigenvalues
      complex(dp), intent(out) :: Eo(cbnd)
 
+!! [body
+
      call s_eigvals_zg(cbnd, cbnd, Ho, Eo)
+
+!! body]
 
      return
   end subroutine cal_ho_eo
