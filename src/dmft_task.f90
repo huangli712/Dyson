@@ -73,6 +73,12 @@
          case (6)
              call dmft_try6()
          !
+         case (7)
+             call dmft_try7()
+         !
+         case (8)
+             call dmft_try8()
+         !
          case (999)
              call dmft_try999()
          !
