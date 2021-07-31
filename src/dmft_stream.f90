@@ -654,24 +654,26 @@
          close(mytmp)
 
      endif ! back if ( myid == master ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast data from master node to all children nodes
 # if defined (MPI)
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
-! broadcast data
+     ! broadcast data
      call mp_bcast( bmin , master )
      call mp_bcast( bmax , master )
      call mp_bcast( nbnd , master )
      call mp_bcast( kwin , master )
 
-! block until all processes have reached here
+     ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
+
+!! body]
 
      return
   end subroutine dmft_input_window
