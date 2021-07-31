@@ -400,7 +400,7 @@
 !!
 !! try to calculate lattice green's function at given k-point and spin.
 !! this subroutine needs the self-energy function at Kohn-Sham basis (i.e
-!! `Sk`), that is the reason why it is called `cal_sk_gk`. note that Sk
+!! `Sk`), that is the reason why it is named as `cal_sk_gk`. note that Sk
 !! have to contain the full contributions from all impurity sites.
 !!
   subroutine cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
@@ -416,40 +416,42 @@
 
      implicit none
 
-! external arguments
-! number of dft bands for given k-point and spin
+!! external arguments
+     ! number of dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-! band window: start index and end index for bands
+     ! band window: start index and end index for bands
      integer, intent(in) :: bs, be
 
-! index for k-points
+     ! index for k-points
      integer, intent(in) :: k
 
-! index for spin
+     ! index for spin
      integer, intent(in) :: s
 
-! self-energy function at Kohn-Sham basis
+     ! self-energy function at Kohn-Sham basis
      complex(dp), intent(in)  :: Sk(cbnd,cbnd,nmesh)
 
-! lattice green's function at given k-point and spin
+     ! lattice green's function at given k-point and spin
      complex(dp), intent(out) :: Gk(cbnd,cbnd,nmesh)
 
-! local variables
-! loop index for frequency mesh
+!! local variables
+     ! loop index for frequency mesh
      integer :: m
 
-! status flag
+     ! status flag
      integer :: istat
 
-! dummy array: for band dispersion (vector)
+     ! dummy array: for band dispersion (vector)
      complex(dp), allocatable :: Fm(:)
      complex(dp), allocatable :: Em(:)
 
-! dummy array: for effective hamiltonian (diagonal matrix)
+     ! dummy array: for effective hamiltonian (diagonal matrix)
      complex(dp), allocatable :: Hm(:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(Fm(cbnd),      stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_sk_gk','can not allocate enough memory')
@@ -465,8 +467,10 @@
          call s_print_error('cal_sk_gk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! evaluate Fm, which is k-dependent, but frequency-independent
-! if you want to consider magnetic field, you can add your codes here
+     ! evaluate Fm, which is k-dependent, but frequency-independent.
+     !
+     ! if you want to consider magnetic or the other external fields,
+     ! you can insert your codes here.
      Fm = fermi - enk(bs:be,k,s)
 
 ! loop over frequency points
