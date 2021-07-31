@@ -555,7 +555,7 @@
 !!
 !! @sub dichotomy
 !!
-!! try to locate the fermi level with the bisection method
+!! try to locate the fermi level with the bisection method.
 !!
   subroutine dichotomy(desired, eigs, einf)
      use constants, only : dp, mystd
@@ -570,46 +570,51 @@
 
      implicit none
 
-! external arguments
-! desired charge density
+!! external arguments
+     ! desired charge density
      real(dp), intent(in)    :: desired
 
-! eigenvalues for H(k) + \Sigma(i\omega_n)
+     ! eigenvalues for H(k) + \Sigma(i\omega_n)
      complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
 
-! eigenvalues for H(k) + \Sigma(\infty)
+     ! eigenvalues for H(k) + \Sigma(\infty)
      complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
 
-! local parameters
-! maximum number of loops for the bisection algorithm
+!! local parameters
+     ! maximum number of loops for the bisection algorithm
      integer, parameter  :: max_loops = 100
 
-! step for locating the energy boundary
+     ! step for locating the energy boundary
      real(dp), parameter :: delta = 0.5_dp
 
-! local variables
-! loop index for the bisection algorithm
+!! local variables
+     ! loop index for the bisection algorithm
      integer  :: loop
 
-! left boundary, right boundary, and the final result for the fermi level
+     ! left boundary, right boundary,
+     ! and the final result for the fermi level.
      real(dp) :: mu1, mu2, mu3
 
-! the corresponding charge density
+     ! the corresponding charge density
      real(dp) :: occ1, occ2, occ3
 
-! sign
+     ! sign
      real(dp) :: sign
 
-! print message in the terminal
+!! [body
+
+     ! print message in the terminal
      if ( myid == master ) then
          write(mystd,'(4X,a)') 'searching fermi level'
      endif ! back if ( myid == master ) block
 
-! initialization, determine mu1, mu2, occ1, occ2, and sign
-!
-! (1) if sign < 0, it means occ1 < desired, we should push mu2 to higher
-! energy. (2) if sign > 0, it means occ1 > desired. then mu1 will be the
-! right boundary, and we should push mu2 to lower energy
+     ! initialization, determine mu1, mu2, occ1, occ2, and sign.
+     !
+     ! (1) if sign < 0, it means occ1 < desired, we should push
+     !     mu2 to higher energy.
+     !
+     ! (2) if sign > 0, it means occ1 > desired. then mu1 will be
+     !     the right boundary, and we should push mu2 to lower energy.
      mu1 = fermi
      call cal_occupy(mu1, occ1, eigs, einf)
      !
