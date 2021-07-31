@@ -423,23 +423,27 @@
 
      implicit none
 
-! local variables
-! index for impurity sites
+!! local variables
+     ! index for impurity sites
      integer :: t
 
-! loop index for spins
+     ! loop index for spins
      integer :: s
 
-! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given impurity site
      integer :: cdim
 
-! substract the double counting terms from eimps to build eimpx
+!! [body
+
+     ! substract the double counting terms from eimps to build eimpx
      do t=1,nsite
          do s=1,nspin
              cdim = ndim(t)
              eimpx(1:cdim,1:cdim,s,t) = eimps(1:cdim,1:cdim,s,t) - sigdc(1:cdim,1:cdim,s,t)
          enddo ! over s={1,nspin} loop
      enddo ! over t={1,nsite} loop
+
+!! body]
 
      return
   end subroutine cal_eimpx
