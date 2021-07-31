@@ -672,6 +672,8 @@
      ! dummy array: for local green's function
      complex(dp), allocatable :: Gl(:,:)
 
+!! [body
+
      ! reset weiss
      weiss = czero
 
@@ -691,9 +693,9 @@
 ! from the self-energy function. see subroutine cal_sigma().
 !
 
-! loop over quantum impurities
+     ! loop over quantum impurities
      SITE_LOOP: do t=1,nsite
-! get size of orbital space
+         ! get size of orbital space
          cdim = ndim(t)
 
 ! allocate memory
