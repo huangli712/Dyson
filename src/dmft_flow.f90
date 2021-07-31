@@ -262,39 +262,41 @@
 
      implicit none
 
-! local variables
-! loop index for spins
+!! local variables
+     ! loop index for spins
      integer :: s
 
-! loop index for k-points
+     ! loop index for k-points
      integer :: k
 
-! index for impurity sites
+     ! index for impurity sites
      integer :: t
 
-! number of dft bands for given k-point and spin
+     ! number of dft bands for given k-point and spin
      integer :: cbnd
 
-! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given impurity site
      integer :: cdim
 
-! band window: start index and end index for bands
+     ! band window: start index and end index for bands
      integer :: bs, be
 
-! status flag
+     ! status flag
      integer :: istat
 
-! dummy arrays, used to build effective hamiltonian
+     ! dummy arrays, used to build effective hamiltonian
      complex(dp), allocatable :: Em(:)
      complex(dp), allocatable :: Hm(:,:)
 
-! dummy array, used to build site-dependent impurity level
+     ! dummy array, used to build site-dependent impurity level
      complex(dp), allocatable :: Xe(:,:)
 
-! dummy array, used to perform mpi reduce operation for eimps
+     ! dummy array, used to perform mpi reduce operation for eimps
      complex(dp), allocatable :: eimps_mpi(:,:,:,:)
 
-! allocate memory
+!! [body
+
+     ! allocate memory
      allocate(Xe(qdim,qdim), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_eimps','can not allocate enough memory')
@@ -305,16 +307,16 @@
          call s_print_error('cal_eimps','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! reset cbnd and cdim. they will be updated later
-! cbnd should be k-dependent and cdim should be impurity-dependent.
+     ! reset cbnd and cdim. they will be updated later.
+     ! cbnd should be k-dependent and cdim should be impurity-dependent.
      cbnd = 0
      cdim = 0
 
-! reset eimps
+     ! reset eimps
      eimps = czero
      eimps_mpi = czero
 
-! print some useful information
+     ! print some useful information
      if ( myid == master ) then
          write(mystd,'(4X,a,2X,i2,2X,a)') 'calculate eimps for', nsite, 'sites'
          write(mystd,'(4X,a,2X,i4,2X,a)') 'add contributions from', nkpt, 'kpoints'
@@ -330,23 +332,24 @@
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
-! evaluate band window for the current k-point and spin
-! i_wnd(t) returns the corresponding band window for given impurity site t
-! see remarks in cal_nelect()
+             ! evaluate band window for the current k-point and spin.
+             !
+             ! i_wnd(t) returns the corresponding band window for given
+             ! impurity site t. see remarks in cal_nelect().
              t = 1 ! t is fixed to 1
              bs = kwin(k,s,1,i_wnd(t))
              be = kwin(k,s,2,i_wnd(t))
 
-! determine cbnd
+             ! determine cbnd
              cbnd = be - bs + 1
 
-! provide some useful information
+             ! provide some useful information
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
              write(mystd,'(2X,a,i5)',advance='no') 'kpnt: ', k
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
-! allocate memory
+             ! allocate memory
              allocate(Em(cbnd),      stat = istat)
              allocate(Hm(cbnd,cbnd), stat = istat)
              !
@@ -354,13 +357,15 @@
                  call s_print_error('cal_eimps','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-! evaluate Em, which is the eigenvalues (substracted by the fermi level)
+             ! evaluate `Em`, which is the eigenvalues substracted
+             ! by the fermi level.
              Em = enk(bs:be,k,s) - fermi
 
-! convert `Em` to diagonal matrix `Hm`
+             ! convert `Em` to diagonal matrix `Hm`
              call s_diag_z(cbnd, Em, Hm)
 
-! project effective hamiltonian from Kohn-Sham basis to local basis
+             ! project effective hamiltonian from the Kohn-Sham basis
+             ! to the local basis, and then sum it up.
              do t=1,nsite
                  Xe = czero
                  cdim = ndim(t)
@@ -368,7 +373,7 @@
                  eimps(:,:,s,t) = eimps(:,:,s,t) + Xe * weight(k)
              enddo ! over t={1,nsite} loop
 
-! deallocate memory
+             ! deallocate memory
              if ( allocated(Em) ) deallocate(Em)
              if ( allocated(Hm) ) deallocate(Hm)
 
@@ -390,12 +395,14 @@
 
 # endif /* MPI */
 
-! renormalize the impurity levels
+     ! renormalize the impurity levels
      eimps = eimps_mpi / float(nkpt)
 
-! deallocate memory
+     ! deallocate memory
      if ( allocated(Xe) ) deallocate(Xe)
      if ( allocated(eimps_mpi) ) deallocate(eimps_mpi)
+
+!! body]
 
      return
   end subroutine cal_eimps
