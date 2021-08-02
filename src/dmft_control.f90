@@ -6,7 +6,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/30/2021 by li huang (last modified)
+!!!           08/03/2021 by li huang (last modified)
 !!! purpose : define the global control variables.
 !!! status  : unstable
 !!! comment :
@@ -333,21 +333,21 @@
 !!
 !! version string, version number + date info. + status info.
 !!
-     character(len=20), public, parameter :: V_FULL = 'v0.7.0 @ 2021.07.30D'
+     character(len=20), public, parameter :: V_FULL = 'v0.7.1 @ 2021.08.03D'
 
 !!
 !! @var V_CURR
 !!
 !! version string, only version number
 !!
-     character(len=06), public, parameter :: V_CURR = 'v0.7.0'
+     character(len=06), public, parameter :: V_CURR = 'v0.7.1'
 
 !!
 !! @var V_DATE
 !!
 !! version string, only date info.
 !!
-     character(len=11), public, parameter :: V_DATE = '2021.07.30'
+     character(len=11), public, parameter :: V_DATE = '2021.08.03'
 
 !!
 !! @var V_STAT
