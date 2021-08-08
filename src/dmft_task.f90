@@ -254,10 +254,30 @@
      implicit none
 
 !! local variables
+     ! status flag
+     integer  :: istat
+
      ! lattice occupancy
      real(dp) :: occup
 
+     ! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
+     complex(dp), allocatable :: eigs(:,:,:,:)
+
+     ! dummy array, used to save the eigenvalues of H + \Sigma(ioo)
+     complex(dp), allocatable :: einf(:,:,:)
+
 !! [body
+
+     ! allocate memory
+     allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('dmft_try5','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
+     allocate(einf(qbnd,nkpt,nspin),       stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('dmft_try5','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      ! try to search the fermi level
      if ( myid == master ) then
@@ -544,7 +564,8 @@
 !! can be used in the postprocessing procedure.
 !!
   subroutine dmft_try5()
-     use constants, only : dp, mystd
+     use constants, only : dp
+     use constants, only : mystd
 
      use control, only : cname
      use control, only : nkpt, nspin
