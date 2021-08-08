@@ -249,6 +249,7 @@
      use control, only : fermi
      use control, only : myid, master
 
+     use context, only : qbnd
      use context, only : eimps, eimpx
      use context, only : green
      use context, only : weiss, delta
