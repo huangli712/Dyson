@@ -6,6 +6,7 @@
 !!!           cal_eimps
 !!!           cal_eimpx
 !!!           cal_green
+!!!           cal_green_tetra
 !!!           cal_weiss
 !!!           cal_delta
 !!!           cal_gamma
@@ -13,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)
-!!!           07/31/2021 by li huang (last modified)
+!!!           08/08/2021 by li huang (last modified)
 !!! purpose : implement the main work flow of dft + dmft calculation.
 !!! status  : unstable
 !!! comment :
@@ -632,6 +633,15 @@
 
      return
   end subroutine cal_green
+
+!!
+!! @sub cal_green_tetra
+!!
+  subroutine cal_green_tetra()
+     implicit none
+
+     return
+  end subroutine cal_green_tetra
 
 !!
 !! @sub cal_weiss
