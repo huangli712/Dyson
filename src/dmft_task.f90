@@ -293,10 +293,6 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-
-
-
-
      ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
@@ -305,7 +301,11 @@
      occup = zero
      !
      if ( lfermi .eqv. .true. ) then
-         call cal_fermi(occup)
+         ! calculate the nominal charge density
+         call cal_nelect(occup)
+         !
+         ! search the fermi level using bisection algorithm
+         call dichotomy(occup, eigs, einf)
      else
          if ( myid == master ) then
              write(mystd,'(4X,a)') 'SKIP'
@@ -386,6 +386,10 @@
          !
          write(mystd,*)
      endif ! back if ( myid == master ) block
+
+     ! deallocate memory
+     if ( allocated(eigs) ) deallocate(eigs)
+     if ( allocated(einf) ) deallocate(einf)
 
 !! body]
 
