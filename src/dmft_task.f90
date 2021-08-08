@@ -2,7 +2,6 @@
 !!! project : jacaranda
 !!! program : dmft_driver
 !!!           dmft_try1
-!!!           dmft_try1_tetra
 !!!           dmft_try2
 !!!           dmft_try3
 !!!           dmft_try4
@@ -15,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)
-!!!           08/08/2021 by li huang (last modified)
+!!!           08/09/2021 by li huang (last modified)
 !!! purpose : driver subroutines.
 !!! status  : unstable
 !!! comment :
@@ -32,7 +31,6 @@
 !!
   subroutine dmft_driver()
      use control, only : task
-     use control, only : ltetra
 
      implicit none
 
@@ -58,11 +56,7 @@
      DISPATCHER: select case ( task )
          !
          case (1)
-             if ( ltetra .eqv. .false. ) then
-                 call dmft_try1()
-             else
-                 call dmft_try1_tetra()
-             endif
+             call dmft_try1()
          !
          case (2)
              call dmft_try2()
@@ -110,14 +104,13 @@
 !! on the configuration parameter `lfermi`. this subroutine is suitable
 !! for the one-shot dft + dmft calculations.
 !!
-!! the standard algorithm will be used.
-!!
   subroutine dmft_try1()
-     use constants, only : dp, zero
+     use constants, only : dp
+     use constants, only : zero
      use constants, only : mystd
 
      use control, only : cname
-     use control, only : lfermi
+     use control, only : lfermi, ltetra
      use control, only : fermi
      use control, only : myid, master
 
@@ -170,7 +163,11 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Green'
      endif ! back if ( myid == master ) block
      !
-     call cal_green()
+     if ( ltetra .eqv. .false. ) then
+         call cal_green()
+     else
+         call cal_green_tetra()
+     endif
      !
      if ( myid == master ) then
          write(mystd,*)
@@ -227,174 +224,6 @@
 
      return
   end subroutine dmft_try1
-
-!!
-!! @sub dmft_try1_tetra
-!!
-!! to calculate the local green's function, generate key inputs for the
-!! quantum impurity solvers. the fermi level may be updated, depending
-!! on the configuration parameter `lfermi`. this subroutine is suitable
-!! for the one-shot dft + dmft calculations.
-!!
-!! the analytical tetrahedron algorithm will be used.
-!!
-  subroutine dmft_try1_tetra()
-     use constants, only : dp, zero
-     use constants, only : mystd
-
-     use control, only : cname
-     use control, only : lfermi
-     use control, only : nkpt, nspin
-     use control, only : nmesh
-     use control, only : fermi
-     use control, only : myid, master
-
-     use context, only : qbnd
-     use context, only : eimps, eimpx
-     use context, only : green
-     use context, only : weiss, delta
-
-     implicit none
-
-!! local variables
-     ! status flag
-     integer  :: istat
-
-     ! lattice occupancy
-     real(dp) :: occup
-
-     ! dummy array, used to save the eigenvalues of H + \Sigma(i\omega_n)
-     complex(dp), allocatable :: eigs(:,:,:,:)
-
-     ! dummy array, used to save the eigenvalues of H + \Sigma(ioo)
-     complex(dp), allocatable :: einf(:,:,:)
-
-!! [body
-
-     ! allocate memory
-     allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('dmft_try1_tetra','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-     !
-     allocate(einf(qbnd,nkpt,nspin),       stat = istat)
-     if ( istat /= 0 ) then
-         call s_print_error('dmft_try1_tetra','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-     ! try to diagonalize the effective hamiltonian
-     if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Eigen'
-     endif ! back if ( myid == master ) block
-     !
-     call cal_eigsys(eigs, einf)
-     !
-     if ( myid == master ) then
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
-
-     ! try to search the fermi level
-     if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
-     endif ! back if ( myid == master ) block
-     !
-     occup = zero
-     !
-     if ( lfermi .eqv. .true. ) then
-         ! calculate the nominal charge density
-         call cal_nelect(occup)
-         !
-         ! search the fermi level using bisection algorithm
-         call dichotomy(occup, eigs, einf)
-     else
-         if ( myid == master ) then
-             write(mystd,'(4X,a)') 'SKIP'
-         endif ! back if ( myid == master ) block
-     endif ! back if ( lfermi .eqv. .true. ) block
-     !
-     if ( myid == master ) then
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
-
-     ! try to compute the local impurity levels
-     if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Level'
-     endif ! back if ( myid == master ) block
-     !
-     call cal_eimps()
-     !
-     call cal_eimpx()
-     !
-     if ( myid == master ) then
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
-
-     ! try to compute the local green's function
-     if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Green'
-     endif ! back if ( myid == master ) block
-     !
-     call cal_green()
-     !
-     if ( myid == master ) then
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
-
-     ! try to compute the local weiss's function
-     if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Weiss'
-     endif ! back if ( myid == master ) block
-     !
-     call cal_weiss()
-     !
-     if ( myid == master ) then
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
-
-     ! try to compute the hybridization function
-     if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Hybri'
-     endif ! back if ( myid == master ) block
-     !
-     call cal_delta()
-     !
-     if ( myid == master ) then
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
-
-     ! write the calculated results, only the master node can do it.
-     if ( myid == master ) then
-         write(mystd,'(2X,a)') cname // ' >>> Task : Write'
-         !
-         write(mystd,'(4X,a)') 'save fermi...'
-         call dmft_dump_fermi(fermi, occup, zero)
-         !
-         write(mystd,'(4X,a)') 'save eimps...'
-         call dmft_dump_eimps(eimps)
-         !
-         write(mystd,'(4X,a)') 'save eimpx...'
-         call dmft_dump_eimpx(eimpx)
-         !
-         write(mystd,'(4X,a)') 'save green...'
-         call dmft_dump_green(green)
-         !
-         write(mystd,'(4X,a)') 'save weiss...'
-         call dmft_dump_weiss(weiss)
-         !
-         write(mystd,'(4X,a)') 'save delta...'
-         call dmft_dump_delta(delta)
-         !
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
-
-     ! deallocate memory
-     if ( allocated(eigs) ) deallocate(eigs)
-     if ( allocated(einf) ) deallocate(einf)
-
-!! body]
-
-     return
-  end subroutine dmft_try1_tetra
 
 !!
 !! @sub dmft_try2
