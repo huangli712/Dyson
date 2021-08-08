@@ -110,6 +110,8 @@
 !! on the configuration parameter `lfermi`. this subroutine is suitable
 !! for the one-shot dft + dmft calculations.
 !!
+!! the standard algorithm will be used.
+!!
   subroutine dmft_try1()
      use constants, only : dp, zero
      use constants, only : mystd
@@ -225,6 +227,132 @@
 
      return
   end subroutine dmft_try1
+
+!!
+!! @sub dmft_try1_tetra
+!!
+!! to calculate the local green's function, generate key inputs for the
+!! quantum impurity solvers. the fermi level may be updated, depending
+!! on the configuration parameter `lfermi`. this subroutine is suitable
+!! for the one-shot dft + dmft calculations.
+!!
+!! the analytical tetrahedron algorithm will be used.
+!!
+  subroutine dmft_try1_tetra()
+     use constants, only : dp, zero
+     use constants, only : mystd
+
+     use control, only : cname
+     use control, only : lfermi
+     use control, only : fermi
+     use control, only : myid, master
+
+     use context, only : eimps, eimpx
+     use context, only : green
+     use context, only : weiss, delta
+
+     implicit none
+
+!! local variables
+     ! lattice occupancy
+     real(dp) :: occup
+
+!! [body
+
+     ! try to search the fermi level
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
+     endif ! back if ( myid == master ) block
+     !
+     occup = zero
+     !
+     if ( lfermi .eqv. .true. ) then
+         call cal_fermi(occup)
+     else
+         if ( myid == master ) then
+             write(mystd,'(4X,a)') 'SKIP'
+         endif ! back if ( myid == master ) block
+     endif ! back if ( lfermi .eqv. .true. ) block
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+     ! try to compute the local impurity levels
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Level'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_eimps()
+     !
+     call cal_eimpx()
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+     ! try to compute the local green's function
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Green'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_green()
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+     ! try to compute the local weiss's function
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Weiss'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_weiss()
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+     ! try to compute the hybridization function
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Hybri'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_delta()
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+     ! write the calculated results, only the master node can do it.
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Write'
+         !
+         write(mystd,'(4X,a)') 'save fermi...'
+         call dmft_dump_fermi(fermi, occup, zero)
+         !
+         write(mystd,'(4X,a)') 'save eimps...'
+         call dmft_dump_eimps(eimps)
+         !
+         write(mystd,'(4X,a)') 'save eimpx...'
+         call dmft_dump_eimpx(eimpx)
+         !
+         write(mystd,'(4X,a)') 'save green...'
+         call dmft_dump_green(green)
+         !
+         write(mystd,'(4X,a)') 'save weiss...'
+         call dmft_dump_weiss(weiss)
+         !
+         write(mystd,'(4X,a)') 'save delta...'
+         call dmft_dump_delta(delta)
+         !
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+!! body]
+
+     return
+  end subroutine dmft_try1_tetra
 
 !!
 !! @sub dmft_try2
