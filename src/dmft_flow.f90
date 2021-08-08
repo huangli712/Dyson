@@ -455,8 +455,9 @@
 !! try to calculate local green's function for all the impurity sites.
 !!
   subroutine cal_green()
-     use constants, only : dp, mystd
+     use constants, only : dp
      use constants, only : czero, czi
+     use constants, only : mystd
 
      use mmpi, only : mp_barrier
      use mmpi, only : mp_allreduce
@@ -638,6 +639,9 @@
 !! @sub cal_green_tetra
 !!
   subroutine cal_green_tetra()
+     use constants, only : dp
+     use constants, only : mystd
+
      implicit none
 
      return
