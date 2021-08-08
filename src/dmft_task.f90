@@ -282,6 +282,21 @@
          call s_print_error('dmft_try1_tetra','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     ! try to diagonalize the effective hamiltonian
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname // ' >>> Task : Eigen'
+     endif ! back if ( myid == master ) block
+     !
+     call cal_eigsys(eigs, einf)
+     !
+     if ( myid == master ) then
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
+
+
+
+
      ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
