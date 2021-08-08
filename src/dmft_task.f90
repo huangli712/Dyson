@@ -271,12 +271,12 @@
      ! allocate memory
      allocate(eigs(qbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
-         call s_print_error('dmft_try5','can not allocate enough memory')
+         call s_print_error('dmft_try1_tetra','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
      !
      allocate(einf(qbnd,nkpt,nspin),       stat = istat)
      if ( istat /= 0 ) then
-         call s_print_error('dmft_try5','can not allocate enough memory')
+         call s_print_error('dmft_try1_tetra','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! try to search the fermi level
