@@ -2,6 +2,7 @@
 !!! project : jacaranda
 !!! program : dmft_driver
 !!!           dmft_try1
+!!!           dmft_try1_tetra
 !!!           dmft_try2
 !!!           dmft_try3
 !!!           dmft_try4
@@ -14,7 +15,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)
-!!!           07/31/2021 by li huang (last modified)
+!!!           08/08/2021 by li huang (last modified)
 !!! purpose : driver subroutines.
 !!! status  : unstable
 !!! comment :
@@ -31,6 +32,7 @@
 !!
   subroutine dmft_driver()
      use control, only : task
+     use control, only : ltetra
 
      implicit none
 
@@ -56,7 +58,11 @@
      DISPATCHER: select case ( task )
          !
          case (1)
-             call dmft_try1()
+             if ( ltetra .eqv. .false. ) then
+                 call dmft_try1()
+             else
+                 call dmft_try1_tetra()
+             endif
          !
          case (2)
              call dmft_try2()
