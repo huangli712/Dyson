@@ -1295,7 +1295,7 @@
 
 ! report the error
      if ( counter > 0 ) then
-         call wann_print_error('wann_test_eigsys','error in evl . evr = 1')
+         call s_print_error('wann_test_eigsys','error in evl . evr = 1')
      endif
 
 ! check A^{L} . H . A^{R} = E
@@ -1335,3 +1335,32 @@
 
      return
   end subroutine wann_test_eigsys
+
+!>>> convert a complex(dp) vector to a diagonal matrix
+  subroutine wann_zmat_vec(ndim, zvec, zmat)
+     use constants, only : dp, czero
+
+     implicit none
+
+! external arguments
+! dimension of zmat matrix
+     integer, intent(in) :: ndim
+
+! complex(dp) vector
+     complex(dp), intent(in)  :: zvec(ndim)
+
+! object matrix
+     complex(dp), intent(out) :: zmat(ndim,ndim)
+
+! local variables
+! loop index
+     integer :: i
+
+     zmat = czero
+
+     do i=1,ndim
+         zmat(i,i) = zvec(i)
+     enddo ! over i={1,ndim} loop
+
+     return
+  end subroutine wann_zmat_vec
