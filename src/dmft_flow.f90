@@ -1033,3 +1033,305 @@
      return
   end subroutine wann_diag_hamk3
 
+!>>> make degenerate eigenvectors orthogonal
+  subroutine wann_orth_eigsys(nwan, zek, evl, evr)
+     use constants, only : dp, eps6
+
+     implicit none
+
+! external arguments
+! number of Wannier orbitals
+     integer, intent(in) :: nwan
+
+! eigenvalues
+     complex(dp), intent(in)    :: zek(nwan)
+
+! left  eigenvectors, A^{L}
+     complex(dp), intent(inout) :: evl(nwan,nwan)
+
+! right eigenvectors, A^{R}
+     complex(dp), intent(inout) :: evr(nwan,nwan)
+
+! local variables
+! loop index for Wannier orbitals
+     integer :: pwan
+     integer :: qwan
+
+! dummy variables
+     complex(dp) :: pp
+     complex(dp) :: pq
+     complex(dp) :: qp
+
+     do qwan=1,nwan
+         do pwan=1,qwan-1
+             pq = dot_product( evl(pwan,:), evr(:,qwan) )
+             pp = dot_product( evl(pwan,:), evr(:,pwan) )
+             if ( abs( zek(pwan) - zek(qwan) ) < eps6 .and. abs( pq ) > eps6 ) then
+                 evr(:,qwan) = evr(:,qwan) - (pq / pp) * evr(:,pwan)
+             endif
+         enddo ! over pwan={1,qwan-1} loop
+
+         do pwan=1,qwan-1
+             qp = dot_product( evl(qwan,:), evr(:,pwan) )
+             pp = dot_product( evl(pwan,:), evr(:,pwan) )
+             if ( abs( zek(pwan) - zek(qwan) ) < eps6 .and. abs( qp ) > eps6 ) then
+                 evl(qwan,:) = evl(qwan,:) - (qp / pp) * evl(pwan,:)
+             endif
+         enddo ! over pwan={1,qwan-1} loop
+     enddo ! over qwan={1,nwan} loop
+
+     return
+  end subroutine wann_orth_eigsys
+
+!>>> normalize the eigenvectors, to ensure A^{L} . A^{R} = I
+  subroutine wann_norm_eigsys(nwan, evl, evr)
+     use constants, only : dp, czero
+
+     implicit none
+
+! external arguments
+! number of Wannier orbitals
+     integer, intent(in) :: nwan
+
+! left  eigenvectors, A^{L}
+     complex(dp), intent(inout) :: evl(nwan,nwan)
+
+! right eigenvectors, A^{R}
+     complex(dp), intent(inout) :: evr(nwan,nwan)
+
+! local variables
+! loop index for Wannier orbitals
+     integer :: iwan
+     integer :: jwan
+
+! dummy variables
+     complex(dp) :: caux
+     complex(dp) :: scaler(nwan)
+
+! apply Lowdin transformation
+     do iwan=1,nwan
+         caux = czero
+         do jwan=1,nwan
+             caux = caux + evl(iwan,jwan) * evr(jwan,iwan)
+         enddo ! over jwan={1,nwan} loop
+         scaler(iwan) = sqrt(caux)
+     enddo ! over iwan={1,nwan} loop
+
+     do iwan=1,nwan
+         evl(iwan,:) = evl(iwan,:) / scaler(iwan)
+         evr(:,iwan) = evr(:,iwan) / scaler(iwan)
+     enddo ! over iwan={1,nwan} loop
+
+     return
+  end subroutine wann_norm_eigsys
+
+!>>> to check the causality of eigenvalues. they should be negative definite
+  subroutine wann_caus_eigsys(nwan, zek)
+     use constants, only : dp, epss
+
+     implicit none
+
+! external arguments
+! dimension of matrices
+     integer, intent(in) :: nwan
+
+! array of eigenvalues
+     complex(dp), intent(inout) :: zek(nwan)
+
+! local variables
+! loop index
+     integer  :: iwan
+
+! real and imaginary part
+     real(dp) :: re
+     real(dp) :: im
+
+! to ensure the imaginary part negative
+     do iwan=1,nwan
+         re =  real( zek(iwan) )
+         im = aimag( zek(iwan) )
+
+         if ( im > -epss ) then
+             zek(iwan) = dcmplx(re, -epss)
+         endif
+     enddo ! over iwan={1,nwan} loop
+
+     return
+  end subroutine wann_caus_eigsys
+
+!>>> this routine sorts complex(dp) eigenvalues of a matrix according 
+! to its real parts with the smallest in the first slot and reorders 
+! the matrices of left (row) and right (column) eigenvectors in a 
+! corresponding manner.
+  subroutine wann_sort_eigsys(nwan, zek, evl, evr)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of matrices
+     integer, intent(in) :: nwan
+
+! array of eigenvalues
+     complex(dp), intent(inout) :: zek(nwan)
+
+! matrix of left  eigenvectors (row)
+     complex(dp), intent(inout) :: evl(nwan,nwan)
+
+! matrix of right eigenvectors (column)
+     complex(dp), intent(inout) :: evr(nwan,nwan)
+
+! local parameters
+! maximum value
+     real(dp), parameter :: maxvalue = 1000.0_dp
+
+! local variables
+! loop index
+     integer  :: p
+     integer  :: q
+     integer  :: idx
+
+! minimum value
+     real(dp) :: minvalue
+
+! pointer for sorted eigenvalues
+     integer  :: idxarr(nwan)
+
+! to record which eigenvalue is sorted
+     logical  :: sorted(nwan)
+
+! save the real parts of original eigenvalues
+     real(dp) :: sorton(nwan)
+
+! sorted eigenvalues
+     complex(dp) :: eval(nwan)
+
+! sorted eigenvectors
+     complex(dp) :: evec(nwan,nwan)
+
+! initialize arrays
+     idxarr = 0
+     sorton = dble(zek)
+     sorted = .false.
+
+! create index array
+     do p=1,nwan
+         minvalue = maxvalue
+         do q=1,nwan
+             if ( sorted(q) == .false. .and. minvalue > sorton(q) ) then
+                 minvalue = sorton(q)
+                 idx = q
+             endif
+         enddo ! over q={1,nwan} loop
+         idxarr(p) = idx
+         sorted(idx) = .true.
+     enddo ! over p={1,nwan} loop
+
+! permute the eigenvalues
+     do p=1,nwan
+         eval(p) = zek( idxarr(p) )
+     enddo ! over p={1,nwan} loop
+     zek = eval
+
+! permute the right eigenvectors
+     do p=1,nwan
+         evec(:,p) = evr(:,idxarr(p))
+     enddo ! over p={1,nwan} loop
+     evr = evec
+
+! permute the left eigenvectors
+     do p=1,nwan
+         evec(p,:) = evl(idxarr(p),:)
+     enddo ! over p={1,nwan} loop
+     evl = evec
+
+     return
+  end subroutine wann_sort_eigsys
+
+!>>> check the eigensystem
+  subroutine wann_test_eigsys(nwan, zek, evl, evr, ham)
+     use constants, only : dp, cone, epss, epst
+
+     implicit none
+
+! external arguments
+! number of Wannier orbitals
+     integer, intent(in) :: nwan
+
+! complex eigenvalues
+     complex(dp), intent(in) :: zek(nwan)
+
+! left  eigenvectors, A^{L}
+     complex(dp), intent(in) :: evl(nwan,nwan)
+
+! right eigenvectors, A^{R}
+     complex(dp), intent(in) :: evr(nwan,nwan)
+
+! hamiltoniam
+     complex(dp), intent(in) :: ham(nwan,nwan)
+
+! local variables
+! loop index for Wannier orbitals
+     integer :: iwan
+     integer :: jwan
+
+! number counter
+     integer :: counter
+
+! dummy matrix
+     complex(dp) :: tmat(nwan,nwan)
+     complex(dp) :: zmat(nwan,nwan)
+
+! check A^{L} . A^{R} = I
+!-------------------------------------------------------------------------
+     tmat = matmul(evl, evr)
+
+     counter = 0
+     do iwan=1,nwan
+         if ( abs( tmat(iwan,iwan) - cone ) >= epss ) then
+             counter = counter + 1
+         endif
+     enddo ! over iwan={1,nwan} loop
+
+! report the error
+     if ( counter > 0 ) then
+         call wann_print_error('wann_test_eigsys','error in evl . evr = 1')
+     endif
+
+! check A^{L} . H . A^{R} = E
+!-------------------------------------------------------------------------
+     tmat = matmul( matmul( evl, ham ), evr )
+
+     counter = 0
+     do iwan=1,nwan
+         if ( abs( tmat(iwan,iwan) - zek(iwan) ) >= epst ) then
+             counter = counter + 1
+         endif
+     enddo ! over iwan={1,nwan} loop
+
+! report the error
+     if ( counter > 0 ) then
+         call s_print_error('wann_test_eigsys','error in evl . H . evr = zek')
+     endif
+
+! check A^{R} . E . A^{L} = H
+!-------------------------------------------------------------------------
+     call wann_zmat_vec(nwan, zek, zmat)
+     tmat = matmul( matmul( evr, zmat ), evl )
+
+     counter = 0
+     do iwan=1,nwan
+         do jwan=1,nwan
+             if ( abs( tmat(iwan,jwan) - ham(iwan,jwan) ) >= epst ) then
+                 counter = counter + 1
+             endif
+         enddo ! over jwan={1,nwan} loop
+     enddo ! over iwan={1,nwan} loop
+
+! report the error
+     if ( counter > 0 ) then
+         call s_print_error('wann_test_eigsys','error in evr . E . evl = H')
+     endif
+
+     return
+  end subroutine wann_test_eigsys
