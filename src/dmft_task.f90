@@ -244,6 +244,8 @@
 
      use control, only : cname
      use control, only : lfermi
+     use control, only : nkpt, nspin
+     use control, only : nmesh
      use control, only : fermi
      use control, only : myid, master
 
