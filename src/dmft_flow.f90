@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)
-!!!           08/08/2021 by li huang (last modified)
+!!!           08/09/2021 by li huang (last modified)
 !!! purpose : implement the main work flow of dft + dmft calculation.
 !!! status  : unstable
 !!! comment :
@@ -636,18 +636,6 @@
   end subroutine cal_green
 
 !!
-!! @sub cal_green_tetra
-!!
-  subroutine cal_green_tetra()
-     use constants, only : dp
-     use constants, only : mystd
-
-     implicit none
-
-     return
-  end subroutine cal_green_tetra
-
-!!
 !! @sub cal_weiss
 !!
 !! try to calculate local weiss's function for all impurity sites.
@@ -944,3 +932,104 @@
 
      return
   end subroutine cal_gamma
+
+!!
+!! @sub cal_green_tetra
+!!
+  subroutine cal_green_tetra()
+     use constants, only : dp
+     use constants, only : mystd
+
+     implicit none
+
+     return
+  end subroutine cal_green_tetra
+
+!>>> diagonalize general hamiltonian, return eigenvalues and eigenvectors
+  subroutine wann_diag_hamk3(nwan, nkpt, hamk, eval, evecl, evecr)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! number of Wannier orbitals
+     integer, intent(in) :: nwan
+
+! number of k-points
+     integer, intent(in) :: nkpt
+
+! hamiltonian matrix
+     complex(dp), intent(in)  :: hamk(nwan,nwan,nkpt)
+
+! eigenvalues
+     complex(dp), intent(out) :: eval(nwan,nkpt)
+
+! left  eigenvectors, A^{L}
+     complex(dp), intent(out) :: evecl(nwan,nwan,nkpt)
+
+! right eigenvectors, A^{R}
+     complex(dp), intent(out) :: evecr(nwan,nwan,nkpt)
+
+! local variables
+! loop index for k-points
+     integer  :: ikpt
+
+! dummy integer variables for lapack call
+     integer  :: info
+     integer  :: lwork
+
+! working space for lapack call
+     real(dp) :: rwork(2*nwan)
+
+! working space for lapack call
+     complex(dp) :: work(4*nwan)
+
+! dummy eigenvalues and eigenvectors array
+     complex(dp) :: eig(nwan)
+     complex(dp) :: evl(nwan,nwan)
+     complex(dp) :: evr(nwan,nwan)
+
+! dummy hamiltonian matrix on entry, on exit, A contains intermediate values
+     complex(dp) :: A(nwan,nwan)
+
+! setup lwork
+     lwork = 4 * nwan
+
+     HAMK_DIAG_LOOP: do ikpt=1,nkpt
+
+! copy hamk to A
+         A = hamk(:,:,ikpt)
+
+! call lapack subroutine zgeev() to diagonalize a general matrix
+         call zgeev('V', 'V', nwan, A, nwan, eig, evl, nwan, evr, nwan, work, lwork, rwork, info)
+
+! transpose conjugate left eigenvectors
+         evl = transpose( dconjg( evl ) )
+
+! make degenerate eigenvectors orthogonal
+         call wann_orth_eigsys(nwan, eig, evl, evr)
+
+! normalize eigenvectors to ensure A^{L} . A^{R} = I by Lowdin transformation
+         call wann_norm_eigsys(nwan, evl, evr)
+
+! deal with the causality of eigenvalues
+         call wann_caus_eigsys(nwan, eig)
+
+! sort final eigenvalues and corresponding eigenvectors
+         call wann_sort_eigsys(nwan, eig, evl, evr)
+
+! copy eigenvalues and eigenvectors
+         eval(:,ikpt) = eig
+         evecl(:,:,ikpt) = evl
+         evecr(:,:,ikpt) = evr
+
+! if error occurs
+         if ( info /= 0 ) then
+             call s_print_error('wann_diag_hamk3','can not diagonalize hamiltonian matrix')
+         endif
+
+     enddo HAMK_DIAG_LOOP ! over ikpt={1,nkpt} loop
+
+     return
+  end subroutine wann_diag_hamk3
+
