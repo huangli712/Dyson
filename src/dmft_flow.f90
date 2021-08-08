@@ -940,7 +940,15 @@
      use constants, only : dp
      use constants, only : mystd
 
+     use control, only : nmesh
+
      implicit none
+
+!! local variables
+     integer :: m
+
+     do m=1,nmesh
+     enddo
 
      return
   end subroutine cal_green_tetra
