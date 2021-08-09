@@ -944,6 +944,7 @@
      use control, only : nkpt, nspin
 
      use context, only : qbnd
+     use context, only : i_wnd, kwin
 
      implicit none
 
@@ -951,6 +952,9 @@
      integer :: istat
      integer :: m
      integer :: k, s
+     integer :: t
+     integer :: bs, be
+     integer :: cbnd
 
 ! brillouin zone integration weight
      complex(dp), allocatable :: wtet(:,:)
@@ -966,6 +970,11 @@
 
 ! effective hamiltonian: hdmf = hamk + sigw(x)
      complex(dp), allocatable :: hdmf(:,:,:)
+
+
+     ! dummy array: for self-energy function (upfolded to Kohn-Sham basis)
+     complex(dp), allocatable :: Sk(:,:)
+     complex(dp), allocatable :: Xk(:,:)
 
      allocate(zenk(qbnd,nkpt),       stat=istat)
      if ( istat /= 0 ) then
@@ -991,6 +1000,31 @@
 
          do s=1,nspin
              do k=1,nkpt
+
+                 ! evaluate band window for the current k-point and spin.
+                 !
+                 ! i_wnd(t) returns the corresponding band window for given
+                 ! impurity site t. see remarks in cal_nelect() for more details.
+                 t = 1 ! t is fixed to 1
+                 bs = kwin(k,s,1,i_wnd(t))
+                 be = kwin(k,s,2,i_wnd(t))
+
+                 ! determine cbnd
+                 cbnd = be - bs + 1
+
+                 ! allocate memories Sk, Xk.
+                 ! their sizes are k-dependent.
+                 allocate(Sk(cbnd,cbnd), stat = istat)
+                 allocate(Xk(cbnd,cbnd), stat = istat)
+                 !
+                 if ( istat /= 0 ) then
+                     call s_print_error('cal_green','can not allocate enough memory')
+                 endif ! back if ( istat /= 0 ) block
+
+                 ! deallocate memories
+                 if ( allocated(Sk) ) deallocate(Sk)
+                 if ( allocated(Xk) ) deallocate(Xk)
+
              enddo
          enddo
      enddo
