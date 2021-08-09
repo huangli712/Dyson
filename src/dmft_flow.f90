@@ -966,24 +966,24 @@
 ! effective hamiltonian: hdmf = hamk + sigw(x)
      complex(dp), allocatable :: hdmf(:,:,:)
 
-     allocate(zenk(nwan,nkpt),       stat=istat)
+     allocate(zenk(qbnd,nkpt),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('wann_dmft_core2','can not allocate enough memory')
      endif
 
-     allocate(zevl(nwan,nwan,nkpt),  stat=istat)
+     allocate(zevl(qbnd,qbnd,nkpt),  stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('wann_dmft_core2','can not allocate enough memory')
      endif
 
-     allocate(zevr(nwan,nwan,nkpt),  stat=istat)
+     allocate(zevr(qbnd,qbnd,nkpt),  stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('wann_dmft_core2','can not allocate enough memory')
      endif
 
-     allocate(hdmf(nwan,nwan,nkpt),  stat=istat)
+     allocate(hdmf(qbnd,qbnd,nkpt),  stat=istat)
      if ( istat /= 0 ) then
-         call wann_print_error('wann_dmft_core2','can not allocate enough memory')
+         call s_print_error('wann_dmft_core2','can not allocate enough memory')
      endif
 
      do m=1,nmesh
