@@ -938,9 +938,11 @@
 !!
   subroutine cal_green_tetra()
      use constants, only : dp
+     use constants, only : czero
      use constants, only : mystd
 
      use control, only : nmesh
+     use control, only : nsite
      use control, only : nkpt, nspin
 
      use context, only : qbnd
