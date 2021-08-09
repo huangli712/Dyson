@@ -941,7 +941,7 @@
      use constants, only : mystd
 
      use control, only : nmesh
-     use control, only : nkpt
+     use control, only : nkpt, nspin
 
      use context, only : qbnd
 
@@ -950,6 +950,7 @@
 !! local variables
      integer :: istat
      integer :: m
+     integer :: k, s
 
 ! brillouin zone integration weight
      complex(dp), allocatable :: wtet(:,:)
@@ -988,6 +989,10 @@
 
      do m=1,nmesh
 
+         do s=1,nspin
+             do k=1,nkpt
+             enddo
+         enddo
      enddo
 
      deallocate(wtet)
