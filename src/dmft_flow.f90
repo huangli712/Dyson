@@ -978,9 +978,22 @@
          call s_print_error('wann_dmft_core2','can not allocate enough memory')
      endif
 
+     allocate(hdmf(nwan,nwan,nkpt),  stat=istat)
+     if ( istat /= 0 ) then
+         call wann_print_error('wann_dmft_core2','can not allocate enough memory')
+     endif
+
      do m=1,nmesh
 
      enddo
+
+     deallocate(wtet)
+
+     deallocate(zenk)
+     deallocate(zevl)
+     deallocate(zevr)
+
+     deallocate(hdmf)
 
      return
   end subroutine cal_green_tetra
