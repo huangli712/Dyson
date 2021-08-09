@@ -1028,7 +1028,7 @@
                  do t=1,nsite
                      Xk = czero ! reset Xk
                      cdim = ndim(t)
-                     call cal_sl_sk_T(cdim, cbnd, k, s, t, Xk)
+                     call cal_sl_sk_T(cdim, cbnd, k, s, m, t, Xk)
                      Sk = Sk + Xk
                  enddo ! over t={1,nsite} loop
 
