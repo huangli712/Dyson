@@ -945,9 +945,41 @@
      implicit none
 
 !! local variables
+     integer :: istat
      integer :: m
 
+! brillouin zone integration weight
+     complex(dp), allocatable :: wtet(:,:)
+
+! complex eigenvalues
+     complex(dp), allocatable :: zenk(:,:)
+
+! left eigenvectors, A^{L}
+     complex(dp), allocatable :: zevl(:,:,:)
+
+! right eigenvectors, A^{R}
+     complex(dp), allocatable :: zevr(:,:,:)
+
+! effective hamiltonian: hdmf = hamk + sigw(x)
+     complex(dp), allocatable :: hdmf(:,:,:)
+
+     allocate(zenk(nwan,nkpt),       stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('wann_dmft_core2','can not allocate enough memory')
+     endif
+
+     allocate(zevl(nwan,nwan,nkpt),  stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('wann_dmft_core2','can not allocate enough memory')
+     endif
+
+     allocate(zevr(nwan,nwan,nkpt),  stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('wann_dmft_core2','can not allocate enough memory')
+     endif
+
      do m=1,nmesh
+
      enddo
 
      return
