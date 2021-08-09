@@ -946,6 +946,7 @@
      use control, only : nkpt, nspin
 
      use context, only : qbnd
+     use context, only : ndim
      use context, only : i_wnd, kwin
 
      implicit none
@@ -957,6 +958,7 @@
      integer :: t
      integer :: bs, be
      integer :: cbnd
+     integer :: cdim
 
 ! brillouin zone integration weight
      complex(dp), allocatable :: wtet(:,:)
