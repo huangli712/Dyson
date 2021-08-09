@@ -941,6 +941,9 @@
      use constants, only : mystd
 
      use control, only : nmesh
+     use control, only : nkpt
+
+     use context, only : qbnd
 
      implicit none
 
