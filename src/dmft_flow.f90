@@ -1058,7 +1058,7 @@
 
          call wann_diag_hamk3(qbnd, nkpt, hdmf, zenk, zevl, zevr)
          call wann_tetra_weight2(qbnd, czi * fmesh(m) + fermi , zenk, wtet)
-
+         call wann_dmft_ksum2(qbnd, nkpt, wtet, zevl, zevr, gloc)
      enddo
 
      deallocate(wtet)
@@ -1076,7 +1076,6 @@
 ! to calculate the lattice green's function
   subroutine wann_dmft_ksum2(nwan, nkpt, wtet, zevl, zevr, gloc)
      use constants, only : dp, czero
-     !use control
 
      implicit none
 
@@ -1111,13 +1110,13 @@
 ! G_{loc}(j, i) = \sum_{ik} \sum_{k} A^{R}(j, k, ik) . W(k, ik) . A^{L}(k, i, ik)
 ! it is important to add up the contributions of every k-points and bands
 ! case A: just for spin up part
-     DMFT_WANN_LOOP1: do iwan=1,n1wan               ! loop over Wannier orbitals
-         DMFT_WANN_LOOP2: do jwan=1,n1wan           ! loop over Wannier orbitals
+     DMFT_WANN_LOOP1: do iwan=1,nwan               ! loop over Wannier orbitals
+         DMFT_WANN_LOOP2: do jwan=1,nwan           ! loop over Wannier orbitals
 
-             DMFT_KPNT_LOOP1: do ikpt=1,nkpt        ! loop over k-points
+             DMFT_KPNT_LOOP1: do ikpt=1,nkpt       ! loop over k-points
                  caux = czero
 
-                 DMFT_WANN_LOOP3: do kwan=1,n1wan   ! loop over Wannier orbitals
+                 DMFT_WANN_LOOP3: do kwan=1,nwan   ! loop over Wannier orbitals
                      caux = caux + wtet(kwan,ikpt) * zevr(jwan,kwan,ikpt) * zevl(kwan,iwan,ikpt)
                  enddo DMFT_WANN_LOOP3 ! over kwan={1,n1wan} loop
 
