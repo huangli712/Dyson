@@ -946,7 +946,7 @@
      use control, only : nkpt, nspin
      use control, only : fermi
 
-     use context, only : qbnd
+     use context, only : qbnd, qdim
      use context, only : ndim
      use context, only : i_wnd, kwin
      use context, only : fmesh
@@ -985,6 +985,8 @@
 
      ! dummy array: used to perform mpi reduce operation for green
      complex(dp), allocatable :: gk(:,:,:)
+     complex(dp), allocatable :: gl(:,:)
+     allocate(gl(qdim,qdim))
      allocate(gk(qbnd,qbnd,nkpt), stat = istat)
 
      allocate(wtet(qbnd,nkpt),       stat=istat)
@@ -1068,6 +1070,31 @@
          call wann_tetra_weight2(qbnd, czi * fmesh(m) + fermi , zenk, wtet)
          call wann_dmft_ksum2(qbnd, nkpt, wtet, zevl, zevr, gk)
 
+         do s=1,nspin
+             do k=1,nkpt
+
+                 ! evaluate band window for the current k-point and spin.
+                 !
+                 ! i_wnd(t) returns the corresponding band window for given
+                 ! impurity site t. see remarks in cal_nelect() for more details.
+                 t = 1 ! t is fixed to 1
+                 bs = kwin(k,s,1,i_wnd(t))
+                 be = kwin(k,s,2,i_wnd(t))
+
+                 ! determine cbnd
+                 cbnd = be - bs + 1
+
+                 ! downfold the lattice green's function to obtain local
+                 ! green's function, then we have to perform k-summation.
+                 do t=1,nsite
+                     Gl = czero
+                     cdim = ndim(t)
+                     call cal_gk_gl_T(cbnd, cdim, k, s, t, gk(1:cbnd,1:cbnd,k), Gl(1:cdim,1:cdim))
+                     green(:,:,m,s,t) = green(:,:,m,s,t) + Gl * weight(k)
+                 enddo ! over t={1,nsite} loop
+
+             enddo
+         enddo
 
      enddo
 
@@ -1081,6 +1108,48 @@
 
      return
   end subroutine cal_green_tetra
+
+!!
+!! @sub cal_gk_gl_T
+!!
+!! try to calculate local green's function from lattice green's function
+!! via downfolding procedure.
+!!
+  subroutine cal_gk_gl_T(cbnd, cdim, k, s, t, Gk, Gl)
+     use constants, only : dp
+
+     implicit none
+
+!! external arguments
+     ! number of dft bands for given k-point and spin
+     integer, intent(in) :: cbnd
+
+     ! number of correlated orbitals for given impurity site
+     integer, intent(in) :: cdim
+
+     ! index for k-points
+     integer, intent(in) :: k
+
+     ! index for spin
+     integer, intent(in) :: s
+
+     ! index for impurity sites
+     integer, intent(in) :: t
+
+     ! lattice green's function at given k-point and spin
+     complex(dp), intent(in)  :: Gk(cbnd,cbnd)
+
+     ! local green's function (contributions from the given k-point and spin)
+     complex(dp), intent(out) :: Gl(cdim,cdim)
+
+!! [body
+
+     call one_psi_chi(cbnd, cdim, k, s, t, Gk, Gl)
+
+!! body]
+
+     return
+  end subroutine cal_gk_gl_T
 
 !>>> perform brillouin zone integration by analytical tetrahedron method
 ! to calculate the lattice green's function
