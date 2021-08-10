@@ -1066,8 +1066,6 @@
      use constants, only : dp
      use constants, only : czero
 
-     use control, only : nmesh
-
      use context, only : sigma
 
      implicit none
