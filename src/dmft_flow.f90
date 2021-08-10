@@ -1121,7 +1121,7 @@
 
 ! build mtet for the first running
      if ( mtet == 0 ) then
-         mtet = sum( tetra(5,:) )
+         mtet = sum( tetra(:,5) )
      endif
 
 ! initialize weight
@@ -1132,7 +1132,7 @@
 
 ! sets the vectors of corner energies to zc
              do iccc=1,4
-                 ikpt = tetra(iccc,itet)
+                 ikpt = tetra(itet,iccc)
                  zc(iccc) = zenk(iwan,ikpt)
              enddo ! over iccc={1,4} loop
 
@@ -1141,8 +1141,8 @@
 
 ! stores weights for irreducible k-points
              do iccc=1,4
-                 ikpt = tetra(iccc,itet)
-                 weight(iwan,ikpt) = weight(iwan,ikpt) + zw(iccc) * real( tetra(5,itet) )
+                 ikpt = tetra(itet,iccc)
+                 weight(iwan,ikpt) = weight(iwan,ikpt) + zw(iccc) * real( tetra(itet,5) )
              enddo ! over iccc={1,4} loop
 
          enddo WEIGHT_ORBIT_LOOP ! over iwan={1,nwan} loop
