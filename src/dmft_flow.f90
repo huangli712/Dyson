@@ -1074,9 +1074,9 @@
 
 !>>> perform brillouin zone integration by analytical tetrahedron method
 ! to calculate the lattice green's function
-  subroutine wann_dmft_ksum2(wtet, zevl, zevr, gloc)
-     use constants
-     use control
+  subroutine wann_dmft_ksum2(nwan, nkpt, wtet, zevl, zevr, gloc)
+     use constants, only : dp, czero
+     !use control
 
      implicit none
 
