@@ -984,8 +984,7 @@
      complex(dp), allocatable :: Xk(:,:)
 
      ! dummy array: used to perform mpi reduce operation for green
-     complex(dp), allocatable :: green_mpi(:,:,:,:,:)
-     complex(dp), allocatable :: gk(:,:)
+     complex(dp), allocatable :: gk(:,:,:)
      allocate(gk(qbnd,qbnd,nkpt), stat = istat)
 
      allocate(wtet(qbnd,nkpt),       stat=istat)
