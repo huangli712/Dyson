@@ -1049,6 +1049,7 @@
              enddo
          enddo
 
+         call wann_diag_hamk3(qbnd, nkpt, hdmf, zenk, zevl, zevr)
      enddo
 
      deallocate(wtet)
