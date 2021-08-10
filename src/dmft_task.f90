@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)
-!!!           08/09/2021 by li huang (last modified)
+!!!           07/31/2021 by li huang (last modified)
 !!! purpose : driver subroutines.
 !!! status  : unstable
 !!! comment :
@@ -105,12 +105,11 @@
 !! for the one-shot dft + dmft calculations.
 !!
   subroutine dmft_try1()
-     use constants, only : dp
-     use constants, only : zero
+     use constants, only : dp, zero
      use constants, only : mystd
 
      use control, only : cname
-     use control, only : lfermi, ltetra
+     use control, only : lfermi
      use control, only : fermi
      use control, only : myid, master
 
@@ -126,7 +125,6 @@
 
 !! [body
 
-     fermi = -0.83286562_dp
      ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
@@ -164,11 +162,7 @@
          write(mystd,'(2X,a)') cname // ' >>> Task : Green'
      endif ! back if ( myid == master ) block
      !
-     if ( ltetra .eqv. .false. ) then
-         call cal_green()
-     else
-         call cal_green_tetra()
-     endif
+     call cal_green()
      !
      if ( myid == master ) then
          write(mystd,*)
@@ -416,8 +410,7 @@
 !! can be used in the postprocessing procedure.
 !!
   subroutine dmft_try5()
-     use constants, only : dp
-     use constants, only : mystd
+     use constants, only : dp, mystd
 
      use control, only : cname
      use control, only : nkpt, nspin
