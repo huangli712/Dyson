@@ -975,7 +975,6 @@
 ! effective hamiltonian: hdmf = hamk + sigw(x)
      complex(dp), allocatable :: hdmf(:,:,:)
 
-
      ! dummy array: for self-energy function (upfolded to Kohn-Sham basis)
      complex(dp), allocatable :: Sk(:,:)
      complex(dp), allocatable :: Xk(:,:)
@@ -1042,6 +1041,7 @@
 
              enddo
          enddo
+
      enddo
 
      deallocate(wtet)
@@ -1062,7 +1062,7 @@
 !! basis. here, we don't care whether the double counting terms have been
 !! substracted from the self-energy functions.
 !!
-  subroutine cal_sl_sk_T(cdim, cbnd, k, s, t, Sk)
+  subroutine cal_sl_sk_T(cdim, cbnd, k, s, m, t, Sk)
      use constants, only : dp
      use constants, only : czero
 
@@ -1085,40 +1085,37 @@
      ! index for spin
      integer, intent(in) :: s
 
+     integer, intent(in) :: m
+
      ! index for impurity sites
      integer, intent(in) :: t
 
      ! self-energy function in Kohn-Sham basis
-     complex(dp), intent(out) :: Sk(cbnd,cbnd,nmesh)
+     complex(dp), intent(out) :: Sk(cbnd,cbnd)
 
 !! local variables
-     ! loop index for frequency mesh
-     integer :: m
-
      ! status flag
      integer :: istat
 
      ! dummy array: for local self-energy function
-     complex(dp), allocatable :: Sl(:,:,:)
+     complex(dp), allocatable :: Sl(:,:)
 
 !! [body
 
      ! allocate memory
-     allocate(Sl(cdim,cdim,nmesh), stat = istat)
+     allocate(Sl(cdim,cdim), stat = istat)
      !
      if ( istat /= 0 ) then
-         call s_print_error('cal_sl_sk','can not allocate enough memory')
+         call s_print_error('cal_sl_sk_T','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! we use Sl to store parts of sigma.
      ! note that actually sigdc has been substracted from sigma before
      ! hand. please see cal_sigma() for more details.
-     do m=1,nmesh
-         Sl(:,:,m) = sigma(1:cdim,1:cdim,m,s,t)
-     enddo ! over m={1,nmesh} loop
+     Sl = sigma(1:cdim,1:cdim,m,s,t)
 
      ! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
-     call map_chi_psi(cdim, cbnd, nmesh, k, s, t, Sl, Sk)
+     call one_chi_psi(cdim, cbnd, k, s, t, Sl, Sk)
 
      ! deallocate memory
      if ( allocated(Sl) ) deallocate(Sl)
