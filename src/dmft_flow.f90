@@ -1081,6 +1081,9 @@
      implicit none
 
 ! external arguments
+     integer, intent(in) :: nwan
+     integer, intent(in) :: nkpt
+
 ! tetrahedron integration weight
      complex(dp), intent(in)  :: wtet(nwan,nkpt)
 
