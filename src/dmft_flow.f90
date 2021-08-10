@@ -945,6 +945,7 @@
      use control, only : nsite
      use control, only : nkpt, nspin
      use control, only : fermi
+     use control, only : myid, master, nprocs
 
      use context, only : qbnd, qdim
      use context, only : ndim
@@ -952,6 +953,9 @@
      use context, only : fmesh
      use context, only : weight
      use context, only : green
+
+     use mmpi, only : mp_barrier
+     use mmpi, only : mp_allreduce
 
      implicit none
 
@@ -985,11 +989,14 @@
      complex(dp), allocatable :: Xk(:,:)
 
      ! dummy array: used to perform mpi reduce operation for green
+     complex(dp), allocatable :: green_mpi(:,:,:,:,:)
+     ! dummy array: used to perform mpi reduce operation for green
      complex(dp), allocatable :: gk(:,:,:)
      complex(dp), allocatable :: gl(:,:)
      allocate(gl(qdim,qdim))
      allocate(gk(qbnd,qbnd,nkpt), stat = istat)
 
+     allocate(green_mpi(qdim,qdim,nmesh,nspin,nsite), stat = istat)
      allocate(wtet(qbnd,nkpt),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('wann_dmft_core2','can not allocate enough memory')
@@ -1017,9 +1024,23 @@
 
      ! reset green
      green = czero
+     green_mpi = czero
 
-     do m=1,nmesh
+! mpi barrier. waiting all processes reach here.
+# if defined (MPI)
+     !
+     call mp_barrier()
+     !
+# endif /* MPI */
 
+     do m=myid+1,nmesh,nprocs
+         print *, m, " freq: ", fmesh(m), " myid: ", myid
+         hdmf = czero
+         zenk = czero
+         zevl = czero
+         zevr = czero
+         wtet = czero
+         gk = czero
          do s=1,nspin
              do k=1,nkpt
 
@@ -1099,6 +1120,23 @@
 
      enddo
 
+! collect data from all mpi processes
+# if defined (MPI)
+     !
+     call mp_barrier()
+     !
+     call mp_allreduce(green, green_mpi)
+     !
+     call mp_barrier()
+     !
+# else  /* MPI */
+
+     green_mpi = green
+
+# endif /* MPI */
+
+     green = green_mpi !/ real(nkpt)
+
      deallocate(wtet)
 
      deallocate(zenk)
@@ -1106,6 +1144,7 @@
      deallocate(zevr)
 
      deallocate(hdmf)
+     if ( allocated(green_mpi) ) deallocate(green_mpi)
 
      return
   end subroutine cal_green_tetra

@@ -126,6 +126,7 @@
 
 !! [body
 
+     fermi = -0.83286562_dp
      ! try to search the fermi level
      if ( myid == master ) then
          write(mystd,'(2X,a)') cname // ' >>> Task : Fermi'
