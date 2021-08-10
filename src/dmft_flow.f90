@@ -950,6 +950,7 @@
      use context, only : ndim
      use context, only : i_wnd, kwin
      use context, only : fmesh
+     use context, only : weight
      use context, only : green
 
      implicit none
