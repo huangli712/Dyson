@@ -1072,6 +1072,64 @@
      return
   end subroutine cal_green_tetra
 
+!>>> perform brillouin zone integration by analytical tetrahedron method
+! to calculate the lattice green's function
+  subroutine wann_dmft_ksum2(wtet, zevl, zevr, gloc)
+     use constants
+     use control
+
+     implicit none
+
+! external arguments
+! tetrahedron integration weight
+     complex(dp), intent(in)  :: wtet(nwan,nkpt)
+
+! left eigenvectors
+     complex(dp), intent(in)  :: zevl(nwan,nwan,nkpt)
+
+! right eigenvectors
+     complex(dp), intent(in)  :: zevr(nwan,nwan,nkpt)
+
+! lattice green's function
+     complex(dp), intent(out) :: gloc(nwan,nwan)
+
+! local variables
+! loop index for Wannier orbitals
+     integer :: iwan
+     integer :: jwan
+     integer :: kwan
+
+! loop index for k-points
+     integer :: ikpt
+
+! dummy array subscript
+     integer :: naux
+
+! dummy complex variables
+     complex(dp) :: caux
+
+! G_{loc}(j, i) = \sum_{ik} \sum_{k} A^{R}(j, k, ik) . W(k, ik) . A^{L}(k, i, ik)
+! it is important to add up the contributions of every k-points and bands
+! case A: just for spin up part
+     DMFT_WANN_LOOP1: do iwan=1,n1wan               ! loop over Wannier orbitals
+         DMFT_WANN_LOOP2: do jwan=1,n1wan           ! loop over Wannier orbitals
+
+             DMFT_KPNT_LOOP1: do ikpt=1,nkpt        ! loop over k-points
+                 caux = czero
+
+                 DMFT_WANN_LOOP3: do kwan=1,n1wan   ! loop over Wannier orbitals
+                     caux = caux + wtet(kwan,ikpt) * zevr(jwan,kwan,ikpt) * zevl(kwan,iwan,ikpt)
+                 enddo DMFT_WANN_LOOP3 ! over kwan={1,n1wan} loop
+
+                 gloc(jwan,iwan) = gloc(jwan,iwan) + caux
+             enddo DMFT_KPNT_LOOP1 ! over ikpt={1,nkpt} loop
+
+         enddo DMFT_WANN_LOOP2 ! over jwan={1,n1wan} loop
+     enddo DMFT_WANN_LOOP1 ! over iwan={1,n1wan} loop
+
+     return
+  end subroutine wann_dmft_ksum2
+
 !>>> compute tetrahedron integrated weights for brillouin zone integration.
 ! only lambin-vigneron algorithm is implemented.
 ! note: it is called by wann_dmft_core1() and wann_dmft_core2() subroutines,
@@ -1293,10 +1351,6 @@
 
      return
   end subroutine cal_sk_hk_T
-
-
-
-
 
 !>>> diagonalize general hamiltonian, return eigenvalues and eigenvectors
   subroutine wann_diag_hamk3(nwan, nkpt, hamk, eval, evecl, evecr)
