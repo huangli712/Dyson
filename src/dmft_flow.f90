@@ -944,10 +944,12 @@
      use control, only : nmesh
      use control, only : nsite
      use control, only : nkpt, nspin
+     use control, only : fermi
 
      use context, only : qbnd
      use context, only : ndim
      use context, only : i_wnd, kwin
+     use context, only : fmesh
 
      implicit none
 
