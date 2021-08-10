@@ -938,7 +938,7 @@
 !!
   subroutine cal_green_tetra()
      use constants, only : dp
-     use constants, only : czero
+     use constants, only : czero, czi
      use constants, only : mystd
 
      use control, only : nmesh
