@@ -980,6 +980,11 @@
      complex(dp), allocatable :: Sk(:,:)
      complex(dp), allocatable :: Xk(:,:)
 
+     allocate(wtet(qbnd,nkpt),       stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('wann_dmft_core2','can not allocate enough memory')
+     endif
+
      allocate(zenk(qbnd,nkpt),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('wann_dmft_core2','can not allocate enough memory')
@@ -1050,6 +1055,8 @@
          enddo
 
          call wann_diag_hamk3(qbnd, nkpt, hdmf, zenk, zevl, zevr)
+         call wann_tetra_weight2(qbnd, czi * fmesh(m) + fermi , zenk, wtet)
+
      enddo
 
      deallocate(wtet)
@@ -1062,6 +1069,88 @@
 
      return
   end subroutine cal_green_tetra
+
+!>>> compute tetrahedron integrated weights for brillouin zone integration.
+! only lambin-vigneron algorithm is implemented.
+! note: it is called by wann_dmft_core1() and wann_dmft_core2() subroutines,
+! used to calculate lattice green's function
+  subroutine wann_tetra_weight2(nwan, z, zenk, weight)
+     use constants
+     use control, only : nkpt, ntet
+     use context, only : tetra
+
+     use mtetra
+
+     implicit none
+
+! external arguments
+     integer, intent(in) :: nwan
+
+! current complex energy
+     complex(dp), intent(in)  :: z
+
+! eigenvalues of hamiltonian
+     complex(dp), intent(in)  :: zenk(nwan,nkpt)
+
+! integration weights
+     complex(dp), intent(out) :: weight(nwan,nkpt)
+
+! local variables
+! loop index for Wannier orbitals
+     integer :: iwan
+
+! loop index for tetrahedron
+     integer :: itet
+
+! loop index for k-points
+     integer :: ikpt
+
+! loop index for corner of tetrahedron
+     integer :: iccc
+
+! mass of tetrahedron
+     integer, save :: mtet = 0
+
+! energy at the corner of tetrahedron
+     complex(dp) :: zc(4)
+
+! weight at the corner of tetrahedron
+     complex(dp) :: zw(4)
+
+! build mtet for the first running
+     if ( mtet == 0 ) then
+         mtet = sum( tetra(5,:) )
+     endif
+
+! initialize weight
+     weight = czero
+
+     WEIGHT_TETRA_LOOP: do itet=1,ntet
+         WEIGHT_ORBIT_LOOP: do iwan=1,nwan
+
+! sets the vectors of corner energies to zc
+             do iccc=1,4
+                 ikpt = tetra(iccc,itet)
+                 zc(iccc) = zenk(iwan,ikpt)
+             enddo ! over iccc={1,4} loop
+
+! actually calculates weights for 4 corners of one tetrahedron
+             call tetra_lambin_weight(z, zc, zw)
+
+! stores weights for irreducible k-points
+             do iccc=1,4
+                 ikpt = tetra(iccc,itet)
+                 weight(iwan,ikpt) = weight(iwan,ikpt) + zw(iccc) * real( tetra(5,itet) )
+             enddo ! over iccc={1,4} loop
+
+         enddo WEIGHT_ORBIT_LOOP ! over iwan={1,nwan} loop
+     enddo WEIGHT_TETRA_LOOP ! over itet={1,ntet} loop
+
+! normalize properly
+     weight = weight / real(mtet)
+
+     return
+  end subroutine wann_tetra_weight2
 
 !!
 !! @sub cal_sl_sk_T
