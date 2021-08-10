@@ -1123,6 +1123,77 @@
      return
   end subroutine cal_sl_sk_T
 
+!!
+!! @sub cal_sk_hk_T
+!!
+!! try to build H(k) + \Sigma(i\omega_n). here, \Sigma should contain
+!! contributions from all impurity sites. so, only when nsite = 1, we
+!! can use the output of cal_sl_sk() as the input of this subroutine.
+!!
+  subroutine cal_sk_hk_T(cbnd, bs, be, k, s, Sk, Hk)
+     use constants, only : dp
+
+     use context, only : enk
+
+     implicit none
+
+!! external arguments
+     ! number of dft bands for given k-point and spin
+     integer, intent(in) :: cbnd
+
+     ! band window: start index and end index for bands
+     integer, intent(in) :: bs, be
+
+     ! index for k-points
+     integer, intent(in) :: k
+
+     ! index for spin
+     integer, intent(in) :: s
+
+     ! self-energy function at Kohn-Sham basis
+     complex(dp), intent(in)  :: Sk(cbnd,cbnd)
+
+     ! effective hamiltonian at given k-point and spin
+     complex(dp), intent(out) :: Hk(cbnd,cbnd)
+
+!! local variables
+     ! status flag
+     integer :: istat
+
+     ! dummy arrays, used to build effective hamiltonian
+     complex(dp), allocatable :: Em(:)
+     complex(dp), allocatable :: Hm(:,:)
+
+!! [body
+
+     ! allocate memory
+     allocate(Em(cbnd),      stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_sk_hk','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
+     allocate(Hm(cbnd,cbnd), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('cal_sk_hk','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     ! evaluate Em, which is just some dft eigenvalues
+     Em = enk(bs:be,k,s)
+
+     ! convert `Em` to diagonal matrix `Hm`
+     call s_diag_z(cbnd, Em, Hm)
+
+     ! combine `Hm` and `Sk` to build the effective hamiltonian
+     Hk = Hm + Sk
+
+     ! deallocate memory
+     if ( allocated(Em) ) deallocate(Em)
+     if ( allocated(Hm) ) deallocate(Hm)
+
+!! body]
+
+     return
+  end subroutine cal_sk_hk_T
 
 
 
