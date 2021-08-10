@@ -976,6 +976,7 @@
      complex(dp), allocatable :: hdmf(:,:,:)
 
      ! dummy array: for self-energy function (upfolded to Kohn-Sham basis)
+     complex(dp), allocatable :: Hk(:,:)
      complex(dp), allocatable :: Sk(:,:)
      complex(dp), allocatable :: Xk(:,:)
 
@@ -1017,6 +1018,7 @@
 
                  ! allocate memories Sk, Xk.
                  ! their sizes are k-dependent.
+                 allocate(Hk(cbnd,cbnd), stat = istat)
                  allocate(Sk(cbnd,cbnd), stat = istat)
                  allocate(Xk(cbnd,cbnd), stat = istat)
                  !
@@ -1035,7 +1037,12 @@
                      Sk = Sk + Xk
                  enddo ! over t={1,nsite} loop
 
+                 call cal_sk_hk_T(cbnd, bs, be, k, s, Sk, Hk)
+
+                 hdmf(1:cbnd,1:cbnd,k) = Hk 
+
                  ! deallocate memories
+                 if ( allocated(Hk) ) deallocate(Hk)
                  if ( allocated(Sk) ) deallocate(Sk)
                  if ( allocated(Xk) ) deallocate(Xk)
 
