@@ -1105,9 +1105,6 @@
 ! loop index for k-points
      integer :: ikpt
 
-! dummy array subscript
-     integer :: naux
-
 ! dummy complex variables
      complex(dp) :: caux
 
