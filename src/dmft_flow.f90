@@ -950,6 +950,7 @@
      use context, only : ndim
      use context, only : i_wnd, kwin
      use context, only : fmesh
+     use context, only : green
 
      implicit none
 
@@ -982,6 +983,11 @@
      complex(dp), allocatable :: Sk(:,:)
      complex(dp), allocatable :: Xk(:,:)
 
+     ! dummy array: used to perform mpi reduce operation for green
+     complex(dp), allocatable :: green_mpi(:,:,:,:,:)
+     complex(dp), allocatable :: gk(:,:)
+     allocate(gk(qbnd,qbnd,nkpt), stat = istat)
+
      allocate(wtet(qbnd,nkpt),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('wann_dmft_core2','can not allocate enough memory')
@@ -1006,6 +1012,9 @@
      if ( istat /= 0 ) then
          call s_print_error('wann_dmft_core2','can not allocate enough memory')
      endif
+
+     ! reset green
+     green = czero
 
      do m=1,nmesh
 
@@ -1058,7 +1067,9 @@
 
          call wann_diag_hamk3(qbnd, nkpt, hdmf, zenk, zevl, zevr)
          call wann_tetra_weight2(qbnd, czi * fmesh(m) + fermi , zenk, wtet)
-         call wann_dmft_ksum2(qbnd, nkpt, wtet, zevl, zevr, gloc)
+         call wann_dmft_ksum2(qbnd, nkpt, wtet, zevl, zevr, gk)
+
+
      enddo
 
      deallocate(wtet)
@@ -1074,7 +1085,7 @@
 
 !>>> perform brillouin zone integration by analytical tetrahedron method
 ! to calculate the lattice green's function
-  subroutine wann_dmft_ksum2(nwan, nkpt, wtet, zevl, zevr, gloc)
+  subroutine wann_dmft_ksum2(nwan, nkpt, wtet, zevl, zevr, gk)
      use constants, only : dp, czero
 
      implicit none
@@ -1093,7 +1104,7 @@
      complex(dp), intent(in)  :: zevr(nwan,nwan,nkpt)
 
 ! lattice green's function
-     complex(dp), intent(out) :: gloc(nwan,nwan)
+     complex(dp), intent(out) :: gk(nwan,nwan,nkpt)
 
 ! local variables
 ! loop index for Wannier orbitals
@@ -1109,7 +1120,6 @@
 
 ! G_{loc}(j, i) = \sum_{ik} \sum_{k} A^{R}(j, k, ik) . W(k, ik) . A^{L}(k, i, ik)
 ! it is important to add up the contributions of every k-points and bands
-! case A: just for spin up part
      DMFT_WANN_LOOP1: do iwan=1,nwan               ! loop over Wannier orbitals
          DMFT_WANN_LOOP2: do jwan=1,nwan           ! loop over Wannier orbitals
 
@@ -1120,7 +1130,7 @@
                      caux = caux + wtet(kwan,ikpt) * zevr(jwan,kwan,ikpt) * zevl(kwan,iwan,ikpt)
                  enddo DMFT_WANN_LOOP3 ! over kwan={1,n1wan} loop
 
-                 gloc(jwan,iwan) = gloc(jwan,iwan) + caux
+                 gk(jwan,iwan,ikpt) = caux
              enddo DMFT_KPNT_LOOP1 ! over ikpt={1,nkpt} loop
 
          enddo DMFT_WANN_LOOP2 ! over jwan={1,n1wan} loop
