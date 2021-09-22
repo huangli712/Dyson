@@ -19,7 +19,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/31/2021 by li huang (last modified)
+!!!           09/22/2021 by li huang (last modified)
 !!! purpose : setup the configuration parameters and read the input data.
 !!! status  : unstable
 !!! comment :
@@ -151,7 +151,8 @@
      use control, only : scale, fermi, volt
      use control, only : myid, master
 
-     use context, only : qdim, qbnd
+     use context, only : qdim
+     use context, only : qbnd, xbnd
 
      implicit none
 
@@ -177,9 +178,11 @@
      ntet   = 4374      ! number of tetrahedra
      !--------------------------------------------------------------------
      ngrp   = 1         ! number of groups for projectors
-     qdim   = 3         ! maximum number of projectors in groups
+     qdim   = 5         ! maximum number of projectors in groups
+     !--------------------------------------------------------------------
      nwnd   = 1         ! number of windows for projectors
-     qbnd   = 5         ! maximum number of bands in windows
+     qbnd   = 5         ! maximum number of bands in local windows
+     xbnd   = 5         ! maximum number of bands in global windows
      !--------------------------------------------------------------------
      nsite  = 1         ! number of impurity sites
      nmesh  = 8193      ! number of frequency points
@@ -232,6 +235,7 @@
              read(mytmp,*) ! for window block
              read(mytmp,*) chr1, chr2, nwnd
              read(mytmp,*) chr1, chr2, qbnd
+             read(mytmp,*) chr1, chr2, xbnd
              read(mytmp,*)
 
              read(mytmp,*) ! for sigma block
@@ -275,6 +279,7 @@
      ! for window block
      call mp_bcast( nwnd  , master )
      call mp_bcast( qbnd  , master )
+     call mp_bcast( xbnd  , master )
      call mp_barrier()
 
      ! for sigma block
@@ -439,6 +444,7 @@
      ! broadcast data
      call mp_bcast( i_grp, master )
      call mp_bcast( i_wnd, master )
+     !
      call mp_bcast( g_imp, master )
      call mp_bcast( w_imp, master )
 
@@ -448,7 +454,6 @@
 # endif  /* MPI */
 
      ! additional check for the data
-     ! all of the impurity problems should share the same band window!
      call s_assert2(nsite <= ngrp, 'nsite must be smaller or equal to ngrp')
      !
      call s_assert2(nwnd == ngrp, 'nwnd must be equal to ngrp')
@@ -525,11 +530,13 @@
          ! read data
          do i=1,ngrp
              read(mytmp,*)
+             !
              read(mytmp,*) chr1, chr2, site(i)
              read(mytmp,*) chr1, chr2, l(i)
              read(mytmp,*) chr1, chr2, corr(i)
              read(mytmp,*) chr1, chr2, shell(i)
              read(mytmp,*) chr1, chr2, ndim(i)
+             !
              read(mytmp,*)
          enddo ! over i={1,ngrp} loop
 
@@ -569,9 +576,9 @@
 !!
 !! @sub dmft_input_window
 !!
-!! read in band windows of projectors (see module dmft_window). the data
-!! are used to upfold or downfold the self-energy functions and green's
-!! functions.
+!! read in dft band windows of projectors (see module dmft_window). the
+!! data are used to upfold or downfold the self-energy functions and
+!! the green's functions.
 !!
   subroutine dmft_input_window()
      use constants, only : mytmp
@@ -584,7 +591,8 @@
      use control, only : myid, master
 
      use context, only : qbnd
-     use context, only : bmin, bmax, nbnd, kwin
+     use context, only : xbnd
+     use context, only : bmin, bmax, nbnd, qwin, kwin
 
      implicit none
 
@@ -636,15 +644,19 @@
          ! read data
          do i=1,nwnd
              read(mytmp,*)
+             !
              read(mytmp,*) chr1, chr2, bmin(i)
              read(mytmp,*) chr1, chr2, bmax(i)
              read(mytmp,*) chr1, chr2, nbnd(i)
+             !
              read(mytmp,*) ! for kwin
+             !
              do s=1,nspin
                  do k=1,nkpt
                      read(mytmp,*) itmp, itmp, kwin(k,s,1,i), kwin(k,s,2,i)
                  enddo ! over k={1,nkpt} loop
              enddo ! over s={1,nspin} loop
+             !
              read(mytmp,*)
          enddo ! over i={1,nwnd} loop
 
@@ -674,6 +686,17 @@
      call mp_barrier()
 
 # endif  /* MPI */
+
+     ! well, next we will try to build qwin and xbnd
+     do s=1,nspin
+         do k=1,nkpt
+             qwin(k,s,1) = minval(kwin(k,s,1,:))
+             qwin(k,s,2) = maxval(kwin(k,s,2,:))
+         enddo ! over k={1,nkpt} loop
+     enddo ! over s={1,nspin} loop
+     !
+     itmp = maxval(bmax) - minval(bmin) + 1
+     call s_assert2(itmp == xbnd, 'xbnd is wrong')
 
 !! body]
 
@@ -765,9 +788,11 @@
 
          ! read lvect
          read(mytmp,*) ! header
+         !
          do i=1,3
              read(mytmp,*) lvect(i,1:3)
          enddo ! over i={1,3} loop
+         !
          read(mytmp,*) ! empty line
 
          ! read coord
@@ -1209,9 +1234,12 @@
                  do k=1,nkpt
                      do b=1,nbnd(g)
                          do d=1,ndim(g)
+                             !
                              read(mytmp,*) re, im
+                             !
                              chipsi(d,b,k,s,g) = dcmplx(re,+im)
                              psichi(b,d,k,s,g) = dcmplx(re,-im)
+                             !
                          enddo ! over d={1,ndim(g)} loop
                      enddo ! over b={1,nbnd(g)} loop
                  enddo ! over k={1,nkpt} loop
@@ -1262,8 +1290,8 @@
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
 
-     use control, only : nsite
      use control, only : nspin
+     use control, only : nsite
      use control, only : myid, master
 
      use context, only : i_grp
@@ -1333,16 +1361,21 @@
          read(mytmp,*) ! empty line
 
          ! parse the data
+         ! be careful, the data are for correlated orbitals only.
          do i=1,nsite
              do s=1,nspin
+                 !
                  read(mytmp,*) ! empty line
+                 !
                  do m=1,ndim(i_grp(i))
                      do n=1,ndim(i_grp(i))
                          read(mytmp,*) re, im
-                         sigdc(n,m,s,i) = dcmplx(re, im)
+                         sigdc(n,m,s,i_grp(i)) = dcmplx(re, im)
                      enddo ! over n={1,ndim(i_grp(i))} loop
                  enddo ! over m={1,ndim(i_grp(i))} loop
+                 !
                  read(mytmp,*) ! empty line
+                 !
              enddo ! over s={1,nspin} loop
          enddo ! over i={1,nsite} loop
 
@@ -1385,9 +1418,9 @@
      use mmpi, only : mp_barrier
 
      use control, only : axis
+     use control, only : nspin
      use control, only : nsite
      use control, only : nmesh
-     use control, only : nspin
      use control, only : beta
      use control, only : myid, master
 
@@ -1469,24 +1502,28 @@
              call s_assert2(itmp == ndim(i_grp(i)), 'ndim is wrong')
              call s_assert2(itmp <= qdim, 'ndim is wrong')
          enddo ! over i={1,nsite} loop
+         !
          read(mytmp,*) ! empty line
 
          ! parse the data
+         ! be careful, the data are for correlated orbitals only.
          do i=1,nsite
              do s=1,nspin
+                 !
                  read(mytmp,*) ! empty line
-
+                 !
                  do m=1,nmesh
                      read(mytmp,*) chr2, itmp, fmesh(m)
                      do j=1,ndim(i_grp(i))
                          do k=1,ndim(i_grp(i))
                              read(mytmp,*) re, im
-                             sigma(k,j,m,s,i) = dcmplx(re, im)
+                             sigma(k,j,m,s,i_grp(i)) = dcmplx(re, im)
                          enddo ! over k={1,ndim(i_grp(i))} loop
                      enddo ! over j={1,ndim(i_grp(i))} loop
                  enddo ! over m={1,nmesh} loop
-
+                 !
                  read(mytmp,*) ! empty line
+                 !
              enddo ! over s={1,nspin} loop
          enddo ! over i={1,nsite} loop
 
@@ -1550,7 +1587,7 @@
      call cat_alloc_weiss()
      call cat_alloc_delta()
 
-     call cat_alloc_gamma()
+     call cat_alloc_gcorr()
 
 !! body]
 
@@ -1587,7 +1624,7 @@
      call cat_free_weiss()
      call cat_free_delta()
 
-     call cat_free_gamma()
+     call cat_free_gcorr()
 
 !! body]
 

@@ -7,12 +7,12 @@
 !!!           dmft_dump_green
 !!!           dmft_dump_weiss
 !!!           dmft_dump_delta
-!!!           dmft_dump_gamma
+!!!           dmft_dump_gcorr
 !!! source  : dmft_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/31/2021 by li huang (last modified)
+!!!           09/22/2021 by li huang (last modified)
 !!! purpose : provide some subroutines to write down the calculated data.
 !!! status  : unstable
 !!! comment :
@@ -69,8 +69,10 @@
      use constants, only : mytmp
 
      use control, only : nspin
+     use control, only : ngrp
      use control, only : nsite
 
+     use context, only : g_imp
      use context, only : qdim
      use context, only : ndim
 
@@ -78,14 +80,14 @@
 
 !! external arguments
      ! local impurity levels
-     complex(dp), intent(in) :: eimps(qdim,qdim,nspin,nsite)
+     complex(dp), intent(in) :: eimps(qdim,qdim,nspin,ngrp)
 
 !! local variables
-     ! loop index for impurity sites
-     integer :: t
-
      ! loop index for spins
      integer :: s
+
+     ! loop index for groups
+     integer :: t, r
 
      ! loop index for correlated orbitals
      integer :: p, q
@@ -105,11 +107,19 @@
      write(mytmp,*)
 
      ! write body
-     do t=1,nsite
+     do t=1,ngrp
+         !
+         ! get the corresponding impurity site
+         r = g_imp(t)
+         !
+         ! it is not a correlated group
+         if ( r == 0 ) CYCLE
+         !
          do s=1,nspin
              !
              ! write data for given spin and site
-             write(mytmp,'(3(a,i4,2X))') '# site:', t, 'spin:', s, 'dims:', ndim(t)
+             write(mytmp,'(3(a,i4,2X))') '# site:', r, 'spin:', s, 'dims:', ndim(t)
+             !
              do q=1,ndim(t)
                  do p=1,ndim(t)
                      write(mytmp,'(2i4,2f16.8)') p, q, eimps(p,q,s,t)
@@ -121,7 +131,7 @@
              write(mytmp,*)
              !
          enddo ! over s={1,nspin} loop
-     enddo ! over t={1,nsite} loop
+     enddo ! over t={1,ngrp} loop
 
      ! close data file
      close(mytmp)
@@ -142,8 +152,10 @@
      use constants, only : mytmp
 
      use control, only : nspin
+     use control, only : ngrp
      use control, only : nsite
 
+     use context, only : g_imp
      use context, only : qdim
      use context, only : ndim
 
@@ -151,14 +163,14 @@
 
 !! external arguments
      ! local impurity levels. eimpx = eimps - sigdc
-     complex(dp), intent(in) :: eimpx(qdim,qdim,nspin,nsite)
+     complex(dp), intent(in) :: eimpx(qdim,qdim,nspin,ngrp)
 
 !! local variables
-     ! loop index for impurity sites
-     integer :: t
-
      ! loop index for spins
      integer :: s
+
+     ! loop index for groups
+     integer :: t, r
 
      ! loop index for correlated orbitals
      integer :: p, q
@@ -178,11 +190,19 @@
      write(mytmp,*)
 
      ! write body
-     do t=1,nsite
+     do t=1,ngrp
+         !
+         ! get the corresponding impurity site
+         r = g_imp(t)
+         !
+         ! it is not a correlated group
+         if ( r == 0 ) CYCLE
+         !
          do s=1,nspin
              !
              ! write data for given spin and site
-             write(mytmp,'(3(a,i4,2X))') '# site:', t, 'spin:', s, 'dims:', ndim(t)
+             write(mytmp,'(3(a,i4,2X))') '# site:', r, 'spin:', s, 'dims:', ndim(t)
+             !
              do q=1,ndim(t)
                  do p=1,ndim(t)
                      write(mytmp,'(2i4,2f16.8)') p, q, eimpx(p,q,s,t)
@@ -194,7 +214,7 @@
              write(mytmp,*)
              !
          enddo ! over s={1,nspin} loop
-     enddo ! over t={1,nsite} loop
+     enddo ! over t={1,ngrp} loop
 
      ! close data file
      close(mytmp)
@@ -216,38 +236,34 @@
      use control, only : nkpt, nspin
      use control, only : nmesh
 
-     use context, only : i_wnd
-     use context, only : qbnd
-     use context, only : kwin
+     use context, only : xbnd
+     use context, only : qwin
      use context, only : fmesh
 
      implicit none
 
 !! external arguments
      ! eigenvalues for H(k) + \Sigma(i\omega_n)
-     complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
+     complex(dp), intent(in) :: eigs(xbnd,nmesh,nkpt,nspin)
 
 !! local variables
-     ! loop index for spins
-     integer :: s
+     ! number of included dft bands for given k-point and spin
+     integer :: cbnd
+
+     ! band window: start index and end index for bands
+     integer :: bs, be
 
      ! loop index for k-points
      integer :: k
 
-     ! loop index for impurity sites
-     integer :: t
+     ! loop index for spins
+     integer :: s
 
      ! loop index for frequency grid
      integer :: m
 
      ! loop index for bands in band window
      integer :: q
-
-     ! number of dft bands for given k-point and spin
-     integer :: cbnd
-
-     ! band window: start index and end index for bands
-     integer :: bs, be
 
 !! [body
 
@@ -258,7 +274,7 @@
      write(mytmp,'(a9,i4)') '# nkpt : ', nkpt
      write(mytmp,'(a9,i4)') '# nspin: ', nspin
      write(mytmp,'(a9,i4)') '# nmesh: ', nmesh
-     write(mytmp,'(a9,i4)') '# qbnd : ', qbnd
+     write(mytmp,'(a9,i4)') '# xbnd : ', xbnd
 
      ! write separators
      write(mytmp,*)
@@ -269,20 +285,18 @@
          do k=1,nkpt
 
              ! evaluate band window for the current k-point and spin.
-             !
-             ! i_wnd(t) returns the corresponding band window for given
-             ! impurity site t. see remarks in cal_nelect() subroutine.
-             t = 1 ! t is fixed to 1
-             bs = kwin(k,s,1,i_wnd(t))
-             be = kwin(k,s,2,i_wnd(t))
+             bs = qwin(k,s,1)
+             be = qwin(k,s,2)
 
              ! determine cbnd
              cbnd = be - bs + 1
 
              ! write data for given spin and site
              write(mytmp,'(3(a,i4,2X))') '# kpt:', k, 'spin:', s, 'cbnd:', cbnd
+             !
              do m=1,nmesh
                  write(mytmp,'(a2,i6,f16.8)') 'w:', m, fmesh(m)
+                 !
                  do q=1,cbnd
                      write(mytmp,'(i4,2f16.8)') q, eigs(q,m,k,s)
                  enddo ! over q={1,cbnd} loop
@@ -313,8 +327,11 @@
      use constants, only : mytmp
 
      use control, only : nspin
-     use control, only : nsite, nmesh
+     use control, only : ngrp
+     use control, only : nsite
+     use control, only : nmesh
 
+     use context, only : g_imp
      use context, only : qdim
      use context, only : ndim
      use context, only : fmesh
@@ -323,17 +340,17 @@
 
 !! external arguments
      ! local green's function
-     complex(dp), intent(in) :: green(qdim,qdim,nmesh,nspin,nsite)
+     complex(dp), intent(in) :: green(qdim,qdim,nmesh,nspin,ngrp)
 
 !! local variables
-     ! loop index for impurity sites
-     integer :: t
-
      ! loop index for spins
      integer :: s
 
      ! loop index for frequency grid
      integer :: m
+
+     ! loop index for groups
+     integer :: t, r
 
      ! loop index for correlated orbitals
      integer :: p, q
@@ -354,13 +371,22 @@
      write(mytmp,*)
 
      ! write body
-     do t=1,nsite
+     do t=1,ngrp
+         !
+         ! get the corresponding impurity site
+         r = g_imp(t)
+         !
+         ! it is not a correlated group
+         if ( r == 0 ) CYCLE
+         !
          do s=1,nspin
              !
              ! write data for given spin and site
-             write(mytmp,'(3(a,i4,2X))') '# site:', t, 'spin:', s, 'dims:', ndim(t)
+             write(mytmp,'(3(a,i4,2X))') '# site:', r, 'spin:', s, 'dims:', ndim(t)
+             !
              do m=1,nmesh
                  write(mytmp,'(a2,i6,f16.8)') 'w:', m, fmesh(m)
+                 !
                  do q=1,ndim(t)
                      do p=1,ndim(t)
                          write(mytmp,'(2i4,2f16.8)') p, q, green(p,q,m,s,t)
@@ -373,7 +399,7 @@
              write(mytmp,*)
              !
          enddo ! over s={1,nspin} loop
-     enddo ! over t={1,nsite} loop
+     enddo ! over t={1,ngrp} loop
 
      ! close data file
      close(mytmp)
@@ -393,8 +419,11 @@
      use constants, only : mytmp
 
      use control, only : nspin
-     use control, only : nsite, nmesh
+     use control, only : ngrp
+     use control, only : nsite
+     use control, only : nmesh
 
+     use context, only : g_imp
      use context, only : qdim
      use context, only : ndim
      use context, only : fmesh
@@ -403,17 +432,17 @@
 
 !! external arguments
      ! local weiss's function
-     complex(dp), intent(in) :: weiss(qdim,qdim,nmesh,nspin,nsite)
+     complex(dp), intent(in) :: weiss(qdim,qdim,nmesh,nspin,ngrp)
 
 !! local variables
-     ! loop index for impurity sites
-     integer :: t
-
      ! loop index for spins
      integer :: s
 
      ! loop index for frequency grid
      integer :: m
+
+     ! loop index for groups
+     integer :: t, r
 
      ! loop index for correlated orbitals
      integer :: p, q
@@ -434,13 +463,22 @@
      write(mytmp,*)
 
      ! write body
-     do t=1,nsite
+     do t=1,ngrp
+         !
+         ! get the corresponding impurity site
+         r = g_imp(t)
+         !
+         ! it is not a correlated group
+         if ( r == 0 ) CYCLE
+         !
          do s=1,nspin
              !
              ! write data for given spin and site
-             write(mytmp,'(3(a,i4,2X))') '# site:', t, 'spin:', s, 'dims:', ndim(t)
+             write(mytmp,'(3(a,i4,2X))') '# site:', r, 'spin:', s, 'dims:', ndim(t)
+             !
              do m=1,nmesh
                  write(mytmp,'(a2,i6,f16.8)') 'w:', m, fmesh(m)
+                 !
                  do q=1,ndim(t)
                      do p=1,ndim(t)
                          write(mytmp,'(2i4,2f16.8)') p, q, weiss(p,q,m,s,t)
@@ -453,7 +491,7 @@
              write(mytmp,*)
              !
          enddo ! over s={1,nspin} loop
-     enddo ! over t={1,nsite} loop
+     enddo ! over t={1,ngrp} loop
 
      ! close data file
      close(mytmp)
@@ -473,8 +511,11 @@
      use constants, only : mytmp
 
      use control, only : nspin
-     use control, only : nsite, nmesh
+     use control, only : ngrp
+     use control, only : nsite
+     use control, only : nmesh
 
+     use context, only : g_imp
      use context, only : qdim
      use context, only : ndim
      use context, only : fmesh
@@ -483,17 +524,17 @@
 
 !! external arguments
      ! local hybridization function
-     complex(dp), intent(in) :: delta(qdim,qdim,nmesh,nspin,nsite)
+     complex(dp), intent(in) :: delta(qdim,qdim,nmesh,nspin,ngrp)
 
 !! local variables
-     ! loop index for impurity sites
-     integer :: t
-
      ! loop index for spins
      integer :: s
 
      ! loop index for frequency grid
      integer :: m
+
+     ! loop index for groups
+     integer :: t, r
 
      ! loop index for correlated orbitals
      integer :: p, q
@@ -514,13 +555,22 @@
      write(mytmp,*)
 
      ! write body
-     do t=1,nsite
+     do t=1,ngrp
+         !
+         ! get the corresponding impurity site
+         r = g_imp(t)
+         !
+         ! it is not a correlated group
+         if ( r == 0 ) CYCLE
+         !
          do s=1,nspin
              !
              ! write data for given spin and site
-             write(mytmp,'(3(a,i4,2X))') '# site:', t, 'spin:', s, 'dims:', ndim(t)
+             write(mytmp,'(3(a,i4,2X))') '# site:', r, 'spin:', s, 'dims:', ndim(t)
+             !
              do m=1,nmesh
                  write(mytmp,'(a2,i6,f16.8)') 'w:', m, fmesh(m)
+                 !
                  do q=1,ndim(t)
                      do p=1,ndim(t)
                          write(mytmp,'(2i4,2f16.8)') p, q, delta(p,q,m,s,t)
@@ -533,7 +583,7 @@
              write(mytmp,*)
              !
          enddo ! over s={1,nspin} loop
-     enddo ! over t={1,nsite} loop
+     enddo ! over t={1,ngrp} loop
 
      ! close data file
      close(mytmp)
@@ -544,55 +594,51 @@
   end subroutine dmft_dump_delta
 
 !!
-!! @sub dmft_dump_gamma
+!! @sub dmft_dump_gcorr
 !!
 !! write out the dmft correction for dft density matrix.
 !!
-  subroutine dmft_dump_gamma(gamma)
+  subroutine dmft_dump_gcorr(gcorr)
      use constants, only : dp
      use constants, only : mytmp
 
      use control, only : nkpt, nspin
 
-     use context, only : i_wnd
-     use context, only : qbnd
-     use context, only : kwin
+     use context, only : xbnd
+     use context, only : qwin
      use context, only : kmesh
 
      implicit none
 
 !! external arguments
      ! local hybridization function
-     complex(dp), intent(in) :: gamma(qbnd,qbnd,nkpt,nspin)
+     complex(dp), intent(in) :: gcorr(xbnd,xbnd,nkpt,nspin)
 
 !! local variables
-     ! loop index for spins
-     integer :: s
-
-     ! loop index for k-points
-     integer :: k
-
-     ! loop index for impurity sites
-     integer :: t
-
-     ! loop index for bands in band window
-     integer :: p, q
-
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer :: cbnd
 
      ! band window: start index and end index for bands
      integer :: bs, be
 
+     ! loop index for k-points
+     integer :: k
+
+     ! loop index for spins
+     integer :: s
+
+     ! loop index for bands in band window
+     integer :: p, q
+
 !! [body
 
-     ! open data file: dmft.gamma
-     open(mytmp, file='dmft.gamma', form='formatted', status='unknown')
+     ! open data file: dmft.gcorr
+     open(mytmp, file='dmft.gcorr', form='formatted', status='unknown')
 
      ! write parameters
      write(mytmp,'(a9,i4)') '# nkpt : ', nkpt
      write(mytmp,'(a9,i4)') '# nspin: ', nspin
-     write(mytmp,'(a9,i4)') '# qbnd : ', qbnd
+     write(mytmp,'(a9,i4)') '# xbnd : ', xbnd
 
      ! write separators
      write(mytmp,*)
@@ -603,12 +649,8 @@
          do k=1,nkpt
 
              ! evaluate band window for the current k-point and spin.
-             !
-             ! i_wnd(t) returns the corresponding band window for given
-             ! impurity site t. see remarks in cal_nelect() subroutine.
-             t = 1 ! t is fixed to 1
-             bs = kwin(k,s,1,i_wnd(t))
-             be = kwin(k,s,2,i_wnd(t))
+             bs = qwin(k,s,1)
+             be = qwin(k,s,2)
 
              ! determine cbnd
              cbnd = be - bs + 1
@@ -617,9 +659,10 @@
              write(mytmp,'(a,i4)') '# spin:', s
              write(mytmp,'(a,i4,2X,3f16.12)') '# kpt:', k, kmesh(k,1:3)
              write(mytmp,'(3(a,i4,2X))') '# cbnd:', cbnd, 'bs:', bs, 'be:', be
+             !
              do q=1,cbnd
                  do p=1,cbnd
-                     write(mytmp,'(2i4,2f16.8)') p, q, gamma(p,q,k,s)
+                     write(mytmp,'(2i4,2f16.8)') p, q, gcorr(p,q,k,s)
                  enddo ! over p={1,cbnd} loop
              enddo ! over q={1,cbnd} loop
 
@@ -636,4 +679,4 @@
 !! body]
 
      return
-  end subroutine dmft_dump_gamma
+  end subroutine dmft_dump_gcorr

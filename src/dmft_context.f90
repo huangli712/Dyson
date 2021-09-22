@@ -14,13 +14,13 @@
 !!!           dmft_green    module
 !!!           dmft_weiss    module
 !!!           dmft_delta    module
-!!!           dmft_gamma    module
+!!!           dmft_gcorr    module
 !!!           context       module
 !!! source  : dmft_context.f90
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/30/2021 by li huang (last modified)
+!!!           09/22/2021 by li huang (last modified)
 !!! purpose : try to define the global modules and arrays, and implement
 !!!           memory managment.
 !!! status  : unstable
@@ -35,7 +35,7 @@
 !! @mod dmft_map
 !!
 !! define connections / mappings between the quantum impurity problems and
-!! the groups of projectors (and band windows).
+!! the groups of projectors or windows of dft bands.
 !!
   module dmft_map
      implicit none
@@ -51,8 +51,8 @@
 !!
 !! @var i_wnd
 !!
-!! given a given quantum impurity problem, return the corresponding dft
-!! band window, impurity -> window.
+!! given a given quantum impurity problem, return the corresponding window
+!! of dft bands, impurity -> window. actually, this array hasn't been used.
 !!
      integer, public, save, allocatable :: i_wnd(:)
 
@@ -60,20 +60,18 @@
 !! @var g_imp
 !!
 !! given a given group of projectors, return the corresponding quantum
-!! impurity problem, group -> impurity.
-!!
-!! 0 value means that this group of projectors is just for non-correlated
-!! orbitals.
+!! impurity problem, group -> impurity. note that 0 value means that
+!! this group of projectors is just for non-correlated orbitals.
 !!
      integer, public, save, allocatable :: g_imp(:)
 
 !!
 !! @var w_imp
 !!
-!! given a given dft band window, return the corresponding quantum impurity
-!! problem, window -> impurity.
-!!
-!! 0 value means that this dft band window is for non-correlated orbitals.
+!! given a window of dft bands, return the corresponding quantum impurity
+!! problem, window -> impurity. note that 0 value means that this window
+!! of dft bands is just for non-correlated orbitals. actually, this array
+!! hasn't been used.
 !!
      integer, public, save, allocatable :: w_imp(:)
 
@@ -86,7 +84,10 @@
 !!
 !! @mod dmft_group
 !!
-!! specify the traits of groups of projectors.
+!! specify the traits of groups of projectors. the projectors denote the
+!! overlap matrices between the Kohn-Sham bands and local orbitals. they
+!! are split into some groups, which are labelled by the site, angular
+!! momentum, and number of projectors, etc.
 !!
   module dmft_group
      implicit none
@@ -94,7 +95,7 @@
 !!
 !! @var qdim
 !!
-!! maximum number of correlated orbitals for all groups. actually, it
+!! maximum number of correlated orbitals among all groups. actually, it
 !! should be equal to maxval(ndim).
 !!
      integer, public, save :: qdim = -1
@@ -102,14 +103,14 @@
 !!
 !! @var shell
 !!
-!! specification of orbital shell.
+!! type of local orbital.
 !!
      character(len=5), public, save, allocatable :: shell(:)
 
 !!
 !! @var corr
 !!
-!! tell us this group is correlated or not.
+!! tell us whether this group is correlated or not.
 !!
      logical, public, save, allocatable :: corr(:)
 
@@ -123,7 +124,7 @@
 !!
 !! @var l
 !!
-!! the corresponding angular momentum quantum number of this group.
+!! the corresponding angular momentum of this group.
 !!
      integer, public, save, allocatable :: l(:)
 
@@ -143,7 +144,9 @@
 !!
 !! @mod dmft_window
 !!
-!! specify the dft band windows for projectors.
+!! specify the windows of dft bands for projectors. there is a one-to-one
+!! match between each group of projectors and each window of dft bands.
+!! in other words, the number of groups and number of windows are equal.
 !!
   module dmft_window
      implicit none
@@ -151,10 +154,22 @@
 !!
 !! @var qbnd
 !!
-!! maximum number of dft bands for all the band windows. actually, it
+!! maximum number of dft bands among all the band windows. actually, it
 !! should be equal to maxval(nbnd).
 !!
      integer, public, save :: qbnd = -1
+
+!!
+!! @var xbnd
+!!
+!! maximum number of dft bands included in all the windows. actually, it
+!! should be considered as an union of all the dft band windows.
+!!
+!! we have to distinguish qbnd and xbnd. supposed that we have two groups
+!! i.e, two windows. One is from band 1 to band 9, another one is from
+!! band 10 to 14. Then nbnd = (9, 5), qbnd is 9, and xbnd is 14.
+!!
+     integer, public, save :: xbnd = +1
 
 !!
 !! @var bmin
@@ -177,6 +192,13 @@
 !!
      integer, public, save, allocatable :: nbnd(:)
 
+!!
+!! @var qwin
+!!
+!! momentum- and spin-dependent band windows. it records an union for all
+!! windows for each k-point and spin orientation.
+!!
+     integer, public, save, allocatable :: qwin(:,:,:)
 !!
 !! @var kwin
 !!
@@ -255,7 +277,7 @@
 !!
 !! @var kmesh
 !!
-!! k-mesh in the brillouin zone.
+!! k-mesh in the uniform brillouin zone.
 !!
      real(dp), public, save, allocatable :: kmesh(:,:)
 
@@ -330,7 +352,8 @@
 !!
 !! @mod dmft_projs
 !!
-!! contain the local orbital projectors.
+!! contain the projectors, which are basically overlap matrices between
+!! the Kohn-Sham states and the local orbitals.
 !!
   module dmft_projs
      use constants, only : dp
@@ -340,7 +363,7 @@
 !!
 !! @var chipsi
 !!
-!! overlap matrix between the local orbitals and the Kohn-Sham basis. its
+!! overlap matrix between the local orbitals and the Kohn-Sham states. its
 !! definition is \langle \chi^{I}_{\alpha,k} | \psi_{b,k} \rangle, where
 !! `I` means the index for correlated sites, \alpha means the index for
 !! correlated orbitals. `b`, `k`, `s` are indices for dft bands, k-points,
@@ -352,7 +375,7 @@
 !!
 !! @var psichi
 !!
-!! overlap matrix between the Kohn-Sham basis and the local orbitals. its
+!! overlap matrix between the Kohn-Sham states and the local orbitals. its
 !! definition is \langle \psi_{b,k} | \chi^{I}_{\alpha,k} \rangle.
 !! actually, psichi can be obtained by chipsi via conjugate transpose.
 !!
@@ -531,28 +554,28 @@
   end module dmft_delta
 
 !!========================================================================
-!!>>> module dmft_gamma                                                <<<
+!!>>> module dmft_gcorr                                                <<<
 !!========================================================================
 
 !!
-!! @mod dmft_gamma
+!! @mod dmft_gcorr
 !!
 !! contain dft + dmft correction for density matrix.
 !!
-  module dmft_gamma
+  module dmft_gcorr
      use constants, only : dp
 
      implicit none
 
 !!
-!! @var gamma
+!! @var gcorr
 !!
 !! dft + dmft correction for density matrix, which is used to carry out
 !! fully charge self-consistent dft + dmft calculations.
 !!
-     complex(dp), public, save, allocatable :: gamma(:,:,:,:)
+     complex(dp), public, save, allocatable :: gcorr(:,:,:,:)
 
-  end module dmft_gamma
+  end module dmft_gcorr
 
 !!========================================================================
 !!>>> module context                                                   <<<
@@ -589,7 +612,7 @@
      use dmft_green
      use dmft_weiss
      use dmft_delta
-     use dmft_gamma
+     use dmft_gcorr
 
      implicit none
 
@@ -619,7 +642,7 @@
      public :: cat_alloc_green
      public :: cat_alloc_weiss
      public :: cat_alloc_delta
-     public :: cat_alloc_gamma
+     public :: cat_alloc_gcorr
 
      ! declaration of module procedures: deallocate memory
      public :: cat_free_map
@@ -636,7 +659,7 @@
      public :: cat_free_green
      public :: cat_free_weiss
      public :: cat_free_delta
-     public :: cat_free_gamma
+     public :: cat_free_gcorr
 
   contains ! encapsulated functionality
 
@@ -730,6 +753,7 @@
      allocate(bmin(nwnd), stat = istat)
      allocate(bmax(nwnd), stat = istat)
      allocate(nbnd(nwnd), stat = istat)
+     allocate(qwin(nkpt,nspin,2), stat = istat)
      allocate(kwin(nkpt,nspin,2,nwnd), stat = istat)
 
      ! check the status
@@ -741,13 +765,16 @@
      bmin = 0
      bmax = 0
      nbnd = 0
+     qwin = 0
      kwin = 0
 
      ! special treatment for `qbnd`.
-     ! qbnd should be initialized in dmft_setup_param().
+     ! qbnd should be initialized within dmft_setup_param().
      if ( qbnd < 0 ) then
          call s_print_error('cat_alloc_window','qbnd is less than 0')
      endif ! back if ( qbnd < 0 ) block
+     !
+     ! xbnd should be initialized with in dmft_input_window().
 
 !! body]
 
@@ -935,8 +962,8 @@
 !! [body
 
      ! allocate memory
-     allocate(eimps(qdim,qdim,nspin,nsite), stat = istat)
-     allocate(eimpx(qdim,qdim,nspin,nsite), stat = istat)
+     allocate(eimps(qdim,qdim,nspin,ngrp), stat = istat)
+     allocate(eimpx(qdim,qdim,nspin,ngrp), stat = istat)
 
      ! check the status
      if ( istat /= 0 ) then
@@ -963,9 +990,9 @@
 !! [body
 
      ! allocate memory
-     allocate(sigdc(qdim,qdim,nspin,nsite),       stat = istat)
-     allocate(sigoo(qdim,qdim,nspin,nsite),       stat = istat)
-     allocate(sigma(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     allocate(sigdc(qdim,qdim,nspin,ngrp),       stat = istat)
+     allocate(sigoo(qdim,qdim,nspin,ngrp),       stat = istat)
+     allocate(sigma(qdim,qdim,nmesh,nspin,ngrp), stat = istat)
 
      ! check the status
      if ( istat /= 0 ) then
@@ -993,7 +1020,7 @@
 !! [body
 
      ! allocate memory
-     allocate(green(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     allocate(green(qdim,qdim,nmesh,nspin,ngrp), stat = istat)
 
      ! check the status
      if ( istat /= 0 ) then
@@ -1019,7 +1046,7 @@
 !! [body
 
      ! allocate memory
-     allocate(weiss(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     allocate(weiss(qdim,qdim,nmesh,nspin,ngrp), stat = istat)
 
      ! check the status
      if ( istat /= 0 ) then
@@ -1045,7 +1072,7 @@
 !! [body
 
      ! allocate memory
-     allocate(delta(qdim,qdim,nmesh,nspin,nsite), stat = istat)
+     allocate(delta(qdim,qdim,nmesh,nspin,ngrp), stat = istat)
 
      ! check the status
      if ( istat /= 0 ) then
@@ -1061,30 +1088,30 @@
   end subroutine cat_alloc_delta
 
 !!
-!! @sub cat_alloc_gamma
+!! @sub cat_alloc_gcorr
 !!
-!! allocate memory for gamma-related variables.
+!! allocate memory for gcorr-related variables.
 !!
-  subroutine cat_alloc_gamma()
+  subroutine cat_alloc_gcorr()
      implicit none
 
 !! [body
 
      ! allocate memory
-     allocate(gamma(qbnd,qbnd,nkpt,nspin), stat = istat)
+     allocate(gcorr(xbnd,xbnd,nkpt,nspin), stat = istat)
 
      ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('cat_alloc_gamma','can not allocate enough memory')
+         call s_print_error('cat_alloc_gcorr','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! initialize them
-     gamma = czero
+     gcorr = czero
 
 !! body]
 
      return
-  end subroutine cat_alloc_gamma
+  end subroutine cat_alloc_gcorr
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
@@ -1144,6 +1171,7 @@
      if ( allocated(bmin) ) deallocate(bmin)
      if ( allocated(bmax) ) deallocate(bmax)
      if ( allocated(nbnd) ) deallocate(nbnd)
+     if ( allocated(qwin) ) deallocate(qwin)
      if ( allocated(kwin) ) deallocate(kwin)
 
 !! body]
@@ -1349,20 +1377,20 @@
   end subroutine cat_free_delta
 
 !!
-!! @sub cat_free_gamma
+!! @sub cat_free_gcorr
 !!
-!! deallocate memory for gamma-related variables.
+!! deallocate memory for gcorr-related variables.
 !!
-  subroutine cat_free_gamma()
+  subroutine cat_free_gcorr()
      implicit none
 
 !! [body
 
-     if ( allocated(gamma) ) deallocate(gamma)
+     if ( allocated(gcorr) ) deallocate(gcorr)
 
 !! body]
 
      return
-  end subroutine cat_free_gamma
+  end subroutine cat_free_gcorr
 
   end module context

@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)
-!!!           07/30/2021 by li huang (last modified)
+!!!           09/22/2021 by li huang (last modified)
 !!! purpose : service subroutines for upfolding and downfolding.
 !!! status  : unstable
 !!! comment :
@@ -27,17 +27,18 @@
   subroutine map_chi_psi(cdim, cbnd, nfrq, k, s, t, Mc, Mp)
      use constants, only : dp
 
-     use context, only : i_grp
+     use context, only : qdim
+     use context, only : qbnd
      use context, only : chipsi
      use context, only : psichi
 
      implicit none
 
 !! external arguments
-     ! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given group
      integer, intent(in) :: cdim
 
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
      ! number of frequency points
@@ -49,7 +50,7 @@
      ! index for spin
      integer, intent(in) :: s
 
-     ! index for impurity sites
+     ! index for groups
      integer, intent(in) :: t
 
      ! input array defined at local orbital (\chi) basis
@@ -59,13 +60,13 @@
      complex(dp), intent(out) :: Mp(cbnd,cbnd,nfrq)
 
 !! local variables
-     ! loop index for frequency mesh
+     ! loop index for frequency points
      integer :: f
 
      ! status flag
      integer :: istat
 
-     ! overlap matrix between local orbitals and Kohn-Sham wave-functions
+     ! overlap matrix between local orbitals and Kohn-Sham states
      complex(dp), allocatable :: Cp(:,:)
      complex(dp), allocatable :: Pc(:,:)
 
@@ -82,9 +83,13 @@
          call s_print_error('map_chi_psi','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     ! check arguments
+     call s_assert2(cdim <= qdim, 'cdim is wrong')
+     call s_assert2(cbnd <= qbnd, 'cbnd is wrong')
+
      ! copy data
-     Cp = chipsi(1:cdim,1:cbnd,k,s,i_grp(t))
-     Pc = psichi(1:cbnd,1:cdim,k,s,i_grp(t))
+     Cp = chipsi(1:cdim,1:cbnd,k,s,t)
+     Pc = psichi(1:cbnd,1:cdim,k,s,t)
 
      ! upfolding or embedding
      do f=1,nfrq
@@ -109,17 +114,18 @@
   subroutine one_chi_psi(cdim, cbnd, k, s, t, Mc, Mp)
      use constants, only : dp
 
-     use context, only : i_grp
+     use context, only : qdim
+     use context, only : qbnd
      use context, only : chipsi
      use context, only : psichi
 
      implicit none
 
 !! external arguments
-     ! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given group
      integer, intent(in) :: cdim
 
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
      ! index for k-points
@@ -128,7 +134,7 @@
      ! index for spin
      integer, intent(in) :: s
 
-     ! index for impurity sites
+     ! index for groups
      integer, intent(in) :: t
 
      ! input matrix defined at local orbital (\chi) basis
@@ -141,7 +147,7 @@
      ! status flag
      integer :: istat
 
-     ! overlap matrix between local orbitals and Kohn-Sham wave-functions
+     ! overlap matrix between local orbitals and Kohn-Sham states
      complex(dp), allocatable :: Cp(:,:)
      complex(dp), allocatable :: Pc(:,:)
 
@@ -158,9 +164,13 @@
          call s_print_error('one_chi_psi','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     ! check arguments
+     call s_assert2(cdim <= qdim, 'cdim is wrong')
+     call s_assert2(cbnd <= qbnd, 'cbnd is wrong')
+
      ! copy data
-     Cp = chipsi(1:cdim,1:cbnd,k,s,i_grp(t))
-     Pc = psichi(1:cbnd,1:cdim,k,s,i_grp(t))
+     Cp = chipsi(1:cdim,1:cbnd,k,s,t)
+     Pc = psichi(1:cbnd,1:cdim,k,s,t)
 
      ! upfolding or embedding
      Mp = matmul( matmul( Pc, Mc ), Cp )
@@ -187,17 +197,18 @@
   subroutine map_psi_chi(cbnd, cdim, nfrq, k, s, t, Mp, Mc)
      use constants, only : dp
 
-     use context, only : i_grp
+     use context, only : qdim
+     use context, only : qbnd
      use context, only : chipsi
      use context, only : psichi
 
      implicit none
 
 !! external arguments
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-     ! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given group
      integer, intent(in) :: cdim
 
      ! number of frequency points
@@ -209,7 +220,7 @@
      ! index for spin
      integer, intent(in) :: s
 
-     ! index for impurity sites
+     ! index for groups
      integer, intent(in) :: t
 
      ! input array defined at Kohn-Sham (\psi) basis
@@ -219,13 +230,13 @@
      complex(dp), intent(out) :: Mc(cdim,cdim,nfrq)
 
 !! local variables
-     ! loop index for frequency mesh
+     ! loop index for frequency points
      integer :: f
 
      ! status flag
      integer :: istat
 
-     ! overlap matrix between local orbitals and Kohn-Sham wave-functions
+     ! overlap matrix between local orbitals and Kohn-Sham states
      complex(dp), allocatable :: Cp(:,:)
      complex(dp), allocatable :: Pc(:,:)
 
@@ -242,9 +253,13 @@
          call s_print_error('map_psi_chi','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     ! check arguments
+     call s_assert2(cdim <= qdim, 'cdim is wrong')
+     call s_assert2(cbnd <= qbnd, 'cbnd is wrong')
+
      ! copy data
-     Cp = chipsi(1:cdim,1:cbnd,k,s,i_grp(t))
-     Pc = psichi(1:cbnd,1:cdim,k,s,i_grp(t))
+     Cp = chipsi(1:cdim,1:cbnd,k,s,t)
+     Pc = psichi(1:cbnd,1:cdim,k,s,t)
 
      ! downfolding or projection
      do f=1,nfrq
@@ -269,17 +284,18 @@
   subroutine one_psi_chi(cbnd, cdim, k, s, t, Mp, Mc)
      use constants, only : dp
 
-     use context, only : i_grp
+     use context, only : qdim
+     use context, only : qbnd
      use context, only : chipsi
      use context, only : psichi
 
      implicit none
 
 !! external arguments
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-     ! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given group
      integer, intent(in) :: cdim
 
      ! index for k-points
@@ -288,7 +304,7 @@
      ! index for spin
      integer, intent(in) :: s
 
-     ! index for impurity sites
+     ! index for groups
      integer, intent(in) :: t
 
      ! input matrix defined at Kohn-Sham (\psi) basis
@@ -301,7 +317,7 @@
      ! status flag
      integer :: istat
 
-     ! overlap matrix between local orbitals and Kohn-Sham wave-functions
+     ! overlap matrix between local orbitals and Kohn-Sham states
      complex(dp), allocatable :: Cp(:,:)
      complex(dp), allocatable :: Pc(:,:)
 
@@ -318,9 +334,13 @@
          call s_print_error('one_psi_chi','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     ! check arguments
+     call s_assert2(cdim <= qdim, 'cdim is wrong')
+     call s_assert2(cbnd <= qbnd, 'cbnd is wrong')
+
      ! copy data
-     Cp = chipsi(1:cdim,1:cbnd,k,s,i_grp(t))
-     Pc = psichi(1:cbnd,1:cdim,k,s,i_grp(t))
+     Cp = chipsi(1:cdim,1:cbnd,k,s,t)
+     Pc = psichi(1:cbnd,1:cdim,k,s,t)
 
      ! downfolding or projection
      Mc = matmul( matmul( Cp, Mp ), Pc )

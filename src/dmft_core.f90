@@ -18,7 +18,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/23/2021 by li huang (created)
-!!!           08/01/2021 by li huang (last modified)
+!!!           09/22/2021 by li huang (last modified)
 !!! purpose : provide the core service subroutines for the work flow of
 !!!           the dft + dmft calculations.
 !!! status  : unstable
@@ -47,10 +47,10 @@
      implicit none
 
 !! external arguments
-     ! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given group
      integer, intent(in) :: cdim
 
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
      ! index for k-points
@@ -59,7 +59,7 @@
      ! index for spin
      integer, intent(in) :: s
 
-     ! index for impurity sites
+     ! index for groups
      integer, intent(in) :: t
 
      ! self-energy function in Kohn-Sham basis
@@ -84,7 +84,8 @@
          call s_print_error('cal_sl_sk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     ! we use Sl to store parts of sigma.
+     ! we use Sl to save self-energy function temporarily
+     !
      ! note that actually sigdc has been substracted from sigma before
      ! hand. please see cal_sigma() for more details.
      do m=1,nmesh
@@ -106,8 +107,7 @@
 !! @sub cal_sk_hk
 !!
 !! try to build H(k) + \Sigma(i\omega_n). here, \Sigma should contain
-!! contributions from all impurity sites. so, only when nsite = 1, we
-!! can use the output of cal_sl_sk() as the input of this subroutine.
+!! contributions from all groups.
 !!
   subroutine cal_sk_hk(cbnd, bs, be, k, s, Sk, Hk)
      use constants, only : dp
@@ -119,7 +119,7 @@
      implicit none
 
 !! external arguments
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
      ! band window: start index and end index for bands
@@ -161,6 +161,9 @@
          call s_print_error('cal_sk_hk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     ! check arguments
+     call s_assert(cbnd == be - bs + 1, 'cbnd is wrong')
+
      ! evaluate Em, which is just some dft eigenvalues
      Em = enk(bs:be,k,s)
 
@@ -169,7 +172,9 @@
 
      ! combine `Hm` and `Sk` to build the effective hamiltonian
      FREQ_LOOP: do m=1,nmesh
+         !
          Hk(:,:,m) = Hm + Sk(:,:,m)
+         !
      enddo FREQ_LOOP ! over m={1,nmesh} loop
 
      ! deallocate memory
@@ -196,7 +201,7 @@
      implicit none
 
 !! external arguments
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
      ! effective hamiltonian: H(k) + \Sigma(i\omega_n)
@@ -212,7 +217,9 @@
 !! [body
 
      FREQ_LOOP: do m=1,nmesh
+         !
          call s_eigvals_zg(cbnd, cbnd, Hk(:,:,m), Ek(:,m))
+         !
      enddo FREQ_LOOP ! over m={1,nmesh} loop
 
 !! body]
@@ -241,10 +248,10 @@
      implicit none
 
 !! external arguments
-     ! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given group
      integer, intent(in) :: cdim
 
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
      ! index for k-points
@@ -253,7 +260,7 @@
      ! index for spin
      integer, intent(in) :: s
 
-     ! index for impurity sites
+     ! index for groups
      integer, intent(in) :: t
 
      ! self-energy function at \omega = \infty in Kohn-Sham basis
@@ -274,7 +281,7 @@
          call s_print_error('cal_sl_so','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     ! here we use Sl to save parts of sigoo
+     ! here we use Sl to save self-energy function temporarily
      Sl = sigoo(1:cdim,1:cdim,s,t)
 
      ! upfolding: Sl (local basis) -> Sk (Kohn-Sham basis)
@@ -292,8 +299,7 @@
 !! @sub cal_so_ho
 !!
 !! try to build H(k) + \Sigma(\infty). here, \Sigma should contain full
-!! contributions from all impurity sites. so, only when nsite = 1, we
-!! can use the output of cal_sl_so() as the input of this subroutine.
+!! contributions from all groups.
 !!
   subroutine cal_so_ho(cbnd, bs, be, k, s, So, Ho)
      use constants, only : dp
@@ -303,7 +309,7 @@
      implicit none
 
 !! external arguments
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
      ! band window: start index and end index for bands
@@ -318,7 +324,7 @@
      ! self-energy function at Kohn-Sham basis, \omega = \infty
      complex(dp), intent(in)  :: So(cbnd,cbnd)
 
-     ! lattice green's function at given k-point and spin
+     ! effective hamiltonian at given k-point and spin, \omega = \infty
      complex(dp), intent(out) :: Ho(cbnd,cbnd)
 
 !! local variables
@@ -341,6 +347,9 @@
      if ( istat /= 0 ) then
          call s_print_error('cal_so_ho','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+     ! check arguments
+     call s_assert(cbnd == be - bs + 1, 'cbnd is wrong')
 
      ! evaluate Em, which is just some dft eigenvalues
      Em = enk(bs:be,k,s)
@@ -373,7 +382,7 @@
      implicit none
 
 !! external arguments
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
      ! effective hamiltonian: H(k) + \Sigma(\infty)
@@ -401,7 +410,7 @@
 !! try to calculate lattice green's function at given k-point and spin.
 !! this subroutine needs the self-energy function at Kohn-Sham basis (i.e
 !! `Sk`), that is the reason why it is named as `cal_sk_gk`. note that Sk
-!! have to contain the full contributions from all impurity sites.
+!! has to contain the full contributions from all group.
 !!
   subroutine cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
      use constants, only : dp
@@ -417,7 +426,7 @@
      implicit none
 
 !! external arguments
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
      ! band window: start index and end index for bands
@@ -467,10 +476,13 @@
          call s_print_error('cal_sk_gk','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     ! check arguments
+     call s_assert(cbnd == be - bs + 1, 'cbnd is wrong')
+
      ! evaluate Fm, which is k-dependent, but frequency-independent.
      !
      ! if you want to consider magnetic or the other external fields,
-     ! you can insert your codes here.
+     ! please insert your codes here.
      Fm = fermi - enk(bs:be,k,s)
 
      ! loop over frequency points
@@ -518,10 +530,10 @@
      implicit none
 
 !! external arguments
-     ! number of dft bands for given k-point and spin
+     ! number of included dft bands for given k-point and spin
      integer, intent(in) :: cbnd
 
-     ! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given group
      integer, intent(in) :: cdim
 
      ! index for k-points
@@ -530,13 +542,13 @@
      ! index for spin
      integer, intent(in) :: s
 
-     ! index for impurity sites
+     ! index for groups
      integer, intent(in) :: t
 
      ! lattice green's function at given k-point and spin
      complex(dp), intent(in)  :: Gk(cbnd,cbnd,nmesh)
 
-     ! local green's function (contributions from the given k-point and spin)
+     ! local green's function (contributions from given k-point and spin)
      complex(dp), intent(out) :: Gl(cdim,cdim,nmesh)
 
 !! [body
@@ -566,7 +578,7 @@
      use control, only : mc
      use control, only : myid, master
 
-     use context, only : qbnd
+     use context, only : xbnd
 
      implicit none
 
@@ -575,10 +587,10 @@
      real(dp), intent(in)    :: desired
 
      ! eigenvalues for H(k) + \Sigma(i\omega_n)
-     complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
+     complex(dp), intent(in) :: eigs(xbnd,nmesh,nkpt,nspin)
 
      ! eigenvalues for H(k) + \Sigma(\infty)
-     complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
+     complex(dp), intent(in) :: einf(xbnd,nkpt,nspin)
 
 !! local parameters
      ! maximum number of loops for the bisection algorithm
@@ -706,9 +718,10 @@
 !! try to evaluate the difference between the dft density matrix and the
 !! dft + dmft density matrix.
 !!
-  subroutine correction(kocc, gamma, ecorr)
+  subroutine correction(kocc, gcorr, ecorr)
      use constants, only : dp, mystd
-     use constants, only : zero, two, czero
+     use constants, only : zero, two
+     use constants, only : czero
 
      use mmpi, only : mp_barrier
      use mmpi, only : mp_allreduce
@@ -716,9 +729,8 @@
      use control, only : nkpt, nspin
      use control, only : myid, master, nprocs
 
-     use context, only : i_wnd
-     use context, only : qbnd
-     use context, only : kwin
+     use context, only : xbnd
+     use context, only : qwin
      use context, only : weight
      use context, only : enk, occupy
 
@@ -726,15 +738,21 @@
 
 !! external arguments
      ! density matrix from dft + dmft calculations
-     complex(dp), intent(in)  :: kocc(qbnd,qbnd,nkpt,nspin)
+     complex(dp), intent(in)  :: kocc(xbnd,xbnd,nkpt,nspin)
 
      ! correction for density matrix
-     complex(dp), intent(out) :: gamma(qbnd,qbnd,nkpt,nspin)
+     complex(dp), intent(out) :: gcorr(xbnd,xbnd,nkpt,nspin)
 
      ! correction for band energy
      real(dp), intent(out)    :: ecorr
 
 !! local variables
+     ! band window: start index and end index for bands
+     integer :: bs, be
+
+     ! number of included dft bands for given k-point and spin
+     integer :: cbnd
+
      ! index for spins
      integer :: s
 
@@ -743,15 +761,6 @@
 
      ! index for orbitals
      integer :: p, q
-
-     ! index for impurity sites
-     integer :: t
-
-     ! band window: start index and end index for bands
-     integer :: bs, be
-
-     ! number of dft bands for given k-point and spin
-     integer :: cbnd
 
      ! status flag
      integer :: istat
@@ -764,21 +773,30 @@
      complex(dp), allocatable :: Em(:)
      complex(dp), allocatable :: Hm(:,:)
 
-     ! dummy array, used to perform mpi reduce operation for gamma
-     complex(dp), allocatable :: gamma_mpi(:,:,:,:)
+     ! dummy array, used to perform mpi reduce operation for gcorr
+     complex(dp), allocatable :: gcorr_mpi(:,:,:,:)
 
 !! [body
 
      ! allocate memory
-     allocate(gamma_mpi(qbnd,qbnd,nkpt,nspin), stat = istat)
+     allocate(Em(xbnd),      stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('correction','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
      !
+     allocate(Hm(xbnd,xbnd), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('correction','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+     !
+     allocate(gcorr_mpi(xbnd,xbnd,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('correction','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     ! reset gamma
-     gamma = czero
-     gamma_mpi = czero
+     ! reset gcorr
+     gcorr = czero
+     gcorr_mpi = czero
 
      ! reset ecorr
      ecorr = zero
@@ -800,16 +818,15 @@
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
-             ! evaluate band window for the current k-point and spin.
-             !
-             ! i_wnd(t) returns the corresponding band window for given
-             ! impurity site t. see remarks in cal_nelect() for more details.
-             t = 1 ! t is fixed to 1
-             bs = kwin(k,s,1,i_wnd(t))
-             be = kwin(k,s,2,i_wnd(t))
+             ! evaluate global band window for the current k-point and spin.
+             bs = qwin(k,s,1)
+             be = qwin(k,s,2)
 
              ! determine cbnd
              cbnd = be - bs + 1
+             !
+             ! sanity check
+             call s_assert2(cbnd <= xbnd, 'cbnd is wrong')
 
              ! provide some useful information
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
@@ -817,44 +834,32 @@
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
-             ! allocate memory
-             allocate(Em(cbnd),      stat = istat)
-             allocate(Hm(cbnd,cbnd), stat = istat)
-             !
-             if ( istat /= 0 ) then
-                 call s_print_error('correction','can not allocate enough memory')
-             endif ! back if ( istat /= 0 ) block
-
              ! calculate the difference between dft + dmft density matrix
              ! `kocc` and the dft density matrix `occupy`. the results are
-             ! saved at `gamma.
+             ! saved at `gcorr.
              do p = 1,cbnd
                  do q = 1,cbnd
                      if ( p /= q ) then
-                         gamma(q,p,k,s) = kocc(q,p,k,s)
+                         gcorr(q,p,k,s) = kocc(q,p,k,s)
                      else
-                         gamma(q,p,k,s) = kocc(q,p,k,s) - occupy(bs + q - 1,k,s)
+                         gcorr(q,p,k,s) = kocc(q,p,k,s) - occupy(bs + q - 1,k,s)
                      endif
                  enddo ! over q={1,cbnd} loop
              enddo ! over p={1,cbnd} loop
 
-             ! Now gamma(:,:,k,s) is ready, we would like to use it to
+             ! now gcorr(:,:,k,s) is ready, we would like to use it to
              ! calculate its contribution to band energy.
 
              ! evaluate Em, which is the eigenvalues.
-             Em = enk(bs:be,k,s)
+             Em(1:cbnd) = enk(bs:be,k,s)
 
              ! convert `Em` to diagonal matrix `Hm`
-             call s_diag_z(cbnd, Em, Hm)
+             call s_diag_z(cbnd, Em(1:cbnd), Hm(1:cbnd,1:cbnd))
 
              ! evaluate correction to band energy
-             Hm = matmul(gamma(:,:,k,s), Hm)
-             call s_trace_z(cbnd, Hm, tr)
+             Hm(1:cbnd,1:cbnd) = matmul( gcorr(1:cbnd,1:cbnd,k,s), Hm(1:cbnd,1:cbnd) )
+             call s_trace_z(cbnd, Hm(1:cbnd,1:cbnd), tr)
              ecorr = ecorr + real(tr) * weight(k)
-
-             ! deallocate memory
-             if ( allocated(Em) ) deallocate(Em)
-             if ( allocated(Hm) ) deallocate(Hm)
 
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
@@ -864,27 +869,33 @@
      !
      call mp_barrier()
      !
-     call mp_allreduce(gamma, gamma_mpi)
+     call mp_allreduce(gcorr, gcorr_mpi)
      call mp_allreduce(ecorr, ecorr_mpi)
      !
      call mp_barrier()
      !
 # else  /* MPI */
 
-     gamma_mpi = gamma
+     gcorr_mpi = gcorr
      ecorr_mpi = ecorr
 
 # endif /* MPI */
 
      ! get the final correction for density matrix
-     gamma = gamma_mpi
+     gcorr = gcorr_mpi
+
+     ! renormalize ecorr
      ecorr = ecorr_mpi / float(nkpt)
+     !
      if ( nspin == 1 ) then
          ecorr = ecorr * two
      endif ! back if ( nspin == 1 ) block
 
      ! deallocate memory
-     deallocate(gamma_mpi)
+     if ( allocated(Em) ) deallocate(Em)
+     if ( allocated(Hm) ) deallocate(Hm)
+     !
+     if ( allocated(gcorr_mpi)) deallocate(gcorr_mpi)
 
 !! body]
 
@@ -896,7 +907,7 @@
 !!
 !! try to calculate the number of valence electrons by dft occupations
 !! and weights. actually, what we obtain is the nominal occupation
-!! numbers in the selected band window.
+!! numbers in the global band window.
 !!
   subroutine cal_nelect(nelect)
      use constants, only : dp, mystd
@@ -905,26 +916,25 @@
      use control, only : nkpt, nspin
      use control, only : myid, master
 
-     use context, only : i_wnd
-     use context, only : kwin
+     use context, only : qwin
      use context, only : weight
      use context, only : occupy
 
      implicit none
 
 !! external arguments
-     ! number of relevant electrons
+     ! number of valence electrons
      real(dp), intent(out) :: nelect
 
 !! local variables
+     ! band window: start index and end index for bands
+     integer :: bs, be
+
      ! index for k-points
      integer :: k
 
      ! index for spin
      integer :: s
-
-     ! band window: start index and end index for bands
-     integer :: bs, be
 
 !! [body
 
@@ -933,30 +943,20 @@
          write(mystd,'(4X,a)') 'calculating desired charge density'
      endif ! back if ( myid == master ) block
 
-!
-! important remarks:
-!
-! there is an important question. which band window shall we used?
-! multiple band windows are always possible since we don't have enough
-! reason to restrict `nwnd` to be 1.
-!
-! the answer is the band window that is connected to the quantum
-! impurity problems. basically, now we require that all the quantum
-! impurity problems share the same band window. so in this subroutine,
-! we only need to consider ONE band window, which is defined by
-! i_wnd(1) or i_wnd(2). whatever, they should point to the same band
-! window according to our assumption.
-!
-
      ! reset nelect
      nelect = zero
 
      ! loop over spins and k-points to perform summation
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
-             bs = kwin(k,s,1,i_wnd(1))
-             be = kwin(k,s,2,i_wnd(1))
+
+             ! determine the band boundary
+             bs = qwin(k,s,1)
+             be = qwin(k,s,2)
+
+             ! add its contribution to nelect
              nelect = nelect + sum( occupy(bs:be,k,s) ) * weight(k)
+
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
 
@@ -977,7 +977,7 @@
 !! @sub cal_occupy
 !!
 !! for given fermi level, try to calculate the corresponding occupations.
-!! note that this subroutine only works in imaginary axis.
+!! note that this subroutine only works in imaginary axis so far.
 !!
   subroutine cal_occupy(fermi, val, eigs, einf)
      use constants, only : dp
@@ -989,9 +989,8 @@
      use control, only : nmesh
      use control, only : beta
 
-     use context, only : i_wnd
-     use context, only : qbnd
-     use context, only : kwin
+     use context, only : xbnd
+     use context, only : qwin
      use context, only : weight
      use context, only : fmesh
 
@@ -1001,16 +1000,22 @@
      ! assumed fermi level
      real(dp), intent(in)  :: fermi
 
-     ! occupation number
+     ! calculated occupation number
      real(dp), intent(out) :: val
 
      ! eigenvalues for H(k) + \Sigma(i\omega_n)
-     complex(dp), intent(in) :: eigs(qbnd,nmesh,nkpt,nspin)
+     complex(dp), intent(in) :: eigs(xbnd,nmesh,nkpt,nspin)
 
      ! eigenvalues for H(k) + \Sigma(\infty)
-     complex(dp), intent(in) :: einf(qbnd,nkpt,nspin)
+     complex(dp), intent(in) :: einf(xbnd,nkpt,nspin)
 
 !! local variables
+     ! band window: start index and end index for bands
+     integer  :: bs, be
+
+     ! number of included dft bands for given k-point and spin
+     integer  :: cbnd
+
      ! loop index for bands
      integer  :: b
 
@@ -1020,14 +1025,8 @@
      ! loop index for spins
      integer  :: s
 
-     ! loop index for frequency mesh
+     ! loop index for frequency
      integer  :: m
-
-     ! band window: start index and end index for bands
-     integer  :: bs, be
-
-     ! number of dft bands for given k-point and spin
-     integer  :: cbnd
 
      ! status flag
      integer  :: istat
@@ -1042,18 +1041,18 @@
      complex(dp), allocatable :: gloc(:,:,:)
 
 !! external functions
-     ! used to calculate fermi-dirac function
+     ! it is used to calculate fermi-dirac function
      real(dp), external :: fermi_dirac
 
 !! [body
 
      ! allocate memory
-     allocate(zocc(qbnd,nspin),       stat = istat)
+     allocate(zocc(xbnd,nspin),       stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_occupy','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
      !
-     allocate(gloc(qbnd,nmesh,nspin), stat = istat)
+     allocate(gloc(xbnd,nmesh,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_occupy','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -1070,10 +1069,11 @@
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=1,nkpt
 
-             ! determine the band window
-             ! see remarks in cal_nelect()
-             bs = kwin(k,s,1,i_wnd(1))
-             be = kwin(k,s,2,i_wnd(1))
+             ! determine the global band window
+             bs = qwin(k,s,1)
+             be = qwin(k,s,2)
+             !
+             ! determine cbnd
              cbnd = be - bs + 1
 
              ! here, the asymptotic part is substracted
@@ -1090,21 +1090,23 @@
 
      ! calculate summation of the local green's function
      do s=1,nspin
-         do b=1,qbnd
+         do b=1,xbnd
              zocc(b,s) = sum( gloc(b,:,s) ) / real(nkpt) * ( two / beta )
-         enddo ! over b={1,cbnd} loop
+         enddo ! over b={1,xbnd} loop
      enddo ! over s={1,nspin} loop
 
      ! consider the contribution from asymptotic part
      do s=1,nspin
          do k=1,nkpt
 
-             ! determine the band window
-             ! see remarks in cal_nelect()
-             bs = kwin(k,s,1,i_wnd(1))
-             be = kwin(k,s,2,i_wnd(1))
+             ! determine the global band window
+             bs = qwin(k,s,1)
+             be = qwin(k,s,2)
+             !
+             ! determine cbnd
              cbnd = be - bs + 1
 
+             ! here, the asymptotic part is added
              do b=1,cbnd
                  caux = einf(b,k,s) - fermi
                  zocc(b,s) = zocc(b,s) + fermi_dirac( real(caux) ) * weight(k) / real(nkpt)
@@ -1150,14 +1152,14 @@
      use mmpi, only : mp_allreduce
 
      use control, only : nkpt, nspin
-     use control, only : nsite
+     use control, only : ngrp
      use control, only : nmesh
      use control, only : beta
      use control, only : myid, master, nprocs
 
-     use context, only : i_wnd
-     use context, only : qbnd
      use context, only : ndim
+     use context, only : xbnd
+     use context, only : qwin
      use context, only : kwin
      use context, only : fmesh
 
@@ -1165,29 +1167,30 @@
 
 !! external arguments
      ! dft + dmft density matrix
-     complex(dp), intent(out) :: kocc(qbnd,qbnd,nkpt,nspin)
+     complex(dp), intent(out) :: kocc(xbnd,xbnd,nkpt,nspin)
 
 !! local variables
+     ! loop index for k-points
+     integer :: k
+
      ! loop index for spin
      integer :: s
 
-     ! loop index for k-points
-     integer :: k
+     ! loop index for groups
+     integer :: t
 
      ! loop index for orbitals
      integer :: p, q
 
-     ! loop index for impurity sites
-     integer :: t
+     ! number of included dft bands for given k-point and spin
+     integer :: cbnd, cbnd1, cbnd2
 
-     ! number of dft bands for given k-point and spin
-     integer :: cbnd
-
-     ! number of correlated orbitals for given impurity site
+     ! number of correlated orbitals for given group
      integer :: cdim
 
      ! band window: start index and end index for bands
-     integer :: bs, be
+     integer :: bs, bs1, bs2
+     integer :: be, be1, be2
 
      ! status flag
      integer :: istat
@@ -1208,13 +1211,14 @@
 !! [body
 
      ! allocate memory
-     allocate(kocc_mpi(qbnd,qbnd,nkpt,nspin), stat = istat)
+     allocate(kocc_mpi(xbnd,xbnd,nkpt,nspin), stat = istat)
+     !
      if ( istat /= 0 ) then
          call s_print_error('cal_denmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      ! reset cbnd and cdim. they will be updated later.
-     ! cbnd should be k-dependent and cdim should be impurity-dependent.
+     ! cbnd should be k-dependent and cdim should be group-dependent.
      cbnd = 0
      cdim = 0
 
@@ -1238,16 +1242,13 @@
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
-             ! evaluate band window for the current k-point and spin.
-             !
-             ! i_wnd(t) returns the corresponding band window for given
-             ! impurity site t. see remarks in cal_nelect() for more details.
-             t = 1 ! t is fixed to 1
-             bs = kwin(k,s,1,i_wnd(t))
-             be = kwin(k,s,2,i_wnd(t))
+             ! evaluate global band window for the current k-point and spin.
+             bs = qwin(k,s,1)
+             be = qwin(k,s,2)
 
              ! determine cbnd
              cbnd = be - bs + 1
+             call s_assert2(cbnd <= xbnd, 'cbnd is wrong')
 
              ! provide some useful information
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
@@ -1255,26 +1256,63 @@
              write(mystd,'(2X,a,3i3)',advance='no') 'window: ', bs, be, cbnd
              write(mystd,'(2X,a,i2)') 'proc: ', myid
 
-             ! allocate memories Sk, Xk, and Gk.
-             ! their sizes are k-dependent.
+             ! allocate memory
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
-             allocate(Xk(cbnd,cbnd,nmesh), stat = istat)
-             allocate(Gk(cbnd,cbnd,nmesh), stat = istat)
+             if ( istat /= 0 ) then
+                 call s_print_error('cal_denmat','can not allocate enough memory')
+             endif ! back if ( istat /= 0 ) block
              !
+             allocate(Gk(cbnd,cbnd,nmesh), stat = istat)
              if ( istat /= 0 ) then
                  call s_print_error('cal_denmat','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
-             ! build self-energy function, and then upfold it into
-             ! Kohn-Sham basis. Sk should contain contributions from
-             ! all impurity sites
+             ! build self-energy function Sk
+             !
+             ! the self-energy function must be upfolded into Kohn-Sham
+             ! basis at first. finally, Sk should contain contributions
+             ! from all groups, irrespective of correlated or not.
+             !
+             ! reset Sk
              Sk = czero
-             do t=1,nsite
-                 Xk = czero ! reset Xk
+             !
+             ! go through each group
+             do t=1,ngrp
+                 ! get number of orbitals for this group
                  cdim = ndim(t)
-                 call cal_sl_sk(cdim, cbnd, k, s, t, Xk)
-                 Sk = Sk + Xk
-             enddo ! over t={1,nsite} loop
+                 !
+                 ! get dft band window for this group
+                 bs1 = kwin(k,s,1,t)
+                 be1 = kwin(k,s,2,t)
+                 !
+                 ! determine cbnd1
+                 ! local band window is only a subset of global band window
+                 cbnd1 = be1 - bs1 + 1
+                 call s_assert2(cbnd1 <= cbnd, 'cbnd1 is wrong')
+                 !
+                 ! convert the band index to 1-based
+                 p = 1 - bs ! it is shift
+                 bs2 = bs1 + p
+                 be2 = be1 + p
+                 cbnd2 = be2 - bs2 + 1 ! cbnd2 is equal to cbnd1
+                 call s_assert2(cbnd2 <= cbnd, 'cbnd2 is wrong')
+                 !
+                 ! allocate memory for Xk to avoid segment fault
+                 allocate(Xk(cbnd2,cbnd2,nmesh), stat = istat)
+                 if ( istat /= 0 ) then
+                     call s_print_error('cal_denmat','can not allocate enough memory')
+                 endif ! back if ( istat /= 0 ) block
+                 Xk = czero
+                 !
+                 ! upfold the self-energy function
+                 call cal_sl_sk(cdim, cbnd2, k, s, t, Xk)
+                 !
+                 ! merge the contribution
+                 Sk(bs2:be2,bs2:be2,:) = Sk(bs2:be2,bs2:be2,:) + Xk
+                 !
+                 ! deallocate memory for Xk to avoid segment falut
+                 if ( allocated(Xk) ) deallocate(Xk)
+             enddo ! over t={1,ngrp} loop
 
              ! calculate lattice green's function
              call cal_sk_gk(cbnd, bs, be, k, s, Sk, Gk)
@@ -1292,9 +1330,8 @@
                  enddo ! over q={1,cbnd} loop
              enddo ! over p={1,cbnd} loop
 
-             ! deallocate memories
+             ! deallocate memory
              if ( allocated(Sk) ) deallocate(Sk)
-             if ( allocated(Xk) ) deallocate(Xk)
              if ( allocated(Gk) ) deallocate(Gk)
 
          enddo KPNT_LOOP ! over k={1,nkpt} loop
@@ -1340,42 +1377,46 @@
      use mmpi, only : mp_allreduce
 
      use control, only : nkpt, nspin
-     use control, only : nsite
+     use control, only : ngrp
      use control, only : nmesh
      use control, only : myid, master, nprocs
 
-     use context, only : i_wnd
      use context, only : ndim
-     use context, only : qbnd
+     use context, only : xbnd
+     use context, only : qwin
      use context, only : kwin
 
      implicit none
 
 !! external arguments
      ! eigenvalues for H(k) + \Sigma(i\omega_n)
-     complex(dp), intent(out) :: eigs(qbnd,nmesh,nkpt,nspin)
+     complex(dp), intent(out) :: eigs(xbnd,nmesh,nkpt,nspin)
 
      ! eigenvalues for H(k) + \Sigma(\infty)
-     complex(dp), intent(out) :: einf(qbnd,nkpt,nspin)
+     complex(dp), intent(out) :: einf(xbnd,nkpt,nspin)
 
 !! local variables
-     ! loop index for spins
-     integer :: s
-
      ! loop index for k-points
      integer :: k
 
-     ! loop index for impurity sites
+     ! loop index for spin
+     integer :: s
+
+     ! loop index for groups
      integer :: t
 
-     ! number of dft bands for given k-point and spin
-     integer :: cbnd
+     ! loop index for orbitals
+     integer :: p
 
-     ! number of correlated orbitals for given impurity site
+     ! number of included dft bands for given k-point and spin
+     integer :: cbnd, cbnd1, cbnd2
+
+     ! number of correlated orbitals for given group
      integer :: cdim
 
      ! band window: start index and end index for bands
-     integer :: bs, be
+     integer :: bs, bs1, bs2
+     integer :: be, be1, be2
 
      ! status flag
      integer :: istat
@@ -1409,15 +1450,20 @@
 !! [body
 
      ! allocate memory
-     allocate(eigs_mpi(qbnd,nmesh,nkpt,nspin), stat = istat)
+     allocate(eigs_mpi(xbnd,nmesh,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_eigsys','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
      !
-     allocate(einf_mpi(qbnd,nkpt,nspin), stat = istat)
+     allocate(einf_mpi(xbnd,nkpt,nspin), stat = istat)
      if ( istat /= 0 ) then
          call s_print_error('cal_eigsys','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+     ! reset cbnd and cdim. they will be updated later.
+     ! cbnd should be k-dependent and cdim should be group-dependent.
+     cbnd = 0
+     cdim = 0
 
      ! initialization
      eigs = czero
@@ -1442,16 +1488,13 @@
      SPIN_LOOP: do s=1,nspin
          KPNT_LOOP: do k=myid+1,nkpt,nprocs
 
-             ! evaluate band window for the current k-point and spin.
-             !
-             ! i_wnd(t) returns the corresponding band window for given
-             ! impurity site t. see remarks in cal_nelect() subroutine.
-             t = 1 ! t is fixed to 1
-             bs = kwin(k,s,1,i_wnd(t))
-             be = kwin(k,s,2,i_wnd(t))
+             ! evaluate global band window for the current k-point and spin.
+             bs = qwin(k,s,1)
+             be = qwin(k,s,2)
 
              ! determine cbnd
              cbnd = be - bs + 1
+             call s_assert2(cbnd <= xbnd, 'cbnd is wrong')
 
              ! provide some useful information
              write(mystd,'(6X,a,i2)',advance='no') 'spin: ', s
@@ -1461,65 +1504,151 @@
 
              ! allocate memory
              allocate(Sk(cbnd,cbnd,nmesh), stat = istat)
-             allocate(Xk(cbnd,cbnd,nmesh), stat = istat)
-             allocate(Hk(cbnd,cbnd,nmesh), stat = istat)
-             allocate(Ek(cbnd,nmesh),      stat = istat)
+             if ( istat /= 0 ) then
+                 call s_print_error('cal_eigsys','can not allocate enough memory')
+             endif ! back if ( istat /= 0 ) block
              !
+             allocate(Hk(cbnd,cbnd,nmesh), stat = istat)
+             if ( istat /= 0 ) then
+                 call s_print_error('cal_eigsys','can not allocate enough memory')
+             endif ! back if ( istat /= 0 ) block
+             !
+             allocate(Ek(cbnd,nmesh),      stat = istat)
              if ( istat /= 0 ) then
                  call s_print_error('cal_eigsys','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
              !
              allocate(So(cbnd,cbnd),       stat = istat)
-             allocate(Xo(cbnd,cbnd),       stat = istat)
-             allocate(Ho(cbnd,cbnd),       stat = istat)
-             allocate(Eo(cbnd),            stat = istat)
+             if ( istat /= 0 ) then
+                 call s_print_error('cal_eigsys','can not allocate enough memory')
+             endif ! back if ( istat /= 0 ) block
              !
+             allocate(Ho(cbnd,cbnd),       stat = istat)
+             if ( istat /= 0 ) then
+                 call s_print_error('cal_eigsys','can not allocate enough memory')
+             endif ! back if ( istat /= 0 ) block
+             !
+             allocate(Eo(cbnd),            stat = istat)
              if ( istat /= 0 ) then
                  call s_print_error('cal_eigsys','can not allocate enough memory')
              endif ! back if ( istat /= 0 ) block
 
              ! construct H(k) + \Sigma(i\omega_n) and diagonalize it
+             !
+             ! reset some arrays
              Sk = czero
+             Hk = czero
+             Ek = czero
              !
-             do t=1,nsite ! add contributions from all impurity sites
-                 Xk = czero
+             ! go through each group
+             do t=1,ngrp ! add contributions from all groups
+                 ! get number of orbitals for this group
                  cdim = ndim(t)
-                 call cal_sl_sk(cdim, cbnd, k, s, t, Xk)
-                 Sk = Sk + Xk
-             enddo ! over t={1,nsite} loop
+                 !
+                 ! get dft band window for this group
+                 bs1 = kwin(k,s,1,t)
+                 be1 = kwin(k,s,2,t)
+                 !
+                 ! determine cbnd1
+                 ! local band window is only a subset of global band window
+                 cbnd1 = be1 - bs1 + 1
+                 call s_assert2(cbnd1 <= cbnd, 'cbnd1 is wrong')
+                 !
+                 ! convert the band index to 1-based
+                 p = 1 - bs ! it is shift
+                 bs2 = bs1 + p
+                 be2 = be1 + p
+                 cbnd2 = be2 - bs2 + 1 ! cbnd2 is equal to cbnd1
+                 call s_assert2(cbnd2 <= cbnd, 'cbnd2 is wrong')
+                 !
+                 ! allocate memory for Xk to avoid segment fault
+                 allocate(Xk(cbnd2,cbnd2,nmesh), stat = istat)
+                 if ( istat /= 0 ) then
+                     call s_print_error('cal_eigsys','can not allocate enough memory')
+                 endif ! back if ( istat /= 0 ) block
+                 Xk = czero
+                 !
+                 ! upfold the self-energy function
+                 call cal_sl_sk(cdim, cbnd2, k, s, t, Xk)
+                 !
+                 ! merge the contribution
+                 Sk(bs2:be2,bs2:be2,:) = Sk(bs2:be2,bs2:be2,:) + Xk
+                 !
+                 ! deallocate memory for Xk to avoid segment falut
+                 if ( allocated(Xk) ) deallocate(Xk)
+             enddo ! over t={1,ngrp} loop
              !
+             ! build effective hamiltonian
              call cal_sk_hk(cbnd, bs, be, k, s, Sk, Hk)
              !
+             ! diagonalize it
              call cal_hk_ek(cbnd, Hk, Ek)
              !
+             ! copy the eigenvalues
              eigs(1:cbnd,:,k,s) = Ek
 
              ! construct H(k) + \Sigma(\infty) and diagonalize it
+             !
+             ! reset some arrays
              So = czero
+             Ho = czero
+             Eo = czero
              !
-             do t=1,nsite ! add contributions from all impurity sites
-                 Xo = czero
+             ! go through each group
+             do t=1,ngrp ! add contributions from all groups
+                 ! get number of orbitals for this group
                  cdim = ndim(t)
-                 call cal_sl_so(cdim, cbnd, k, s, t, Xo)
-                 So = So + Xo
-             enddo ! over t={1,nsite} loop
+                 !
+                 ! get dft band window for this group
+                 bs1 = kwin(k,s,1,t)
+                 be1 = kwin(k,s,2,t)
+                 !
+                 ! determine cbnd1
+                 ! local band window is only a subset of global band window
+                 cbnd1 = be1 - bs1 + 1
+                 call s_assert2(cbnd1 <= cbnd, 'cbnd1 is wrong')
+                 !
+                 ! convert the band index to 1-based
+                 p = 1 - bs ! it is shift
+                 bs2 = bs1 + p
+                 be2 = be1 + p
+                 cbnd2 = be2 - bs2 + 1 ! cbnd2 is equal to cbnd1
+                 call s_assert2(cbnd2 <= cbnd, 'cbnd2 is wrong')
+                 !
+                 ! allocate memory for Xo to avoid segment fault
+                 allocate(Xo(cbnd2,cbnd2), stat = istat)
+                 if ( istat /= 0 ) then
+                     call s_print_error('cal_eigsys','can not allocate enough memory')
+                 endif ! back if ( istat /= 0 ) block
+                 Xo = czero
+                 !
+                 ! upfold the self-energy function
+                 call cal_sl_so(cdim, cbnd2, k, s, t, Xo)
+                 !
+                 ! merge the contribution
+                 So(bs2:be2,bs2:be2) = So(bs2:be2,bs2:be2) + Xo
+                 !
+                 ! deallocate memory for Xo to avoid segment falut
+                 if ( allocated(Xo) ) deallocate(Xo)
+             enddo ! over t={1,ngrp} loop
              !
+             ! build effective hamiltonian
              call cal_so_ho(cbnd, bs, be, k, s, So, Ho)
              !
+             ! diagonalize it
              call cal_ho_eo(cbnd, Ho, Eo)
              !
+             ! copy the eigenvalues
              einf(1:cbnd,k,s) = Eo
 
              ! deallocate memory
-             if ( allocated(So) ) deallocate(So)
-             if ( allocated(Xo) ) deallocate(Xo)
-             if ( allocated(Ho) ) deallocate(Ho)
-             if ( allocated(Eo) ) deallocate(Eo)
-             !
              if ( allocated(Sk) ) deallocate(Sk)
-             if ( allocated(Xk) ) deallocate(Xk)
              if ( allocated(Hk) ) deallocate(Hk)
              if ( allocated(Ek) ) deallocate(Ek)
+             !
+             if ( allocated(So) ) deallocate(So)
+             if ( allocated(Ho) ) deallocate(Ho)
+             if ( allocated(Eo) ) deallocate(Eo)
 
          enddo KPNT_LOOP ! over k={1,nkpt} loop
      enddo SPIN_LOOP ! over s={1,nspin} loop
@@ -1546,8 +1675,8 @@
      einf = einf_mpi
 
      ! deallocate memory
-     deallocate(eigs_mpi)
-     deallocate(einf_mpi)
+     if ( allocated(eigs_mpi) ) deallocate(eigs_mpi)
+     if ( allocated(einf_mpi) ) deallocate(einf_mpi)
 
 !! body]
 
