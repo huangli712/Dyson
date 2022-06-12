@@ -13,6 +13,7 @@
 !!!           dmft_sigma    module
 !!!           dmft_green    module
 !!!           dmft_weiss    module
+!!!           dmft_delta    module
 !!!           dmft_gamma    module
 !!!           context       module
 !!! source  : dmft_context.f90
