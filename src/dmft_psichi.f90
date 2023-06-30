@@ -1,10 +1,10 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
+!!! project : dyson @ jacaranda
 !!! program : map_chi_psi
 !!!           one_chi_psi
 !!!           map_psi_chi
 !!!           one_psi_chi
-!!! source  : dmft_core.f90
+!!! source  : dmft_psichi.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/29/2021 by li huang (created)

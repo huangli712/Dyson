@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
+!!! project : dyson @ jacaranda
 !!! program : dmft_print_header
 !!!           dmft_print_footer
 !!!           dmft_print_summary
