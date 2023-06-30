@@ -1,7 +1,7 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
-!!! program : control    module
-!!!           version    module
+!!! project : dyson @ jacaranda
+!!! program : control module
+!!!           version module
 !!! source  : dmft_control.f90
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)

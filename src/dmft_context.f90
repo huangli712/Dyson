@@ -1,21 +1,21 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
-!!! program : dmft_map      module
-!!!           dmft_group    module
-!!!           dmft_window   module
-!!!           dmft_lattice  module
-!!!           dmft_kmesh    module
-!!!           dmft_tetra    module
-!!!           dmft_eigen    module
-!!!           dmft_projs    module
-!!!           dmft_fmesh    module
-!!!           dmft_eimps    module
-!!!           dmft_sigma    module
-!!!           dmft_green    module
-!!!           dmft_weiss    module
-!!!           dmft_delta    module
-!!!           dmft_gcorr    module
-!!!           context       module
+!!! project : dyson @ jacaranda
+!!! program : dmft_map     module
+!!!           dmft_group   module
+!!!           dmft_window  module
+!!!           dmft_lattice module
+!!!           dmft_kmesh   module
+!!!           dmft_tetra   module
+!!!           dmft_eigen   module
+!!!           dmft_projs   module
+!!!           dmft_fmesh   module
+!!!           dmft_eimps   module
+!!!           dmft_sigma   module
+!!!           dmft_green   module
+!!!           dmft_weiss   module
+!!!           dmft_delta   module
+!!!           dmft_gcorr   module
+!!!           context      module
 !!! source  : dmft_context.f90
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)

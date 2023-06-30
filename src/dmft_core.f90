@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
+!!! project : dyson @ jacaranda
 !!! program : cal_sl_sk
 !!!           cal_sk_hk
 !!!           cal_hk_ek
