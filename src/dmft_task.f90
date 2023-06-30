@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
+!!! project : dyson @ jacaranda
 !!! program : dmft_driver
 !!!           dmft_try1
 !!!           dmft_try2

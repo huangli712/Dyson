@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
+!!! project : dyson @ jacaranda
 !!! program : fermi_dirac
 !!! source  : dmft_util.f90
 !!! type    : functions

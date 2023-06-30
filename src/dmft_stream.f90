@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
+!!! project : dyson @ jacaranda
 !!! program : dmft_setup_tasks
 !!!           dmft_setup_param
 !!!           dmft_setup_system
