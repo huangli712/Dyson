@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
+!!! project : dyson @ jacaranda
 !!! program : cal_sigoo
 !!!           cal_sigma
 !!!           cal_fermi

@@ -27,6 +27,8 @@
 
      implicit none
 
+!! [body
+
 ! initialize mpi envirnoment
 # if defined (MPI)
 
@@ -98,6 +100,8 @@
      call mp_finalize()
 
 # endif /* MPI */
+
+!! body]
 
 !!========================================================================
   END PROGRAM DMFT_MAIN !                                              <<<

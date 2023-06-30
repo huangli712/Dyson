@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : jacaranda
+!!! project : dyson @ jacaranda
 !!! program : dmft_dump_fermi
 !!!           dmft_dump_eimps
 !!!           dmft_dump_eimpx
