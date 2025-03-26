@@ -2,7 +2,7 @@
 
 The Dyson code is designed to solve the Dyson's equation. It is integrated with the [**Zen**](https://github.com/huangli712/Zen) DFT + DMFT computation framework. In other words, it should not be used separately.
 
-This package is currently under developement. **PLEASE USE IT AT YOUR OWN RISK!**
+This package is currently under heavy developement. **PLEASE USE IT AT YOUR OWN RISK!**
 
 ## Version
 
