@@ -1,12 +1,12 @@
 # Dyson
 
-The Dyson code is designed to solve the Dyson's equation. It is internally used by the [**Zen**](https://github.com/huangli712/Zen) DFT + DMFT framework. 
+The Dyson code is designed to solve the Dyson's equation. It is integrated with the [**Zen**](https://github.com/huangli712/Zen) DFT + DMFT computation framework. In other words, it should not be used separately.
 
-This package is currently under developement. **IT DOESN'T WORK NOW!**
+This package is currently under developement. **PLEASE USE IT AT YOUR OWN RISK!**
 
 ## Version
 
-v0.7.4-devel.210922
+v0.7.5-devel.250326
 
 ## License
 
