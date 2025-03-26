@@ -17,9 +17,9 @@
 !!!           dmft_final_array
 !!! source  : dmft_stream.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 02/23/2021 by li huang (created)
-!!!           09/22/2021 by li huang (last modified)
+!!!           03/26/2025 by li huang (last modified)
 !!! purpose : setup the configuration parameters and read the input data.
 !!! status  : unstable
 !!! comment :

@@ -12,9 +12,9 @@
 !!!           dmft_try999
 !!! source  : dmft_task.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 07/29/2021 by li huang (created)
-!!!           09/19/2021 by li huang (last modified)
+!!!           03/26/2025 by li huang (last modified)
 !!! purpose : driver subroutines.
 !!! status  : unstable
 !!! comment :

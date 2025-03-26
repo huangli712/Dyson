@@ -3,9 +3,9 @@
 !!! program : fermi_dirac
 !!! source  : dmft_util.f90
 !!! type    : functions
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 07/29/2021 by li huang (created)
-!!!           07/30/2021 by li huang (last modified)
+!!!           03/26/2025 by li huang (last modified)
 !!! purpose : define some useful utility functions and subroutines.
 !!! status  : unstable
 !!! comment :

@@ -10,9 +10,9 @@
 !!!           dmft_dump_gcorr
 !!! source  : dmft_dump.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 02/23/2021 by li huang (created)
-!!!           09/22/2021 by li huang (last modified)
+!!!           03/26/2025 by li huang (last modified)
 !!! purpose : provide some subroutines to write down the calculated data.
 !!! status  : unstable
 !!! comment :

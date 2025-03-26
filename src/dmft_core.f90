@@ -16,9 +16,9 @@
 !!!           cal_eigsys
 !!! source  : dmft_core.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 02/23/2021 by li huang (created)
-!!!           09/22/2021 by li huang (last modified)
+!!!           03/26/2025 by li huang (last modified)
 !!! purpose : provide the core service subroutines for the work flow of
 !!!           the dft + dmft calculations.
 !!! status  : unstable

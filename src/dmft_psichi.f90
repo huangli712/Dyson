@@ -6,9 +6,9 @@
 !!!           one_psi_chi
 !!! source  : dmft_psichi.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 07/29/2021 by li huang (created)
-!!!           09/22/2021 by li huang (last modified)
+!!!           03/26/2025 by li huang (last modified)
 !!! purpose : service subroutines for upfolding and downfolding.
 !!! status  : unstable
 !!! comment :

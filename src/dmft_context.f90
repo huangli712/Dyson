@@ -18,9 +18,9 @@
 !!!           context      module
 !!! source  : dmft_context.f90
 !!! type    : modules
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 02/23/2021 by li huang (created)
-!!!           09/22/2021 by li huang (last modified)
+!!!           03/26/2025 by li huang (last modified)
 !!! purpose : try to define the global modules and arrays, and implement
 !!!           memory managment.
 !!! status  : unstable

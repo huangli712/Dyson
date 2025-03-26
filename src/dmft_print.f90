@@ -6,9 +6,9 @@
 !!!           dmft_print_system
 !!! source  : dmft_print.f90
 !!! type    : subroutines
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli@caep.cn)
 !!! history : 02/23/2021 by li huang (created)
-!!!           07/31/2021 by li huang (last modified)
+!!!           03/26/2025 by li huang (last modified)
 !!! purpose : print the configuration and runtime information.
 !!! status  : unstable
 !!! comment :
