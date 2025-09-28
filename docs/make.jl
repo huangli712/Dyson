@@ -17,5 +17,11 @@ makedocs(
     modules = Module[],
     pages = [
         "Welcome" => "index.md",
+        "Introduction" => "intro.md",
+        "Installation" => "install.md",
+        "Usage" => "usage.md",
+        "Input Files" => "input.md",
+        "Output Files" => "output.md",
+        "Parameters" => "param.md", 
     ],
 )
