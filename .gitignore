@@ -15,3 +15,4 @@
 fort.*
 test.f90
 src/dmft
+docs/build
