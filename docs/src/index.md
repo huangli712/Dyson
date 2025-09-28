@@ -1,5 +1,5 @@
 ```@raw html
-<img src="./assets/logo.png" alt="logo.png" width="25%" class="center"/>
+<img src="./assets/logo.png" alt="logo.png" width="50%" class="center"/>
 ```
 
 *Dyson's equation solver for the Zen computation framework*
