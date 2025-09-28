@@ -48,5 +48,5 @@ LFLAGS = $(OMP)
 
 # External linear algebra library
 #-------------------------------------------------------------------------
-LIBS   = -L/Users/lihuang/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
+LIBS   = -L/opt/intel/oneapi/mkl/2025.2/lib -lmkl_core -lmkl_sequential -lmkl_rt
 FLINK  = /home/yun/Working/devel/Flink/src
