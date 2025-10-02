@@ -19,7 +19,7 @@
 ## =======
 ##
 ## 05/11/2015 by li huang (created)
-## 09/28/2025 by li huang (last modified)
+## 10/02/2025 by li huang (last modified)
 ##
 ##
 
@@ -49,4 +49,3 @@ LFLAGS = $(OMP)
 # External linear algebra library
 #-------------------------------------------------------------------------
 LIBS   = -L$(MKLROOT)/lib -qmkl
-FLINK  = /home/yun/Working/devel/Flink/src
